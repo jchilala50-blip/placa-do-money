@@ -1,0 +1,538 @@
+
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Placa do Money - Dashboard</title>
+    <style>
+        body {
+            background-color: #060d1a;
+            color: #ffffff;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            padding: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; /* Fixa o app no topo da tela, eliminando o espaço vazio superior */
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+        .container {
+            background-color: #0c1524;
+            padding: 12px;
+            border-radius: 12px;
+            border: 1px solid #16263f;
+            width: 100%;
+            max-width: 420px;
+            box-sizing: border-box;
+            margin-top: 4px; /* Ajuste fino para não colar totalmente na barra do navegador */
+        }
+        
+        /* Topo com Logo e Botão Info Alinhados */
+        .topo-plataforma {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            position: relative;
+        }
+        .btn-info-youtube {
+            background-color: #101f35;
+            border: 1px solid #1a3152;
+            color: #1e88e5;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+        .texto-logo {
+            flex: 1;
+            text-align: center;
+            padding-right: 36px;
+        }
+        .texto-logo h3 {
+            margin: 0;
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 15px;
+            letter-spacing: 0.5px;
+        }
+        
+        /* Topo: Saldo e Lucro */
+        .grid-topo {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        .card-status {
+            background: linear-gradient(145deg, #0f1b2e, #14243b);
+            padding: 10px;
+            border-radius: 8px;
+            border-left: 4px solid #1e88e5;
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .card-status.lucro { border-left-color: #00e676; }
+        .label-card { font-size: 10px; color: #78909c; text-transform: uppercase; }
+        .valor-card { font-size: 16px; font-weight: bold; margin-top: 4px; }
+        
+        /* Mini Placar de Ganhos e Perdas (Estilo Enote) */
+        .mini-placar {
+            margin-top: 5px;
+            font-size: 11px;
+            font-weight: bold;
+            color: #ffffff;
+            border-top: 1px solid #1a3152;
+            padding-top: 4px;
+        }
+        .win-count { color: #00e676; margin-right: 8px; }
+        .loss-count { color: #ff1744; }
+        
+        /* Seletores Responsivos */
+        .linha-seletores {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 12px;
+            text-align: left;
+        }
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin-top: 4px;
+            background-color: #101f35;
+            border: 1px solid #1a3152;
+            border-radius: 6px;
+            color: #fff;
+            font-size: 12px;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #2e7d32;
+            border: none;
+            color: white;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .btn-alternar {
+            background-color: transparent;
+            color: #388e3c;
+            font-size: 14px;
+            margin-top: 15px;
+            text-decoration: underline;
+        }
+        
+        /* Gráfico Redimensionável para Celular */
+        .container-grafico {
+            background-color: #091220;
+            border-radius: 8px;
+            padding: 10px 6px;
+            margin-bottom: 12px;
+            border: 1px solid #12223a;
+        }
+        .titulo-grafico {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            color: #90a4ae;
+            margin-bottom: 10px;
+            padding: 0 4px;
+        }
+        .area-barras {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            height: 100px;
+            padding-bottom: 3px;
+            border-bottom: 1px solid #1a3152;
+        }
+        .coluna-barra {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+            margin: 0 1px;
+        }
+        .porcentagem-barra { font-size: 9px; color: #90a4ae; margin-bottom: 2px; }
+        .corpo-barra {
+            width: 85%;
+            height: 10%;
+            background-color: #ffffff;
+            border-radius: 2px 2px 0 0;
+            transition: height 0.3s ease, background-color 0.3s ease;
+        }
+        .label-barra { font-size: 10px; font-weight: bold; color: #90a4ae; margin-top: 3px; }
+
+        /* Controles: Engrenagem e Botão Único Play */
+        .linha-controle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        .btn-icon {
+            background-color: #101f35;
+            border: 1px solid #1a3152;
+            border-radius: 6px;
+            color: #fff;
+            width: 42px;
+            height: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        .btn-play-unico {
+            flex: 1;
+            height: 42px;
+            background-color: #e53935;
+            color: #fff;
+            font-weight: bold;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-sizing: border-box;
+            transition: background-color 0.3s ease;
+        }
+
+        .historico-lista {
+            background-color: #101f35;
+            border-radius: 6px;
+            padding: 8px;
+            max-height: 160px; /* Aumentado ligeiramente para aproveitar a base livre da tela */
+            overflow-y: auto;
+            font-size: 12px;
+        }
+
+        /* Modal */
+        .modal-config {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.8);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal-conteudo {
+            background-color: #0c1524;
+            padding: 16px;
+            border-radius: 12px;
+            border: 1px solid #16263f;
+            width: 85%;
+            max-width: 300px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container" id="box-auth">
+    <h2 id="titulo-tela">Entrar na Placa do Money</h2>
+    
+    <div class="input-group" id="grupo-nome" style="display: none;">
+        <label>Nome Completo</label>
+        <input type="text" id="campo-nome" placeholder="Seu nome">
+    </div>
+
+    <div class="input-group">
+        <label>E-mail</label>
+        <input type="email" id="campo-email" placeholder="seuemail@exemplo.com">
+    </div>
+
+    <div class="input-group">
+        <label>Senha</label>
+        <input type="password" id="campo-senha" placeholder="Sua senha">
+    </div>
+
+    <button id="btn-principal" onclick="processarAcao()">Entrar</button>
+    
+    <button class="btn-alternar" id="btn-mudar" onclick="alternarTela()">Não tem conta? Criar Conta</button>
+</div>
+
+<script>
+    window.onerror = function(msg, url, line) {
+        alert("Erro no código:\n" + msg + "\nLinha: " + line);
+        return true;
+    };
+
+    let modoCadastro = false;
+    const API_URL = '/api';
+
+    function alternarTela() {
+        modoCadastro = !modoCadastro;
+        const titulo = document.getElementById('titulo-tela');
+        const grupoNome = document.getElementById('grupo-nome');
+        const btnPrincipal = document.getElementById('btn-principal');
+        const btnMudar = document.getElementById('btn-mudar');
+
+        if (modoCadastro) {
+            titulo.innerText = "Criar Conta na Plataforma";
+            grupoNome.style.display = "block";
+            btnPrincipal.innerText = "Cadastrar Conta";
+            btnMudar.innerText = "Já tem conta? Fazer Login";
+        } else {
+            titulo.innerText = "Entrar na Placa do Money";
+            grupoNome.style.display = "none";
+            btnPrincipal.innerText = "Entrar";
+            btnMudar.innerText = "Não tem conta? Criar Conta";
+        }
+    }
+
+    async function processarAcao() {
+        const nome = document.getElementById('campo-nome').value;
+        const email = document.getElementById('campo-email').value;
+        const senha = document.getElementById('campo-senha').value;
+
+        const rota = modoCadastro ? '/registrar' : '/login';
+        const corpoDados = modoCadastro ? { nome, email, senha } : { email, senha };
+
+        try {
+            const resposta = await fetch(`${API_URL}${rota}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(corpoDados)
+            });
+
+            const resultado = await resposta.json();
+
+            if (!resposta.ok) {
+                alert(resultado.erro || "Ocorreu um erro no servidor.");
+                return;
+            }
+
+            alert(resultado.mensagem);
+
+            if (!modoCadastro) {
+                carregarTelaDeriv();
+            } else {
+                alternarTela();
+            }
+
+        } catch (erro) {
+            alert("Erro físico ao tentar alcançar o servidor.");
+        }
+    }
+
+    function carregarTelaDeriv() {
+    const container = document.getElementById('box-auth');
+    container.innerHTML = `
+        <h2>Placa do Money - Conexão</h2>
+        <p style="color: #8a99ad; font-size: 14px; margin-bottom: 20px;">
+            Sua conta local está ativa. Selecione uma opção para prosseguir:
+        </p>
+        <button onclick="conectarViaOAuth()" style="background-color: #1e88e5; margin-bottom: 12px; width: 100%; padding: 12px; border: none; border-radius: 4px; color: white; font-weight: bold; cursor: pointer;">
+            Conectar à Deriv (OAuth)
+        </button>
+        <button onclick="abrirLinkAfiliado()" style="background-color: #d32f2f; width: 100%; padding: 12px; border: none; border-radius: 4px; color: white; font-weight: bold; cursor: pointer;">
+            Criar conta na Deriv
+        </button>
+    `;
+}
+
+// Função do Botão Azul: Busca a URL de Login da Deriv no seu servidor e redireciona
+async function conectarViaOAuth() {
+    try {
+        const resposta = await fetch('/api/deriv-auth-url');
+        const dados = await resposta.json();
+        if (dados.url) {
+            window.location.href = dados.url; // Redireciona para a Deriv
+        } else {
+            alert("Erro ao obter URL de autenticação.");
+        }
+    } catch (erro) {
+        console.error(erro);
+        alert("Erro ao conectar com o servidor local.");
+    }
+}
+
+// Função do Botão Vermelho: Abre seu link de afiliado em uma nova aba
+async function abrirLinkAfiliado() {
+    try {
+        const resposta = await fetch('/api/link-afiliado');
+        const dados = await resposta.json();
+        if (dados.url) {
+            window.open(dados.url, '_blank');
+        } else {
+            alert("Link de afiliado não configurado no .env");
+        }
+    } catch (erro) {
+        console.error(erro);
+    }
+}
+
+    async function irParaAfiliado() {
+        try {
+            const dados = await resposta.json();
+            window.location.href = dados.url;
+        } catch (e) {
+            alert("Erro ao obter o link de afiliado.");
+        }
+    }
+
+    function irParaDashboardReal() {
+        const container = document.getElementById('box-auth');
+        
+        container.innerHTML = `
+            <div class="topo-plataforma">
+                <a href="https://youtube.com/@derivtutorialnegociacao?si=QN2oZ2GlnTZa6Unn" target="_blank" class="btn-info-youtube">ℹ</a>
+                <div class="texto-logo">
+                    <h3>PLACA DO MONEY 🇧🇫🇲🇿🇺🇸🇧🇷🇦🇴</h3>
+                    <div style="font-size:9px; color:#00e676; font-weight:bold;">OPERAÇÕES AUTOMATIZADAS</div>
+                </div>
+            </div>
+            
+            <div class="grid-topo">
+                <div class="card-status">
+                    <div class="label-card">Saldo</div>
+                    <div class="valor-card" id="saldo-real">$ 0.00 USD</div>
+                </div>
+                <div class="card-status lucro">
+                    <div class="label-card">Lucro/Perda</div>
+                    <div class="valor-card" id="lucro-real" style="color:#00e676;">$ 0.00</div>
+                    <div class="mini-placar">
+                        W: <span class="win-count" id="cont-wins">0</span> 
+                        L: <span class="loss-count" id="cont-losses">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="linha-seletores">
+                <div>
+                    <label class="label-card">Tipo de Conta</label>
+                    <select id="tipo-conta" onchange="alternarAmbienteConta()">
+                        <option value="VRTC">Conta Demo (Virtual)</option>
+                        <option value="REAL">Conta Real</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="label-card">Estratégia</label>
+                    <select id="estrategia-robo">
+                        <option value="nenhuma">Nenhuma</option>
+                        <option value="maestro">Maestro (Dígitos)</option>
+                        <option value="predector">Predector Pro</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="container-grafico">
+                <div class="titulo-grafico">
+                    <div>Últimos Dígitos</div>
+                    <div>100 ticks</div>
+                </div>
+                <div class="area-barras" id="render-grafico">
+                    ${renderizarBarrasIniciais()}
+                </div>
+            </div>
+
+            <div class="linha-controle">
+                <div class="btn-icon" onclick="abrirConfiguracoes()">⚙️</div>
+                <button class="btn-play-unico" id="btn-comecar-robo" onclick="alternarRobo()">▶</button>
+            </div>
+            
+            <div class="label-card" style="margin-bottom:6px;">Histórico de Transações:</div>
+            <div class="historico-lista" id="lista-historico">
+                <div style="color: #607d8b; text-align: center; padding-top: 15px; font-size:11px;">Aguardando execução do mercado...</div>
+            </div>
+
+            <div class="modal-config" id="meu-modal">
+                <div class="modal-conteudo">
+                    <h4 style="margin-top:0; border-bottom:1px solid #1a3152; padding-bottom:8px; font-size:14px;">Configurações</h4>
+                    
+                    <div style="margin-bottom:10px;">
+                        <label class="label-card">Entrada (Stake USD):</label>
+                        <input type="number" id="config-stake" value="0.35">
+                    </div>
+                    <div style="margin-bottom:10px;">
+                        <label class="label-card">Meta de Ganhos (Stop Win):</label>
+                        <input type="number" id="config-win" value="5.00">
+                    </div>
+                    <div style="margin-bottom:16px;">
+                        <label class="label-card">Limite de Perdas (Stop Loss):</label>
+                        <input type="number" id="config-loss" value="10.00">
+                    </div>
+                    
+                    <button style="background-color:#1e88e5; color:white; padding:10px; border-radius:6px; border:none; width:100%; font-weight:bold; font-size:12px;" onclick="fecharConfiguracoes()">SALVAR CONFIGURAÇÕES</button>
+                </div>
+            </div>
+        `;
+        atualizarCoresBarras();
+    }
+
+    function renderizarBarrasIniciais() {
+        let html = '';
+        const valoresMock = [4, 8, 8, 4, 16, 24, 12, 8, 4, 12];
+        for(let i = 0; i <= 9; i++) {
+            let altura = valoresMock[i] * 2.5; 
+            html += `
+                <div class="coluna-barra">
+                    <div class="porcentagem-barra" id="perc-${i}">${valoresMock[i]}%</div>
+                    <div class="corpo-barra" id="barra-${i}" style="height: ${altura}px;"></div>
+                    <div class="label-barra">${i}</div>
+                </div>
+            `;
+        }
+        return html;
+    }
+
+    function atualizarCoresBarras() {
+        const cores = ['#ff1744','#ffffff','#ffffff','#ff1744','#ffffff','#00e676','#ffffff','#ffffff','#ff1744','#ffffff'];
+        for(let i = 0; i <= 9; i++) {
+            const barra = document.getElementById(`barra-${i}`);
+            if(barra) barra.style.backgroundColor = cores[i];
+        }
+    }
+
+    function abrirConfiguracoes() { document.getElementById('meu-modal').style.display = 'flex'; }
+    function fecharConfiguracoes() { document.getElementById('meu-modal').style.display = 'none'; }
+    function alternarAmbienteConta() { 
+        const tipo = document.getElementById('tipo-conta').value;
+        alert("Modo alterado para: " + (tipo === 'REAL' ? 'CONTA REAL' : 'CONTA DEMO')); 
+    }
+
+    let roboLigado = false;
+    function alternarRobo() {
+        const est = document.getElementById('estrategia-robo').value;
+        const btn = document.getElementById('btn-comecar-robo');
+        
+        if (est === 'nenhuma') {
+            alert("Por favor, selecione uma estratégia antes de iniciar o robô!");
+            return;
+        }
+        
+        roboLigado = !roboLigado;
+        
+        if(roboLigado) {
+            btn.innerText = "⏸";
+            btn.style.backgroundColor = "#00e676";
+            btn.style.color = "#000";
+        } else {
+            btn.innerText = "▶";
+            btn.style.backgroundColor = "#e53935";
+            btn.style.color = "#fff";
+        }
+    }
+</script>
+
+</body>
+</html>
+
