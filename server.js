@@ -14,7 +14,7 @@ app.use(express.urlencoded({ extended: true }));
 let usuarios = []; 
 let temporaryStorage = {};
 
-const CLIENT_ID = process.env.DERIV_APP_ID || '33spfQyss60bkoXo0e00o';
+const CLIENT_ID = process.env.DERIV_APP_ID || '33syUeaX60IlPmcJHrdtB';
 const REDIRECT_URI = 'https://placa-do-money.onrender.com/callback';
 
 app.use(express.static(path.join(__dirname)));
