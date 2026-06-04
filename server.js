@@ -1,12 +1,17 @@
 const express = require('express');
 const pkceChallenge = require('pkce-challenge').default;
-const axios = require('axios'); // Garanta que o axios está instalado ou use o 'fetch' nativo do Node 18+
+const axios = require('axios');
 const path = require('path');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Armazenamento temporário em memória para o code_verifier (em produção idealmente seria uma sessão/cookie seguro)
+// Permite que o servidor entenda dados enviados via JSON (essencial para a linha 312 do seu HTML)
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Armazenamento temporário (Substitua por um Banco de Dados real depois)
+let usuarios = []; 
 let temporaryStorage = {};
 
 const CLIENT_ID = process.env.DERIV_APP_ID || '33spfQyss60bkoXo0e00o';
@@ -14,15 +19,32 @@ const REDIRECT_URI = 'https://placa-do-money.onrender.com/callback';
 
 app.use(express.static(path.join(__dirname)));
 
-// 1. Rota de Login - Inicia o fluxo PKCE
-app.get('/login', (req, res) => {
-    // Gera o par de chaves PKCE
+// --- ROTAS DO USUÁRIO LOCAL (Conserta o erro físico do seu formulário) ---
+
+app.post('/registrar', (req, res) => {
+    const { nome, email, senha } = req.body;
+    if (!nome || !email || !senha) {
+        return res.status(400).json({ erro: 'Preencha todos os campos!' });
+    }
+    usuarios.push({ nome, email, senha });
+    res.status(201).json({ mensagem: 'Usuário registrado com sucesso!' });
+});
+
+app.post('/login', (req, res) => {
+    const { email, senha } = req.body;
+    const usuario = usuarios.find(u => u.email === email && u.senha === senha);
+    if (!usuario) {
+        return res.status(400).json({ erro: 'E-mail ou senha incorretos.' });
+    }
+    res.json({ mensagem: 'Login efetuado com sucesso!', usuario: { nome: usuario.nome, email: usuario.email } });
+});
+
+
+// --- ROTAS DA API QUE O SEU HTML PROCURA ---
+
+app.get('/api/deriv-auth-url', (req, res) => {
     const challenge = pkceChallenge();
-    
-    // Identificador simples para rastrear a requisição (pode ser melhorado com sessões)
     const state = Math.random().toString(36).substring(7);
-    
-    // Salva o verifier para checar no callback
     temporaryStorage[state] = challenge.code_verifier;
 
     const authUrl = `https://oauth.deriv.com/oauth2/authorize` +
@@ -31,10 +53,18 @@ app.get('/login', (req, res) => {
                     `&code_challenge_method=S256` +
                     `&state=${state}`;
 
-    res.redirect(authUrl);
+    res.json({ url: authUrl });
 });
 
-// 2. Rota de Callback - Onde a Deriv devolve o usuário com o 'code'
+app.get('/api/link-afiliado', (req, res) => {
+    // Retorna o link de afiliado configurado no .env ou um padrão
+    const link = process.env.LINK_AFILIADO || 'https://deriv.com/?region=pt';
+    res.json({ url: link });
+});
+
+
+// --- FLUXO DE AUTENTICAÇÃO DA DERIV ---
+
 app.get('/callback', async (req, res) => {
     const { code, state } = req.query;
     const code_verifier = temporaryStorage[state];
@@ -44,7 +74,6 @@ app.get('/callback', async (req, res) => {
     }
 
     try {
-        // Troca o código pelo Token de Acesso definitivo
         const response = await axios.post('https://oauth.deriv.com/oauth2/token', new URLSearchParams({
             grant_type: 'authorization_code',
             code: code,
@@ -55,15 +84,8 @@ app.get('/callback', async (req, res) => {
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
         });
 
-        // Limpa o armazenamento temporário
         delete temporaryStorage[state];
-
-        // Aqui você recebe os dados de acesso (tokens, contas, etc)
-        const tokenData = response.data;
-        
-        // Redireciona de volta para a página principal passando as informações (ou salve em cookies/localStorage)
-        res.redirect(`/?auth_success=true&tokens=${JSON.stringify(tokenData)}`);
-
+        res.redirect(`/?auth_success=true&tokens=${JSON.stringify(response.data)}`);
     } catch (error) {
         console.error('Erro ao trocar token:', error.response?.data || error.message);
         res.status(500).send('Erro ao finalizar a autenticação com a Deriv.');
@@ -71,6 +93,6 @@ app.get('/callback', async (req, res) => {
 });
 
 app.listen(PORT, () => {
-    console.log(`Servidor rodando com sucesso na porta ${PORT}`);
+    console.log(`Servidor rodando na porta ${PORT}`);
 });
 
