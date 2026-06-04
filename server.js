@@ -47,16 +47,16 @@ app.get('/api/deriv-auth-url', (req, res) => {
     const state = Math.random().toString(36).substring(7);
     temporaryStorage[state] = challenge.code_verifier;
 
-        const authUrl = `https://oauth.deriv.com/oauth2/authorize` +
-                    `?app_id=${CLIENT_ID}` +
+    const authUrl = `https://oauth.deriv.com/oauth2/authorize` +
+                    `?app_id=33syUeaX60IlPmcJHrdtB` +
                     `&scope=read+trade` +
                     `&code_challenge=${challenge.code_challenge}` +
                     `&code_challenge_method=S256` +
                     `&state=${state}`;
 
-
     res.json({ url: authUrl });
 });
+
 
 app.get('/api/link-afiliado', (req, res) => {
     // Retorna o link de afiliado configurado no .env ou um padrão
