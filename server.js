@@ -1,104 +1,76 @@
 const express = require('express');
-const cors = require('cors');
-require('dotenv').config();
+const pkceChallenge = require('pkce-challenge').default;
+const axios = require('axios'); // Garanta que o axios está instalado ou use o 'fetch' nativo do Node 18+
+const path = require('path');
 
 const app = express();
-app.use(cors());
-app.use(express.json());
-app.get('/', (req, res) => { res.sendFile(__dirname + '/index.html'); });
+const PORT = process.env.PORT || 3000;
 
-const PORT = process.env.PORT || 5000;
+// Armazenamento temporário em memória para o code_verifier (em produção idealmente seria uma sessão/cookie seguro)
+let temporaryStorage = {};
 
-// Banco de dados local na memória para armazenar os usuários da Placa do Money
-const usuariosPlataforma = [];
+const CLIENT_ID = process.env.DERIV_APP_ID || '33spfQyss60bkoXo0e00o';
+const REDIRECT_URI = 'https://placa-do-money.onrender.com/callback';
 
-// ==========================================
-// ETAPA 1: ROTAS DE ACESSO À PLACA DO MONEY
-// ==========================================
+app.use(express.static(path.join(__dirname)));
 
-// 1. Rota para Criar Conta na sua plataforma
-app.post('/api/registrar', (req, res) => {
-    const { nome, email, senha } = req.body;
-    if (!nome || !email || !senha) {
-        return res.status(400).json({ erro: "Preencha todos os campos." });
-    }
+// 1. Rota de Login - Inicia o fluxo PKCE
+app.get('/login', (req, res) => {
+    // Gera o par de chaves PKCE
+    const challenge = pkceChallenge();
     
-    const existe = usuariosPlataforma.find(u => u.email === email);
-    if (existe) {
-        return res.status(400).json({ erro: "Este e-mail já está cadastrado." });
-    }
+    // Identificador simples para rastrear a requisição (pode ser melhorado com sessões)
+    const state = Math.random().toString(36).substring(7);
+    
+    // Salva o verifier para checar no callback
+    temporaryStorage[state] = challenge.code_verifier;
 
-    usuariosPlataforma.push({ nome, email, senha });
-    return res.status(201).json({ mensagem: "Conta criada na Placa do Money com sucesso!" });
+    const authUrl = `https://oauth.deriv.com/oauth2/authorize` +
+                    `?app_id=${CLIENT_ID}` +
+                    `&code_challenge=${challenge.code_challenge}` +
+                    `&code_challenge_method=S256` +
+                    `&state=${state}`;
+
+    res.redirect(authUrl);
 });
 
-// 2. Rota para Entrar (Login) na sua plataforma
-app.post('/api/login', (req, res) => {
-    const { email, senha } = req.body;
-    const usuario = usuariosPlataforma.find(u => u.email === email && u.senha === senha);
-    
-    if (!usuario) {
-        return res.status(401).json({ erro: "E-mail ou senha incorretos." });
+// 2. Rota de Callback - Onde a Deriv devolve o usuário com o 'code'
+app.get('/callback', async (req, res) => {
+    const { code, state } = req.query;
+    const code_verifier = temporaryStorage[state];
+
+    if (!code || !code_verifier) {
+        return res.status(400).send('Falha na autenticação: Código ou Verifier ausente.');
     }
 
-    // Login feito! Autoriza o avanço para a Etapa 2 (Botões da Deriv)
-    return res.json({ 
-        mensagem: "Acesso concedido! Avançando para conexão...",
-        usuario: { nome: usuario.nome, email: usuario.email }
-    });
-});
+    try {
+        // Troca o código pelo Token de Acesso definitivo
+        const response = await axios.post('https://oauth.deriv.com/oauth2/token', new URLSearchParams({
+            grant_type: 'authorization_code',
+            code: code,
+            client_id: CLIENT_ID,
+            redirect_uri: REDIRECT_URI,
+            code_verifier: code_verifier
+        }), {
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+        });
 
-// ==========================================
-// ETAPA 2: BOTÕES DA DERIV E AFILIADO
-// ==========================================
+        // Limpa o armazenamento temporário
+        delete temporaryStorage[state];
 
-// 1. Rota que entrega o seu Link de Afiliado Real para o segundo botão
-app.get('/api/link-afiliado', (req, res) => {
-    const link = process.env.LINK_AFILIADO_DERIV;
-    res.json({ url: link });
-});
+        // Aqui você recebe os dados de acesso (tokens, contas, etc)
+        const tokenData = response.data;
+        
+        // Redireciona de volta para a página principal passando as informações (ou salve em cookies/localStorage)
+        res.redirect(`/?auth_success=true&tokens=${JSON.stringify(tokenData)}`);
 
-// 2. Rota que prepara o endereço de Login Alternativo (Burlar Cloudflare)
-app.get('/api/deriv-auth-url', (req, res) => {
-    const appId = process.env.DERIV_APP_ID || '1089';
-    
-    // Usamos a URL interna de sucesso da própria Deriv
-    const redirectUrl = 'https://oauth.deriv.com/oauth2/successful'; 
-    
-    // Monta o link oficial
-    const url = `https://oauth.deriv.com/oauth2/authorize?app_id=${appId}&l=pt&scope=read+trade+payments&redirect_uri=${encodeURIComponent(redirectUrl)}`;
-    
-    res.json({ url: url });
-});
-
-
-// 3. O Callback: Para onde a Deriv joga o usuário se ele clicar em "Permitir"
-app.get('/deriv-callback', (req, res) => {
-    const { token1, acct1, cur1 } = req.query;
-
-    // Se o usuário não permitiu ou deu erro, barra ele e não mostra o painel
-    if (!token1) {
-        return res.send(`
-            <script>
-                alert("Acesso negado na Deriv. Você precisa permitir para operar.");
-                window.location.href = "/"; // Volta para a tela inicial
-            </script>
-        `);
+    } catch (error) {
+        console.error('Erro ao trocar token:', error.response?.data || error.message);
+        res.status(500).send('Erro ao finalizar a autenticação com a Deriv.');
     }
-
-    // Se permitiu, salva os tokens reais e libera o acesso ao painel de estratégias
-    res.send(`
-        <h1>Conexão Real Estabelecida!</h1>
-        <script>
-            localStorage.setItem('deriv_token', '${token1}');
-            localStorage.setItem('deriv_account', '${acct1}');
-            alert("Conta ${acct1} conectada com sucesso na Placa do Money!");
-            window.location.href = "/painel"; // Libera a tela dos robôs
-        </script>
-    `);
 });
 
 app.listen(PORT, () => {
-    console.log(`Servidor da Placa do Money rodando na porta ${PORT}`);
+    console.log(`Servidor rodando com sucesso na porta ${PORT}`);
 });
 
