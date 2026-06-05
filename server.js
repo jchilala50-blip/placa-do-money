@@ -47,13 +47,14 @@ app.get('/api/deriv-auth-url', (req, res) => {
     const state = Math.random().toString(36).substring(7);
     temporaryStorage[state] = challenge.code_verifier;
 
-            const authUrl = `https://oauth.deriv.com/oauth2/authorize` +
-            `?app_id=${CLIENT_ID}` +
-            `&redirect_uri=${encodeURIComponent(REDIRECT_URI)}` +
-            `&scope=read+trade` +
-            `&code_challenge=${challenge.code_challenge}` +
-            `&code_challenge_method=S256` +
-            `&state=${state}`;
+        const authUrl = 'https://auth.deriv.com/oauth2/auth'
+            + `?response_type=code`
+            + `&client_id=${CLIENT_ID}`
+            + `&redirect_uri=${encodeURIComponent(REDIRECT_URI)}`
+            + `&scope=trade`
+            + `&state=${state}`
+            + `&code_challenge=${challenge.code_challenge}`
+            + `&code_challenge_method=S256`;
 
 
     res.json({ url: authUrl });
