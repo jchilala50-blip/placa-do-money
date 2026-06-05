@@ -74,41 +74,58 @@ app.get('/api/link-afiliado', (req, res) => {
 app.get('/callback', async (req, res) => {
     const { code, state, error, error_description } = req.query;
 
-    // Logs que a Amy pediu para diagnosticar o Render
-    console.log("=== DIAGNÓSTICO DELTA ===");
-    console.log("URL de Callback acionada.");
-    console.log("Code recebido:", code ? "Sim (Presente)" : "Não");
+    console.log("=== DIAGNÓSTICO AMY ===");
     console.log("State recebido:", state);
-    if (error) console.log(`Erro da Deriv: ${error} - ${error_description}`);
-    console.log("Memória atual do temporaryStorage:", JSON.stringify(temporaryStorage));
+    console.log("Code presente?:", code ? "Sim" : "Não");
+    console.log("Memória temporária atual:", JSON.stringify(temporaryStorage));
+
+    if (error) {
+        console.error(`Erro reportado pela Deriv: ${error} - ${error_description}`);
+        return res.status(400).send(`Erro da Deriv: ${error_description}`);
+    }
 
     const code_verifier = temporaryStorage[state];
-    console.log("Verifier encontrado?:", code_verifier ? "Sim" : "Não");
-    console.log("=========================");
 
     if (!code || !code_verifier) {
-        return res.status(400).send(`Falha na autenticação: Código ou Verifier ausente. (State recebido: ${state})`);
+        console.error(`Falha: Faltou code ou verifier. state=${state}`);
+        return res.status(400).send(`Faltou code ou verifier. state=${state}. Se o state veio correto, o Render apagou a memória.`);
     }
 
     try {
-        const response = await axios.post('https://auth.deriv.com/oauth2/token', {
+        // Correção 1 da Amy: Usar URLSearchParams para formatar os dados corretamente
+        const body = new URLSearchParams({
             grant_type: 'authorization_code',
             code: code,
             client_id: CLIENT_ID,
             redirect_uri: REDIRECT_URI,
             code_verifier: code_verifier
-        }, {
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
         });
+
+        console.log("A enviar POST para a Deriv...");
+        const response = await axios.post(
+            'https://auth.deriv.com/oauth2/token',
+            body.toString(),
+            { 
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, 
+                timeout: 15000 
+            }
+        );
 
         delete temporaryStorage[state];
         
-        // Resposta simples para teste, como a Amy sugeriu
-        res.send("<h1>Autenticado com Sucesso!</h1><p>O token foi gerado.</p>");
+        // Resposta simples sugerida pela Amy para testar o sucesso
+        return res.send("<h1>Autenticado com Sucesso!</h1><p>O token da Deriv foi gerado e o fluxo funciona!</p>");
         
-    } catch (error) {
-        console.error('Erro ao trocar token:', error.response?.data || error.message);
-        res.status(500).send('Erro ao finalizar a autenticação com a Deriv.');
+    } catch (err) {
+        // Correção 3 da Amy: Logs detalhados em caso de erro na troca de token
+        console.error('=== ERRO CRÍTICO NA TROCA DE TOKEN ===');
+        console.error('Status:', err.response?.status);
+        console.error('Headers:', err.response?.headers);
+        console.error('Data:', err.response?.data);
+        console.error('Mensagem original:', err.message);
+        console.error('======================================');
+        
+        return res.status(500).send('Erro ao finalizar a autenticação com a Deriv. Verifique os logs do Render.');
     }
 });
 
