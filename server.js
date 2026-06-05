@@ -72,33 +72,43 @@ app.get('/api/link-afiliado', (req, res) => {
 // --- FLUXO DE AUTENTICAÇÃO DA DERIV ---
 
 app.get('/callback', async (req, res) => {
-    const { code, state } = req.query;
+    const { code, state, error, error_description } = req.query;
+
+    // Logs que a Amy pediu para diagnosticar o Render
+    console.log("=== DIAGNÓSTICO DELTA ===");
+    console.log("URL de Callback acionada.");
+    console.log("Code recebido:", code ? "Sim (Presente)" : "Não");
+    console.log("State recebido:", state);
+    if (error) console.log(`Erro da Deriv: ${error} - ${error_description}`);
+    console.log("Memória atual do temporaryStorage:", JSON.stringify(temporaryStorage));
+
     const code_verifier = temporaryStorage[state];
+    console.log("Verifier encontrado?:", code_verifier ? "Sim" : "Não");
+    console.log("=========================");
 
     if (!code || !code_verifier) {
-        return res.status(400).send('Falha na autenticação: Código ou Verifier ausente.');
+        return res.status(400).send(`Falha na autenticação: Código ou Verifier ausente. (State recebido: ${state})`);
     }
 
     try {
-        const response = await axios.post('https://oauth.deriv.com/oauth2/token', new URLSearchParams({
+        const response = await axios.post('https://auth.deriv.com/oauth2/token', {
             grant_type: 'authorization_code',
             code: code,
             client_id: CLIENT_ID,
             redirect_uri: REDIRECT_URI,
             code_verifier: code_verifier
-        }), {
+        }, {
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
         });
 
         delete temporaryStorage[state];
-                res.redirect(`https://placa-do-money.onrender.com/?auth_success=true&tokens=${JSON.stringify(response.data)}`);
-
+        
+        // Resposta simples para teste, como a Amy sugeriu
+        res.send("<h1>Autenticado com Sucesso!</h1><p>O token foi gerado.</p>");
+        
     } catch (error) {
         console.error('Erro ao trocar token:', error.response?.data || error.message);
         res.status(500).send('Erro ao finalizar a autenticação com a Deriv.');
     }
 });
 
-app.listen(PORT, () => {
-    console.log(`Servidor rodando na porta ${PORT}`);
-});
