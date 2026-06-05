@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="pt">
 <head>
@@ -522,15 +523,33 @@ async function abrirLinkAfiliado() {
         roboLigado = !roboLigado;
         
         if(roboLigado) {
-            btn.innerText = "⏸";
-            btn.style.backgroundColor = "#00e676";
-            btn.style.color = "#000";
+        btn.innerText = "⏸";
+        btn.style.backgroundColor = "#00e676";
+        btn.style.color = "#000";
         } else {
-            btn.innerText = "▶";
-            btn.style.backgroundColor = "#e53935";
-            btn.style.color = "#fff";
+        btn.innerText = "▶";
+        btn.style.backgroundColor = "#e53935";
+        btn.style.color = "#fff";
         }
     }
+
+    // Captura automática do Token da Deriv quando a página carrega
+    window.addEventListener('DOMContentLoaded', () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get('token');
+        const authStatus = urlParams.get('auth');
+
+        if (authStatus === 'success' && token) {
+            sessionStorage.setItem('deriv_token', token);
+            
+            // Ativa o teu painel de gráficos diretamente
+            if (typeof irParaDashboardReal === 'function') {
+                irParaDashboardReal();
+            } else if (typeof carregarTelaDeriv === 'function') {
+                document.getElementById('box-auth').innerHTML = '<h3>Conectado à Deriv com Sucesso!</h3>';
+            }
+        }
+    });
 </script>
 
 </body>
