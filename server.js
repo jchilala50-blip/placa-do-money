@@ -41,7 +41,14 @@ app.post('/login', (req, res) => {
 
 // --- ROTAS DA API QUE O SEU HTML PROCURA ---
 app.get('/api/deriv-auth-url', (req, res) => {
-    const challenge = pkceChallenge(43);
+        // Gera um code_verifier manual com exatamente 50 caracteres (cumpre a regra de mais de 43)
+    const caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~';
+    const verifierManual = [...Array(50)].map(() => caracteres[Math.floor(Math.random() * caracteres.length)]).join('');
+
+    const challenge = {
+        code_verifier: verifierManual,
+        code_challenge: verifierManual // Para simplificar e garantir aceitação sem crypto complexo
+    };
 
     // Geração de state robusto e seguro com mais de 8 caracteres
     const state = [...Array(10)].map(() => (~~(Math.random() * 36)).toString(36)).join('');
@@ -61,7 +68,7 @@ app.get('/api/deriv-auth-url', (req, res) => {
         + `&scope=trade`
         + `&state=${state}`
         + `&code_challenge=${challenge.code_challenge}`
-        + `&code_challenge_method=S256`;
+        + `&code_challenge_method=plain`;
 
     res.json({ url: authUrl });
 });
