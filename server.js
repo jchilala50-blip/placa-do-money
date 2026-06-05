@@ -1,4 +1,4 @@
-
+const crypto = require('crypto');
 const express = require('express');
 const pkceChallenge = require('pkce-challenge').default;
 const axios = require('axios');
@@ -40,38 +40,45 @@ app.post('/login', (req, res) => {
 });
 
 // --- ROTAS DA API QUE O SEU HTML PROCURA ---
+
 app.get('/api/deriv-auth-url', (req, res) => {
-        // Gera um code_verifier manual com exatamente 50 caracteres (cumpre a regra de mais de 43)
+    // 1. Gera o code_verifier seguro com 50 caracteres
     const caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~';
-    const verifierManual = [...Array(50)].map(() => caracteres[Math.floor(Math.random() * caracteres.length)]).join('');
+    const code_verifier = [...Array(50)].map(() => caracteres[Math.floor(Math.random() * caracteres.length)]).join('');
 
-    const challenge = {
-        code_verifier: verifierManual,
-        code_challenge: verifierManual // Para simplificar e garantir aceitação sem crypto complexo
-    };
+    // 2. Cria o code_challenge usando o crypto (S256 obrigatório da Deriv)
+    const code_challenge = crypto
+        .createHash('sha256')
+        .update(code_verifier)
+        .digest('base64')
+        .replace(/\+/g, '-')
+        .replace(/\//g, '_')
+        .replace(/=+$/, '');
 
-    // Geração de state robusto e seguro com mais de 8 caracteres
+    // 3. Gera o state
     const state = [...Array(10)].map(() => (~~(Math.random() * 36)).toString(36)).join('');
 
-    // CORREÇÃO AMY: Salvar o verifier no navegador em vez da memória instável do Render
-    res.cookie('deriv_verifier', challenge.code_verifier, { 
-        maxAge: 600000, // 10 minutos de validade
+    // 4. Salva o verifier puro no cookie do navegador
+    res.cookie('deriv_verifier', code_verifier, { 
+        maxAge: 600000, 
         httpOnly: true, 
         secure: true, 
         sameSite: 'none' 
     });
 
+    // 5. Monta a URL final com o método S256 correto
     const authUrl = 'https://auth.deriv.com/oauth2/auth'
         + `?response_type=code`
         + `&client_id=${CLIENT_ID}`
         + `&redirect_uri=${encodeURIComponent(REDIRECT_URI)}`
         + `&scope=trade`
         + `&state=${state}`
-        + `&code_challenge=${challenge.code_challenge}`
-        + `&code_challenge_method=plain`;
+        + `&code_challenge=${code_challenge}`
+        + `&code_challenge_method=S256`;
 
     res.json({ url: authUrl });
 });
+
 
 app.get('/api/link-afiliado', (req, res) => {
     const link = process.env.LINK_AFILIADO || 'https://deriv.com/?region=pt';
