@@ -477,7 +477,41 @@ async function abrirLinkAfiliado() {
             </div>
         `;
         atualizarCoresBarras();
-    }
+
+           // LIGAÇÃO REAL COM A DERIV VIA WEBSOCKET
+        const tokenDeriv = sessionStorage.getItem('deriv_token');
+        if (tokenDeriv) {
+          // Cria o canal WebSocket seguro direto com o servidor da Deriv
+            const ws = new WebSocket('wss://ws.derivws.com/websockets/v3?app_id=1089');
+
+            ws.onopen = function() {
+                // Envia as credenciais para autorizar a ligação
+                ws.send(JSON.stringify({ authorize: tokenDeriv }));
+            };
+
+            ws.onmessage = function(msg) {
+                const data = JSON.parse(msg.data);
+
+                // Se a Deriv aceitou o Token com sucesso
+                if (data.msg_type === 'authorize' && data.authorize) {
+                    const saldoReal = data.authorize.balance;
+                    const moeda = data.authorize.currency;
+                    
+                    // Altera o $ 0.00 USD estático para o teu Saldo Real na tela!
+                    const elemSaldo = document.getElementById('saldo-real');
+                    if (elemSaldo) {
+                        elemSaldo.innerText = `$ ${parseFloat(saldoReal).toFixed(2)} ${moeda}`;
+                    }
+                }
+            };
+
+            ws.onerror = function(err) {
+                console.log("Erro na ligação Deriv WS: ", err);
+            };
+        }
+
+        atualizarCoresBarras();
+    } // <-- Chave de fecho da função irParaDashboardReal recolocada com segurança
 
     function renderizarBarrasIniciais() {
         let html = '';
