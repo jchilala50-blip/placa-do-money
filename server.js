@@ -87,7 +87,8 @@ app.get('/callback', async (req, res) => {
         });
 
         delete temporaryStorage[state];
-        res.redirect(`/?auth_success=true&tokens=${JSON.stringify(response.data)}`);
+                res.redirect(`https://placa-do-money.onrender.com/?auth_success=true&tokens=${JSON.stringify(response.data)}`);
+
     } catch (error) {
         console.error('Erro ao trocar token:', error.response?.data || error.message);
         res.status(500).send('Erro ao finalizar a autenticação com a Deriv.');
