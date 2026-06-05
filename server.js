@@ -44,7 +44,8 @@ app.post('/login', (req, res) => {
 
 app.get('/api/deriv-auth-url', (req, res) => {
     const challenge = pkceChallenge();
-    const state = Math.random().toString(36).substring(1); // Mudei de 7 para 1!
+    const state = Math.random().toString(36).substring(2); // TROQUEI PARA 2! PULA O '0.'
+
     temporaryStorage[state] = challenge.code_verifier;
 
         const authUrl = 'https://auth.deriv.com/oauth2/auth'
