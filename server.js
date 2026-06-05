@@ -130,8 +130,8 @@ app.get('/callback', async (req, res) => {
         const usuarioDeriv = response.data.client_id; // ID ou nome da conta do usuário
 
         // Redireciona de volta para a tua dashboard passando o token na URL
-        // (Ajuste o 'dashboard.html' para o nome real do seu arquivo se for diferente)
-        return res.redirect(`/dashboard.html?token=${token}&user=${usuarioDeriv}&auth=success`);
+        // (Ajuste o 'index.html' para o nome real do seu arquivo se for diferente)
+        return res.redirect(`/index.html?token=${token}&user=${usuarioDeriv}&auth=success`);
         
     } catch (err) {
         console.error('=== ERRO NO TOKEN ===');
