@@ -1,3 +1,4 @@
+
 const express = require('express');
 const pkceChallenge = require('pkce-challenge').default;
 const axios = require('axios');
@@ -40,7 +41,8 @@ app.post('/login', (req, res) => {
 
 // --- ROTAS DA API QUE O SEU HTML PROCURA ---
 app.get('/api/deriv-auth-url', (req, res) => {
-    const challenge = pkceChallenge();
+    const challenge = pkceChallenge(43);
+
     // Geração de state robusto e seguro com mais de 8 caracteres
     const state = [...Array(10)].map(() => (~~(Math.random() * 36)).toString(36)).join('');
 
