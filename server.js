@@ -122,11 +122,16 @@ app.get('/callback', async (req, res) => {
             { headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, timeout: 15000 }
         );
 
-        // Limpar o cookie após o sucesso para segurança
+      // Limpar o cookie após o sucesso para segurança
         res.clearCookie('deriv_verifier');
         
-        // Resposta de sucesso sugerida pela Amy para testes
-        return res.send("<h1>Autenticado com Sucesso!</h1><p>O token da Deriv foi gerado através de Cookies seguros!</p>");
+        // Captura os dados que a Deriv nos enviou de volta
+        const token = response.data.access_token;
+        const usuarioDeriv = response.data.client_id; // ID ou nome da conta do usuário
+
+        // Redireciona de volta para a tua dashboard passando o token na URL
+        // (Ajuste o 'dashboard.html' para o nome real do seu arquivo se for diferente)
+        return res.redirect(`/dashboard.html?token=${token}&user=${usuarioDeriv}&auth=success`);
         
     } catch (err) {
         console.error('=== ERRO NO TOKEN ===');
