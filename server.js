@@ -44,7 +44,7 @@ app.post('/login', (req, res) => {
 
 app.get('/api/deriv-auth-url', (req, res) => {
     const challenge = pkceChallenge();
-    const state = Math.random().toString(36).substring(7);
+    const state = Math.random().toString(36).substring(1); // Mudei de 7 para 1!
     temporaryStorage[state] = challenge.code_verifier;
 
         const authUrl = 'https://auth.deriv.com/oauth2/auth'
@@ -101,4 +101,3 @@ app.get('/callback', async (req, res) => {
 app.listen(PORT, () => {
     console.log(`Servidor rodando na porta ${PORT}`);
 });
-
