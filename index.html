@@ -477,26 +477,8 @@ async function abrirLinkAfiliado() {
         `;
         atualizarCoresBarras();
 
-           // LIGAÇÃO REAL COM A DERIV VIA WEBSOCKET
-          // Cria o canal WebSocket seguro direto com o servidor da Deriv
-                    const tokenDeriv = sessionStorage.getItem('deriv_token');
-        if (tokenDeriv) {
-            const ws = new WebSocket('wss://ws.derivws.com/websockets/v3?app_id=33syUeaX60I0PmcJHrdtB');
-
-            ws.onopen = function () {
-                ws.send(JSON.stringify({
-                    authorize: tokenDeriv
-                }));
-            };
-
-            ws.onmessage = function (msg) {
-                const data = JSON.parse(msg.data);
-
-       // LIGAÇÃO REAL COM A DERIV VIA WEBSOCKET
+              // LIGAÇÃO REAL COM A DERIV VIA WEBSOCKET
     const tokenDeriv = sessionStorage.getItem('deriv_token');
-
-    // TESTE 1: Mostra logo se o token existe na memória do telemóvel
-    alert("O meu token na memoria é: " + tokenDeriv);
 
     if (tokenDeriv) {
         const ws = new WebSocket('wss://ws.derivws.com/websockets/v3?app_id=33syUeaX60IlPmcJHrdtB');
@@ -510,26 +492,9 @@ async function abrirLinkAfiliado() {
         ws.onmessage = function (msg) {
             const data = JSON.parse(msg.data);
 
-            // TESTE 2: Mostra o que a Deriv respondeu de verdade
-            alert("Resposta da Deriv: " + JSON.stringify(data));
-
-            if (data.error) {
-                console.log("ERRO DERIV:", data.error);
-                return;
-            }
-
-            // 1. Após autorização com sucesso, pede o saldo em tempo real
-            if (data.msg_type === 'authorize') {
-                ws.send(JSON.stringify({
-                    balance: 1,
-                    subscribe: 1
-                }));
-            }
-
-            // 2. Quando a Deriv responder com o saldo real atualizado
-            if (data.msg_type === 'balance' && data.balance) {
-                const saldo = data.balance.balance;
-                const moeda = data.balance.currency;
+            if (data.msg_type === 'authorize' && data.authorize) {
+                const saldo = data.authorize.balance;
+                const moeda = data.authorize.currency;
                 const elem = document.getElementById('saldo-real');
                 if (elem) {
                     elem.innerText = `$ ${Number(saldo).toFixed(2)} ${moeda}`;
@@ -549,7 +514,6 @@ async function abrirLinkAfiliado() {
 }
 
 function renderizarBarrasIniciais() {
-
 
         let html = '';
         const valoresMock = [4, 8, 8, 4, 16, 24, 12, 8, 4, 12];
