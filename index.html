@@ -477,28 +477,50 @@ async function abrirLinkAfiliado() {
         `;
         atualizarCoresBarras();
 
-              // LIGAÇÃO REAL COM A DERIV VIA WEBSOCKET
+             // LIGAÇÃO REAL COM A DERIV VIA WEBSOCKET
     const tokenDeriv = sessionStorage.getItem('deriv_token');
 
     if (tokenDeriv) {
+        // Usando o URL correto com o app_id
         const ws = new WebSocket('wss://ws.derivws.com/websockets/v3?app_id=33syUeaX60IlPmcJHrdtB');
 
+        // 1. ASSIM QUE ABRIR: Envia a subscrição do saldo, como a Amy orientou
         ws.onopen = function () {
             ws.send(JSON.stringify({
                 authorize: tokenDeriv
             }));
+            
+            ws.send(JSON.stringify({ 
+                balance: 1, 
+                subscribe: 1, 
+                req_id: 1 
+            }));
         };
 
+        // 2. NO ONMESSAGE: Roteamento recomendado pela Amy
         ws.onmessage = function (msg) {
             const data = JSON.parse(msg.data);
 
-            if (data.msg_type === 'authorize' && data.authorize) {
-                const saldo = data.authorize.balance;
-                const moeda = data.authorize.currency;
-                const elem = document.getElementById('saldo-real');
-                if (elem) {
-                    elem.innerText = `$ ${Number(saldo).toFixed(2)} ${moeda}`;
+            // Trata erros antes de usar os dados
+            if (data.error) { 
+                console.warn("Erro recebido da Deriv:", data.error.message); 
+                return; 
+            }
+
+            // Roteador por msg_type (Switch Case)
+            switch (data.msg_type) {
+                case 'balance': {
+                    const bal = data.balance.balance;
+                    const cur = data.balance.currency;
+                    const el = document.getElementById('saldo-real');
+                    if (el) {
+                        el.innerText = `$ ${Number(bal).toFixed(2)} ${cur}`;
+                    }
+                    break;
                 }
+                // Se no futuro adicionares ticks ou propostas, os cases entram aqui
+                default:
+                    break;
             }
         };
 
