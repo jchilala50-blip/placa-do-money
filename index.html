@@ -501,6 +501,8 @@ async function abrirLinkAfiliado() {
         ws.onmessage = function (msg) {
             const data = JSON.parse(msg.data);
 
+            alert(msg.data);
+
             // Trata erros antes de usar os dados
             if (data.error) { 
                 console.warn("Erro recebido da Deriv:", data.error.message); 
