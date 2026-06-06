@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="pt">
 <head>
@@ -504,11 +505,15 @@ async function abrirLinkAfiliado() {
                 }
             };
 
-                        ws.onerror = function(err) {
+                       ws.onerror = function(err) {
                 console.log("Erro na ligação Deriv WS: ", err);
             };
         }
-        atualizarCoresBarras();
+        
+        // Dá 1 segundo para o HTML renderizar antes de disparar as barras
+        setTimeout(() => {
+            atualizarCoresBarras();
+        }, 1000);
     }
 
     function renderizarBarrasIniciais() {
