@@ -491,6 +491,8 @@ async function abrirLinkAfiliado() {
 
             ws.onmessage = function (msg) {
                 const data = JSON.parse(msg.data);
+           // ADICIONA APENAS ESTA LINHA ABAIXO (Não apagues o resto!):
+                alert("Resposta da Deriv: " + JSON.stringify(data));
 
                 if (data.error) {
                     console.log("ERRO DERIV:", data.error);
