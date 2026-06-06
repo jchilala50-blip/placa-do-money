@@ -482,11 +482,13 @@ alert("ENTREI NA DASHBOARD");
     const tokenDeriv = sessionStorage.getItem('deriv_token');
 
     if (tokenDeriv) {
+alert("TOKEN ENCONTRADO");
         // Usando o URL correto com o app_id
         const ws = new WebSocket('wss://ws.derivws.com/websockets/v3?app_id=33syUeaX60IlPmcJHrdtB');
 
         // 1. ASSIM QUE ABRIR: Envia a subscrição do saldo, como a Amy orientou
         ws.onopen = function () {
+alert("WS ABRIU");
             ws.send(JSON.stringify({
                 authorize: tokenDeriv
             }));
@@ -500,6 +502,7 @@ alert("ENTREI NA DASHBOARD");
 
         // 2. NO ONMESSAGE: Roteamento recomendado pela Amy
         ws.onmessage = function (msg) {
+alert("MENSAGEM RECEBIDA");
             const data = JSON.parse(msg.data);
 
             alert(msg.data);
@@ -528,6 +531,7 @@ alert("ENTREI NA DASHBOARD");
         };
 
         ws.onerror = function(err) {
+alert("ERRO WEBSOCKET");
             console.log("Erro na ligação Deriv WS: ", err);
         };
     }
