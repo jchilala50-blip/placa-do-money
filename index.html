@@ -390,6 +390,7 @@ async function abrirLinkAfiliado() {
     }
 
     function irParaDashboardReal() {
+alert("ENTREI NA DASHBOARD");
         const container = document.getElementById('box-auth');
         
         container.innerHTML = `
@@ -537,8 +538,7 @@ async function abrirLinkAfiliado() {
     }, 1000);
 }
 
-function renderizarBarrasIniciais() {
-
+    function renderizarBarrasIniciais() {
         let html = '';
         const valoresMock = [4, 8, 8, 4, 16, 24, 12, 8, 4, 12];
         for(let i = 0; i <= 9; i++) {
