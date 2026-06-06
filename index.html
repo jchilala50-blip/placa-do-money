@@ -531,10 +531,19 @@ alert("MENSAGEM RECEBIDA");
         };
 
         ws.onerror = function(err) {
-alert("ERRO WEBSOCKET");
-            console.log("Erro na ligação Deriv WS: ", err);
-        };
-    }
+ws.onerror = function(err) {
+    alert("ERRO WEBSOCKET");
+    console.log("WS ERROR:", err);
+};
+
+ws.onclose = function(event) {
+    alert(
+        "WS FECHOU | code=" +
+        event.code +
+        " | reason=" +
+        event.reason
+    );
+};
 
     // Delay de 1 segundo para o HTML assentar antes de pintar as barras
     setTimeout(() => {
