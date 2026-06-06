@@ -481,7 +481,7 @@ async function abrirLinkAfiliado() {
         const tokenDeriv = sessionStorage.getItem('deriv_token');
         if (tokenDeriv) {
           // Cria o canal WebSocket seguro direto com o servidor da Deriv
-            const ws = new WebSocket('wss://ws.derivws.com/websockets/v3?app_id=1089');
+            const ws = new WebSocket('wss://ws.derivws.com/websockets/v3?app_id=33syUeaX60IlPmcJHrdtB');
 
             ws.onopen = function() {
                 // Envia as credenciais para autorizar a ligação
