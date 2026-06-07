@@ -583,6 +583,7 @@ function renderizarBarrasIniciais() {
     // Captura automática do Token da Deriv quando a página carrega
     window.addEventListener('DOMContentLoaded', () => {
         const urlParams = new URLSearchParams(window.location.search);
+alert(window.location.search);
         const token = urlParams.get('token');
         const authStatus = urlParams.get('auth');
 
