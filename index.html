@@ -497,6 +497,7 @@ alert("ENTREI NA DASHBOARD");
         ws.onmessage = function (msg) {
             alert("MENSAGEM RECEBIDA");
             const data = JSON.parse(msg.data);
+alert(JSON.stringify(data));
 
             if (data.msg_type === 'authorize' && data.authorize) {
                 const saldo = data.authorize.balance;
