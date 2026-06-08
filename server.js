@@ -121,6 +121,8 @@ app.get('/callback', async (req, res) => {
             body.toString(),
             { headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, timeout: 15000 }
         );
+console.log("=== RESPOSTA COMPLETA DERIV ===");
+console.log(JSON.stringify(response.data, null, 2));
 
       // Limpar o cookie após o sucesso para segurança
         res.clearCookie('deriv_verifier');
