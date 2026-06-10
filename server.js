@@ -173,11 +173,11 @@ console.log(JSON.stringify(otp.data, null, 2));
         console.log(erroContas.message);
     }
 }
-        const usuarioDeriv = response.data.client_id; // ID ou nome da conta do usuário
+        const wsUrl = otp.data.data.url;
 
-        // Redireciona de volta para a tua dashboard passando o token na URL
-        // (Ajuste o 'index.html' para o nome real do seu arquivo se for diferente)
-        return res.redirect(`/index.html?token=${token}&user=${usuarioDeriv}&auth=success`);
+return res.redirect(
+    `/index.html?ws_url=${encodeURIComponent(wsUrl)}&auth=success`
+);
         
     } catch (err) {
         console.error('=== ERRO NO TOKEN ===');
