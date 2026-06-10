@@ -489,6 +489,7 @@ alert("ENTREI NA DASHBOARD");
 
         ws.onopen = function () {
             alert("WS ABRIU");
+
             ws.send(JSON.stringify({
     authorize: tokenDeriv,
     add_to_login_history: 1
