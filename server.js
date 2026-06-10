@@ -159,22 +159,6 @@ const otp = await axios.post(
     }
 );
 
-console.log("=== CONTAS DERIV ===");
-console.log(JSON.stringify(contas.data, null, 2));
-
-const otp = await axios.post(
-    'https://api.derivws.com/trading/v1/options/accounts/DOT91980903/otp',
-    {},
-    {
-        headers: {
-            'Authorization': `Bearer ${token}`,
-            'Deriv-App-ID': CLIENT_ID,
-            'Content-Type': 'application/json'
-        },
-        timeout: 15000
-    }
-);
-
 console.log("=== OTP DERIV ===");
 console.log(JSON.stringify(otp.data, null, 2));
 
