@@ -491,9 +491,9 @@ alert("ENTREI NA DASHBOARD");
             alert("WS ABRIU");
 
             ws.send(JSON.stringify({
-    authorize: tokenDeriv,
-    add_to_login_history: 1
-}));
+                authorize: tokenDeriv
+            }));
+        };
 
         ws.onmessage = function (msg) {
             alert("MENSAGEM RECEBIDA");
