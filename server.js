@@ -129,6 +129,34 @@ console.log(JSON.stringify(response.data, null, 2));
         
         // Captura os dados que a Deriv nos enviou de volta
         const token = response.data.access_token;
+console.log("=== TESTE CONTAS DERIV ===");
+
+try {
+    const contas = await axios.get(
+        'https://api.derivws.com/trading/v1/options/accounts',
+        {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Deriv-App-ID': CLIENT_ID
+            },
+            timeout: 15000
+        }
+    );
+
+    console.log("=== CONTAS DERIV ===");
+    console.log(JSON.stringify(contas.data, null, 2));
+
+} catch (erroContas) {
+
+    console.log("=== ERRO CONTAS DERIV ===");
+
+    if (erroContas.response) {
+        console.log("Status:", erroContas.response.status);
+        console.log(JSON.stringify(erroContas.response.data, null, 2));
+    } else {
+        console.log(erroContas.message);
+    }
+}
         const usuarioDeriv = response.data.client_id; // ID ou nome da conta do usuário
 
         // Redireciona de volta para a tua dashboard passando o token na URL
