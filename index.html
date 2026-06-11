@@ -271,7 +271,7 @@
 
 <script>
     window.onerror = function(msg, url, line) {
-        alert("Erro no código:\n" + msg + "\nLinha: " + line);
+        Console.log("Erro no código:\n" + msg + "\nLinha: " + line);
         return true;
     };
 
@@ -357,7 +357,7 @@ async function conectarViaOAuth() {
         if (dados.url) {
             window.location.href = dados.url; // Redireciona para a Deriv
         } else {
-            alert("Erro ao obter URL de autenticação.");
+            Console.log("Erro ao obter URL de autenticação.");
         }
     } catch (erro) {
         console.error(erro);
@@ -390,7 +390,6 @@ async function abrirLinkAfiliado() {
     }
 
     function irParaDashboardReal() {
-alert("ENTREI NA DASHBOARD");
         const container = document.getElementById('box-auth');
         
         container.innerHTML = `
@@ -520,7 +519,7 @@ if (wsUrl) {
 };
 
 ws.onclose = function(event) {
-    alert(
+    Console.log(
         "WS FECHOU | code=" +
         event.code +
         " | reason=" +
@@ -531,7 +530,7 @@ ws.onclose = function(event) {
 };
 
         ws.onclose = function(event) {
-            alert("WS FECHOU | code=" + event.code + " | reason=" + event.reason);
+            Console.log("WS FECHOU | code=" + event.code + " | reason=" + event.reason);
         };
     }
 
