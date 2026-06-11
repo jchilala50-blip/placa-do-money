@@ -581,24 +581,27 @@ function renderizarBarrasIniciais() {
         }
     }
 
-    // Captura automática do Token da Deriv quando a página carrega
-    window.addEventListener('DOMContentLoaded', () => {
-        const urlParams = new URLSearchParams(window.location.search);
-alert(window.location.search);
-        const token = urlParams.get('token');
-        const authStatus = urlParams.get('auth');
+    // Captura automática do WebSocket OTP da Deriv
+window.addEventListener('DOMContentLoaded', () => {
 
-        if (authStatus === 'success' && token) {
-            sessionStorage.setItem('deriv_token', token);
-            
-            // Ativa o teu painel de gráficos diretamente
-            if (typeof irParaDashboardReal === 'function') {
-                irParaDashboardReal();
-            } else if (typeof carregarTelaDeriv === 'function') {
-                document.getElementById('box-auth').innerHTML = '<h3>Conectado à Deriv com Sucesso!</h3>';
-            }
+    const urlParams = new URLSearchParams(window.location.search);
+
+    const wsUrl = urlParams.get('ws_url');
+    const authStatus = urlParams.get('auth');
+
+    if (authStatus === 'success' && wsUrl) {
+
+        sessionStorage.setItem('deriv_ws_url', wsUrl);
+
+        alert("OAuth concluído");
+        alert(wsUrl);
+
+        if (typeof irParaDashboardReal === 'function') {
+            irParaDashboardReal();
         }
-    });
+    }
+});
+
 </script>
 
 </body>
