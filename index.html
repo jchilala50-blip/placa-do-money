@@ -480,22 +480,20 @@ alert("ENTREI NA DASHBOARD");
 
               // LIGAÇÃO REAL COM A DERIV VIA WEBSOCKET
 alert(window.location.href);
-    const tokenDeriv = sessionStorage.getItem('deriv_token');
+    const params = new URLSearchParams(window.location.search);
+const wsUrl = params.get('ws_url');
 
-    // Alerta que já viste funcionar
-    alert("TOKEN ENCONTRADO");
+alert("WS URL:");
+alert(wsUrl);
 
-    if (tokenDeriv) {
-        const ws = new WebSocket('wss://ws.derivws.com/websockets/v3?app_id=1089');
+if (wsUrl) {
 
-        ws.onopen = function () {
-            alert("WS ABRIU");
+    const ws = new WebSocket(wsUrl);
 
-           ws.send(JSON.stringify({
-    authorize: tokenDeriv,
-    add_to_login_history: 1
-}));
-}; // <--- Garante que esta linha continua aqui para fechar a função!
+    ws.onopen = function () {
+        alert("WS ABRIU");
+    };
+ // <--- Garante que esta linha continua aqui para fechar a função!
 
         ws.onmessage = function (msg) {
             alert("MENSAGEM RECEBIDA");
