@@ -492,10 +492,6 @@ if (wsUrl) {
 
     ws.onopen = function () {
     alert("WS ABRIU");
-
-    ws.send(JSON.stringify({
-        subscribe: "balance"
-    }));
 };
 
  // <--- Garante que esta linha continua aqui para fechar a função!
