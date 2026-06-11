@@ -479,19 +479,14 @@ alert("ENTREI NA DASHBOARD");
         atualizarCoresBarras();
 
               // LIGAÇÃO REAL COM A DERIV VIA WEBSOCKET
-alert(window.location.href);
     const params = new URLSearchParams(window.location.search);
 const wsUrl = params.get('ws_url');
-
-alert("WS URL:");
-alert(wsUrl);
 
 if (wsUrl) {
 
     const ws = new WebSocket(wsUrl);
 
     ws.onopen = function () {
-    alert("WS ABRIU");
 
     ws.send(JSON.stringify({
         balance: 1,
@@ -503,11 +498,8 @@ if (wsUrl) {
  // <--- Garante que esta linha continua aqui para fechar a função!
 
         ws.onmessage = function (msg) {
-    alert("MENSAGEM RECEBIDA");
 
     const data = JSON.parse(msg.data);
-
-    alert(JSON.stringify(data));
 
     if (data.msg_type === 'balance' && data.balance) {
 
@@ -524,7 +516,6 @@ if (wsUrl) {
 };
 
         ws.onerror = function(err) {
-    alert("ERRO WEBSOCKET");
     console.log("WS ERROR:", err);
 };
 
@@ -616,9 +607,6 @@ window.addEventListener('DOMContentLoaded', () => {
     if (authStatus === 'success' && wsUrl) {
 
         sessionStorage.setItem('deriv_ws_url', wsUrl);
-
-        alert("OAuth concluído");
-        alert(wsUrl);
 
         if (typeof irParaDashboardReal === 'function') {
             irParaDashboardReal();
