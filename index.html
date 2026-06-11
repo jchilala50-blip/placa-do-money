@@ -491,8 +491,13 @@ if (wsUrl) {
     const ws = new WebSocket(wsUrl);
 
     ws.onopen = function () {
-        alert("WS ABRIU");
-    };
+    alert("WS ABRIU");
+
+    ws.send(JSON.stringify({
+        subscribe: "balance"
+    }));
+};
+
  // <--- Garante que esta linha continua aqui para fechar a função!
 
         ws.onmessage = function (msg) {
@@ -511,9 +516,20 @@ alert(JSON.stringify(data));
         };
 
         ws.onerror = function(err) {
-            alert("ERRO WEBSOCKET");
-            console.log("WS ERROR:", err);
-        };
+    alert("ERRO WEBSOCKET");
+    console.log("WS ERROR:", err);
+};
+
+ws.onclose = function(event) {
+    alert(
+        "WS FECHOU | code=" +
+        event.code +
+        " | reason=" +
+        event.reason
+    );
+
+    console.log("CLOSE:", event);
+};
 
         ws.onclose = function(event) {
             alert("WS FECHOU | code=" + event.code + " | reason=" + event.reason);
