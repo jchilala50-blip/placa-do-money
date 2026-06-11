@@ -492,24 +492,36 @@ if (wsUrl) {
 
     ws.onopen = function () {
     alert("WS ABRIU");
+
+    ws.send(JSON.stringify({
+        balance: 1,
+        subscribe: 1,
+        req_id: 1
+    }));
 };
 
  // <--- Garante que esta linha continua aqui para fechar a função!
 
         ws.onmessage = function (msg) {
-            alert("MENSAGEM RECEBIDA");
-            const data = JSON.parse(msg.data);
-alert(JSON.stringify(data));
+    alert("MENSAGEM RECEBIDA");
 
-            if (data.msg_type === 'authorize' && data.authorize) {
-                const saldo = data.authorize.balance;
-                const moeda = data.authorize.currency;
-                const elem = document.getElementById('saldo-real');
-                if (elem) {
-                    elem.innerText = `$ ${Number(saldo).toFixed(2)} ${moeda}`;
-                }
-            }
-        };
+    const data = JSON.parse(msg.data);
+
+    alert(JSON.stringify(data));
+
+    if (data.msg_type === 'balance' && data.balance) {
+
+        const saldo = data.balance.balance;
+        const moeda = data.balance.currency;
+
+        const elem = document.getElementById('saldo-real');
+
+        if (elem) {
+            elem.innerText = `${Number(saldo).toFixed(2)} ${moeda}`;
+        }
+    }
+
+};
 
         ws.onerror = function(err) {
     alert("ERRO WEBSOCKET");
