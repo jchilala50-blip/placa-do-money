@@ -15,6 +15,9 @@ app.use(cookieParser()); // CORREÇÃO AMY: Ativar leitura de cookies
 // Armazenamento local (mantido apenas para o formulário se necessário)
 let usuarios = [];
 
+// criar variável global para guartoken acess  token
+let derivToken = null;
+
 const CLIENT_ID = process.env.DERIV_APP_ID || '33syUeaX60IlPmcJHrdtB';
 const REDIRECT_URI = 'https://placa-do-money.onrender.com/callback';
 
@@ -129,6 +132,9 @@ console.log(JSON.stringify(response.data, null, 2));
         
         // Captura os dados que a Deriv nos enviou de volta
         const token = response.data.access_token;
+derivToken = token;
+console.log("TOKEN DERIV GUARDADO");
+
 console.log("=== TESTE CONTAS DERIV ===");
 
 try {
