@@ -494,6 +494,11 @@ window.derivWS = ws;
         subscribe: 1,
         req_id: 1
     }));
+
+ws.send(JSON.stringify({
+    ticks: "R_100"
+}));
+
 };
 
  // <--- Garante que esta linha continua aqui para fechar a função!
@@ -514,7 +519,10 @@ window.derivWS = ws;
         }
     }
 
-};
+if (data.tick) {
+    console.log("TICK:", data.tick.quote);
+
+}
 
         ws.onerror = function(err) {
     console.log("WS ERROR:", err);
