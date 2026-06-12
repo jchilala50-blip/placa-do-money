@@ -523,12 +523,13 @@ if (data.tick) {
 
 }
 
+};
         ws.onerror = function(err) {
     console.log("WS ERROR:", err);
 };
 
 ws.onclose = function(event) {
-    Console.log(
+    console.log(
         "WS FECHOU | code=" +
         event.code +
         " | reason=" +
