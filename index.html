@@ -500,7 +500,6 @@ ws.send(JSON.stringify({
 }));
 
 };
-
  // <--- Garante que esta linha continua aqui para fechar a função!
 
         ws.onmessage = function (msg) {
@@ -517,7 +516,7 @@ ws.send(JSON.stringify({
         if (elem) {
             elem.innerText = `${Number(saldo).toFixed(2)} ${moeda}`;
         }
-    }
+    };
 
 if (data.tick) {
     console.log("TICK:", data.tick.quote);
