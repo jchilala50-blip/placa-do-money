@@ -196,6 +196,53 @@ return res.redirect(
     }
 });
 
+app.get('/api/novo-otp', async (req, res) => {
+
+    if (!derivToken) {
+        return res.status(401).json({
+            erro: 'Nenhum token Deriv disponível.'
+        });
+    }
+
+    try {
+
+        const otp = await axios.post(
+            'https://api.derivws.com/trading/v1/options/accounts/DOT91980903/otp',
+            {},
+            {
+                headers: {
+                    'Authorization': `Bearer ${derivToken}`,
+                    'Deriv-App-ID': CLIENT_ID,
+                    'Content-Type': 'application/json'
+                },
+                timeout: 15000
+            }
+        );
+
+        const wsUrl = otp.data.data.url;
+
+        res.json({
+            success: true,
+            ws_url: wsUrl
+        });
+
+    } catch (erro) {
+
+        console.log("=== ERRO NOVO OTP ===");
+
+        if (erro.response) {
+            console.log("Status:", erro.response.status);
+            console.log(JSON.stringify(erro.response.data, null, 2));
+        } else {
+            console.log(erro.message);
+        }
+
+        res.status(500).json({
+            erro: 'Falha ao gerar novo OTP.'
+        });
+    }
+});
+
 app.listen(PORT, () => {
     console.log(`Servidor rodando na porta ${PORT}`);
 });
