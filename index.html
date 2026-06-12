@@ -502,9 +502,11 @@ ws.send(JSON.stringify({
 };
  // <--- Garante que esta linha continua aqui para fechar a função!
 
-        ws.onmessage = function (msg) {
+ws.onmessage = function (msg) {
 
     const data = JSON.parse(msg.data);
+
+    console.log(data);
 
     if (data.msg_type === 'balance' && data.balance) {
 
@@ -518,12 +520,12 @@ ws.send(JSON.stringify({
         }
     }
 
-if (data.tick) {
-    console.log("TICK:", data.tick.quote);
+    if (data.tick) {
+        console.log("TICK:", data.tick.quote);
+    }
 
-}
+};        
 
-};
         ws.onerror = function(err) {
     console.log("WS ERROR:", err);
 };
