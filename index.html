@@ -485,6 +485,8 @@ if (wsUrl) {
 
     const ws = new WebSocket(wsUrl);
 
+window.derivWS = ws;
+
     ws.onopen = function () {
 
     ws.send(JSON.stringify({
