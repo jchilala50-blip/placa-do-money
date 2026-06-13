@@ -480,16 +480,9 @@ async function abrirLinkAfiliado() {
               // LIGAÇÃO REAL COM A DERIV VIA WEBSOCKET
     const params = new URLSearchParams(window.location.search);
 
-let wsUrl =
+const wsUrl =
     params.get('ws_url') ||
     sessionStorage.getItem('deriv_ws_url');
-
-if (!params.get('ws_url') && wsUrl) {
-
-    try {
-
-        const resposta = await fetch('/api/novo-otp');
-        const dados = await resposta.json();
 
         if (dados.success && dados.ws_url) {
 
@@ -569,6 +562,8 @@ ws.onclose = function(event) {
 
     console.log("CLOSE:", event);
 };
+
+} // FECHA O if (wsUrl)
 
     // Delay de 1 segundo para o HTML assentar antes de pintar as barras
     setTimeout(() => {
