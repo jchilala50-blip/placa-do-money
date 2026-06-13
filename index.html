@@ -393,44 +393,6 @@ async function abrirLinkAfiliado() {
         const container = document.getElementById('box-auth');
         
         container.innerHTML = `
-// INICIO SUGESTAO DO CHAT 2
-const wsUrl = sessionStorage.getItem("ws_url");
-
-if (!wsUrl) {
-    console.log("Sem WS → a pedir nova OTP");
-
-    const res = await fetch("/api/novo-otp", {
-        method: "POST"
-    });
-
-    const data = await res.json();
-
-    sessionStorage.setItem("ws_url", data.url);
-
-    wsUrl = data.url;
-}
-
-const ws = new WebSocket(wsUrl);
-window.derivWS = ws;
-
-ws.onopen = () => {
-    console.log("WS reconectado após refresh");
-
-    ws.send(JSON.stringify({
-        balance: 1
-    }));
-};
-
-ws.onmessage = (msg) => {
-    const data = JSON.parse(msg.data);
-
-    if (data.msg_type === "balance") {
-        document.getElementById("saldo-real").innerText =
-            data.balance;
-    }
-};
-// FIM DA FUNCAO DADA PELO CHAT 2
-
             <div class="topo-plataforma">
                 <a href="https://youtube.com/@derivtutorialnegociacao?si=QN2oZ2GlnTZa6Unn" target="_blank" class="btn-info-youtube">ℹ</a>
                 <div class="texto-logo">
