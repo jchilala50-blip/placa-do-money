@@ -479,6 +479,8 @@ ss="mini-placar">
         atualizarCoresBarras();
 
               // LIGAÇÃO REAL COM A DERIV VIA WEBSOCKET
+const params = new URLSearchParams(window.location.search);
+
 let wsUrl =
     params.get('ws_url') ||
     sessionStorage.getItem('deriv_ws_url');
