@@ -491,6 +491,7 @@ if (wsUrl) {
     window.derivWS = ws;
 
     ws.onopen = function () {
+console.log("WS ABRIU");
 
     ws.send(JSON.stringify({
         balance: 1,
