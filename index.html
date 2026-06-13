@@ -478,36 +478,17 @@ async function abrirLinkAfiliado() {
         atualizarCoresBarras();
 
               // LIGAÇÃO REAL COM A DERIV VIA WEBSOCKET
-    const params = new URLSearchParams(window.location.search);
+const params = new URLSearchParams(window.location.search);
 
 const wsUrl =
     params.get('ws_url') ||
     sessionStorage.getItem('deriv_ws_url');
 
-        if (dados.success && dados.ws_url) {
-
-            wsUrl = dados.ws_url;
-
-            sessionStorage.setItem(
-                'deriv_ws_url',
-                wsUrl
-            );
-        }
-
-    } catch (erro) {
-
-        console.log(
-            "Falha ao renovar OTP:",
-            erro
-        );
-    }
-}
-
 if (wsUrl) {
 
     const ws = new WebSocket(wsUrl);
 
-window.derivWS = ws;
+    window.derivWS = ws;
 
     ws.onopen = function () {
 
