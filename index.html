@@ -648,6 +648,12 @@ window.addEventListener('DOMContentLoaded', () => {
 
         sessionStorage.setItem('deriv_ws_url', wsUrl);
 
+window.history.replaceState(
+    {},
+    document.title,
+    '/index.html'
+);
+
         if (typeof irParaDashboardReal === 'function') {
             irParaDashboardReal();
         }
