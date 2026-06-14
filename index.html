@@ -567,7 +567,6 @@ ws.onmessage = function (msg) {
     }
 
     if (data.tick) {
-
     console.log(
         "TICK RECEBIDO:",
         data.tick.quote
@@ -578,7 +577,7 @@ ws.onmessage = function (msg) {
         data.tick.quote
     );
 
-};
+}
 
         ws.onerror = function(err) {
     console.log("WS ERROR:", err);
