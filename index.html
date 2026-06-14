@@ -491,6 +491,7 @@ ss="mini-placar">
             </div>
         `;
         atualizarCoresBarras();
+let ultimosDigitos = [];
 
               // LIGAÇÃO REAL COM A DERIV VIA WEBSOCKET
 const params = new URLSearchParams(window.location.search);
@@ -566,11 +567,22 @@ ws.onmessage = function (msg) {
         }
     }
 
-    if (data.tick) {
-    console.log(
-        "TICK RECEBIDO:",
-        data.tick.quote
-    );
+    const ultimoDigito =
+    String(data.tick.quote)
+        .slice(-1);
+
+ultimosDigitos.push(
+    Number(ultimoDigito)
+);
+
+if (ultimosDigitos.length > 100) {
+    ultimosDigitos.shift();
+}
+
+console.log(
+    "Último dígito:",
+    ultimoDigito
+);
 
   // alert removido
 
