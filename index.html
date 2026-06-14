@@ -567,8 +567,16 @@ ws.onmessage = function (msg) {
     }
 
     if (data.tick) {
-    console.log("TICK:", data.tick.quote);
-}
+
+    console.log(
+        "TICK RECEBIDO:",
+        data.tick.quote
+    );
+
+    alert(
+        "Tick: " +
+        data.tick.quote
+    );
 
 };
 
