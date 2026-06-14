@@ -224,6 +224,20 @@
         }
 
         /* Modal */
+// Inicio do codigo Cria a classe CSS
+.tela-robo {
+    background:
+        linear-gradient(
+            rgba(6,13,26,0.82),
+            rgba(6,13,26,0.82)
+        ),
+        url('robot.jpg');
+
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+// fim do codigo Cria a classe CSS
         .modal-config {
             display: none;
             position: fixed;
@@ -246,7 +260,7 @@
 </head>
 <body>
 
-<div class="container" id="box-auth">
+<div class="container tela-robo" id="box-auth">
     <h2 id="titulo-tela">Entrar na Placa do Money</h2>
     
     <div class="input-group" id="grupo-nome" style="display: none;">
@@ -391,7 +405,9 @@ async function abrirLinkAfiliado() {
 
     async function irParaDashboardReal() {
         const container = document.getElementById('box-auth');
-        
+    // Aqui se fez uma alteracao para ilustrar imagem robo na tela inicial
+container.classList.remove('tela-robo');
+    
         container.innerHTML = `
             <div class="topo-plataforma">
                 <a href="https://youtube.com/@derivtutorialnegociacao?si=QN2oZ2GlnTZa6Unn" target="_blank" class="btn-info-youtube">ℹ</a>
