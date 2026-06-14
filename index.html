@@ -567,17 +567,10 @@ ws.onmessage = function (msg) {
     }
 
     if (data.tick) {
-
-    console.log(
-        "TICK RECEBIDO:",
-        data.tick.quote
-    );
-
-    alert(
-        "Tick: " +
-        data.tick.quote
-    );
+    console.log("TICK:", data.tick.quote);
 }
+
+};
 
         ws.onerror = function(err) {
     console.log("WS ERROR:", err);
