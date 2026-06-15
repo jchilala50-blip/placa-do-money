@@ -551,6 +551,8 @@ ws.send(JSON.stringify({
 
 ws.onmessage = function (msg) {
 
+alert(event.data);
+
     const data = JSON.parse(msg.data);
 
     console.log(data);
