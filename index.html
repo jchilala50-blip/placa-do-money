@@ -638,6 +638,9 @@ function renderizarBarrasIniciais() {
 
 function atualizarGraficoReal() {
 
+document.getElementById('saldo-real').innerText =
+    "TICKS: " + ultimosDigitos.length;
+
 document.getElementById('perc-0').innerText = 'OK';
 
     const contagem = Array(10).fill(0);
