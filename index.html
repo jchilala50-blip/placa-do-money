@@ -583,12 +583,9 @@ if (ultimosDigitos.length > 100) {
 
 atualizarGraficoReal();
 
-console.log(
-    "QUOTE:",
-    data.tick.quote,
-    "| DIGITO:",
-    ultimoDigito
-);
+document.getElementById('saldo-real').innerText =
+    "Q:" + data.tick.quote +
+    " D:" + ultimoDigito;
 
 } // FECHA if(data.tick)
 
