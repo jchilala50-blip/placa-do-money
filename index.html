@@ -581,11 +581,27 @@ ultimosDigitos.shift();
 
 atualizarGraficoReal();
 
-document.getElementById('saldo-real').innerText =
-"Q:" + data.tick.quote +
-" D:" + ultimoDigito;
 
 } // FECHA if(data.tick)
+
+}; // FECHA ws.onmessage
+
+ws.onerror = function(err) {
+    console.log("WS ERROR:", err);
+};
+
+ws.onclose = function(event) {
+    console.log(
+        "WS FECHOU | code=" +
+        event.code +
+        " | reason=" +
+        event.reason
+    );
+
+    console.log("CLOSE:", event);
+};
+
+} // FECHA if (wsUrl)
 
 
     // Delay de 1 segundo para o HTML assentar antes de pintar as barras
