@@ -565,7 +565,7 @@ ws.onmessage = function (msg) {
         if (elem) {
             elem.innerText = `${Number(saldo).toFixed(2)} ${moeda}`;
         }
-    }
+   }
 
 if (data.tick) {
 
@@ -594,7 +594,7 @@ ws.onclose = function(event) {
     console.log("WS FECHOU", event);
 };
 
-} // FECHA if(wsUrl)
+}
 
     // Delay de 1 segundo para o HTML assentar antes de pintar as barras
     setTimeout(() => {
