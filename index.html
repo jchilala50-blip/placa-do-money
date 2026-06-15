@@ -581,10 +581,10 @@ if (ultimosDigitos.length > 100) {
     ultimosDigitos.shift();
 }
 
-console.log(
-    "Último dígito:",
-    ultimoDigito
-);
+document.getElementById(
+    'saldo-real'
+).innerText =
+    "Dígito: " + ultimoDigito;
 
 } // FECHA if(data.tick)
 
