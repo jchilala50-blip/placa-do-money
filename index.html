@@ -570,43 +570,31 @@ ws.onmessage = function (msg) {
 if (data.tick) {
 
     const ultimoDigito =
-    String(data.tick.quote)
-        .slice(-1);
+        String(data.tick.quote)
+            .slice(-1);
 
-ultimosDigitos.push(
-    Number(ultimoDigito)
-);
+    ultimosDigitos.push(Number(ultimoDigito));
 
-if (ultimosDigitos.length > 100) {
-    ultimosDigitos.shift();
+    if (ultimosDigitos.length > 100) {
+        ultimosDigitos.shift();
+    }
+
+    atualizarGraficoReal();
+
+    document.getElementById('saldo-real').innerText =
+        "Q:" + data.tick.quote +
+        " D:" + ultimoDigito;
 }
 
-atualizarGraficoReal();
-
-document.getElementById('saldo-real').innerText =
-    "Q:" + data.tick.quote +
-    " D:" + ultimoDigito;
-
-} // FECHA if(data.tick)
-
-}; // FECHA ws.onmessage
-
-        ws.onerror = function(err) {
+ws.onerror = function(err) {
     console.log("WS ERROR:", err);
 };
 
 ws.onclose = function(event) {
-    console.log(
-        "WS FECHOU | code=" +
-        event.code +
-        " | reason=" +
-        event.reason
-    );
-
-    console.log("CLOSE:", event);
+    console.log("WS FECHOU", event);
 };
 
-} // FECHA O if (wsUrl)
+} // FECHA if(wsUrl)
 
     // Delay de 1 segundo para o HTML assentar antes de pintar as barras
     setTimeout(() => {
