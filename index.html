@@ -567,6 +567,8 @@ ws.onmessage = function (msg) {
         }
     }
 
+if (data.tick) {
+
     const ultimoDigito =
     String(data.tick.quote)
         .slice(-1);
@@ -584,8 +586,7 @@ console.log(
     ultimoDigito
 );
 
-
-};
+} // FECHA if(data.tick)
 
 }; // FECHA ws.onmessage
 
