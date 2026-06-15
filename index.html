@@ -569,67 +569,23 @@ ws.onmessage = function (msg) {
 
 if (data.tick) {
 
-
-  const ultimoDigito =
-
-  String(data.tick.quote)
-
-    .slice(-1);
-
+const ultimoDigito = String(data.tick.quote) .slice(-1); 
 
 ultimosDigitos.push(
-
-  Number(ultimoDigito)
-
+Number(ultimoDigito)
 );
 
-
 if (ultimosDigitos.length > 100) {
-
-  ultimosDigitos.shift();
-
+ultimosDigitos.shift();
 }
-
 
 atualizarGraficoReal();
 
-
 document.getElementById('saldo-real').innerText =
+"Q:" + data.tick.quote +
+" D:" + ultimoDigito;
 
-  "Q:" + data.tick.quote +
-
-  " D:" + ultimoDigito;
-
-}
-};
-    ws.onerror = function(err) {
-
-  console.log("WS ERROR:", err);
-
-};
-
-
-ws.onclose = function(event) {
-
-  console.log(
-
-    "WS FECHOU | code=" +
-
-    event.code +
-
-    " | reason=" +
-
-    event.reason
-
-  );
-
-
-  console.log("CLOSE:", event);
-
-};
-
-
-} // FECHA if (wsUrl)
+} // FECHA if(data.tick)
 
 
     // Delay de 1 segundo para o HTML assentar antes de pintar as barras
