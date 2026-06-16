@@ -666,49 +666,33 @@ function renderizarBarrasIniciais() {
     }
 
 function atualizarGraficoReal() {
-
-document.getElementById('saldo-real').innerText =
-    "TICKS: " + ultimosDigitos.length;
-
-document.getElementById('perc-0').innerText = 'OK';
-
     const contagem = Array(10).fill(0);
 
     ultimosDigitos.forEach(digito => {
-        contagem[digito]++;
+        if (!isNaN(digito) && digito >= 0 && digito <= 9) {
+            contagem[digito]++;
+        }
     });
 
     for (let i = 0; i <= 9; i++) {
-
-        const percentual =
-            ultimosDigitos.length > 0
-            ? Math.round(
-                (contagem[i] / ultimosDigitos.length) * 100
-              )
+        const barra = document.getElementById(`barra-${i}`);
+        const texto = document.getElementById(`perc-${i}`);
+        
+        const percentual = ultimosDigitos.length > 0 
+            ? Math.round((contagem[i] / ultimosDigitos.length) * 100) 
             : 0;
 
-        const barra =
-            document.getElementById(`barra-${i}`);
-
-if (!barra) {
-    document.getElementById('saldo-real').innerText =
-        "SEM BARRA " + i;
-}
-
-        const texto =
-            document.getElementById(`perc-${i}`);
-
         if (barra) {
-            barra.style.height =
-    `${50 + (i * 10)}px`;
+            let altura = Math.max(percentual * 3, 5);
+            barra.style.height = altura + "px";
         }
 
         if (texto) {
-            texto.innerText =
-                `${percentual}%`;
+            texto.innerText = percentual + "%";
         }
     }
 }
+
 
     function abrirConfiguracoes() { document.getElementById('meu-modal').style.display = 'flex'; }
     function fecharConfiguracoes() { document.getElementById('meu-modal').style.display = 'none'; }
