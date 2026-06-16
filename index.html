@@ -639,33 +639,25 @@ ws.onclose = function(event) {
 }
 
 function renderizarBarrasIniciais() {
+    let html = '';
 
-let html = '';
+    for(let i = 0; i <= 9; i++) {
 
-const valoresMock =;
+        html += `
+            <div class="coluna-barra">
+                <div class="porcentagem-barra" id="perc-${i}">
+                    ...
+                </div>
 
-for(let i = 0; i <= 9; i++) {
+                <div class="corpo-barra" id="barra-${i}">
+                </div>
 
-let altura = valoresMock[i] * 2.5;
+                <div class="label-barra">${i}</div>
+            </div>
+        `;
+    }
 
-html += `
-
-<div class="coluna-barra">
-
-<div class="porcentagem-barra" id="perc-${i}">${valoresMock[i]}%</div>
-
-<div class="corpo-barra" id="barra-${i}" styl="height: ${altura}px;"></div>
-
-<div class="label-barra">${i}</div>
-
-</div>
-
-`;
-
-}
-
-return html;
-
+    return html;
 }
 
     function atualizarCoresBarras() {
