@@ -537,10 +537,12 @@ if (wsUrl) {
 console.log("WS ABRIU");
 
     ws.send(JSON.stringify({
-        balance: 1,
-        subscribe: 1,
-        req_id: 1
-    }));
+    ticks_history: "R_100",
+    style: "candles",
+    granularity: 60,
+    count: 50,
+    end: "latest"
+}));
 
 ws.send(JSON.stringify({
     ticks: "R_100"
