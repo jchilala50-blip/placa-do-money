@@ -18,7 +18,7 @@
             min-height: 100vh;
             box-sizing: border-box;
         }
-        .container {
+        container {
             background-color: #0c1524;
             padding: 12px;
             border-radius: 12px;
@@ -30,14 +30,14 @@
         }
         
         /* Topo com Logo e Botão Info Alinhados */
-        .topo-plataforma {
+        topo-plataforma {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 15px;
             position: relative;
         }
-        .btn-info-youtube {
+        btn-info-youtube {
             background-color: #101f35;
             border: 1px solid #1a3152;
             color: #1e88e5;
@@ -52,12 +52,12 @@
             font-size: 16px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.3);
         }
-        .texto-logo {
+        texto-logo {
             flex: 1;
             text-align: center;
             padding-right: 36px;
         }
-        .texto-logo h3 {
+        texto-logo h3 {
             margin: 0;
             font-family: 'Times New Roman', Times, serif;
             font-size: 15px;
@@ -65,13 +65,13 @@
         }
         
         /* Topo: Saldo e Lucro */
-        .grid-topo {
+        grid-topo {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 8px;
             margin-bottom: 12px;
         }
-        .card-status {
+        card-status {
             background: linear-gradient(145deg, #0f1b2e, #14243b);
             padding: 10px;
             border-radius: 8px;
@@ -81,12 +81,12 @@
             flex-direction: column;
             justify-content: space-between;
         }
-        .card-status.lucro { border-left-color: #00e676; }
-        .label-card { font-size: 10px; color: #78909c; text-transform: uppercase; }
-        .valor-card { font-size: 16px; font-weight: bold; margin-top: 4px; }
+        card-status.lucro { border-left-color: #00e676; }
+        label-card { font-size: 10px; color: #78909c; text-transform: uppercase; }
+        valor-card { font-size: 16px; font-weight: bold; margin-top: 4px; }
         
         /* Mini Placar de Ganhos e Perdas (Estilo Enote) */
-        .mini-placar {
+        mini-placar {
             margin-top: 5px;
             font-size: 11px;
             font-weight: bold;
@@ -94,11 +94,11 @@
             border-top: 1px solid #1a3152;
             padding-top: 4px;
         }
-        .win-count { color: #00e676; margin-right: 8px; }
-        .loss-count { color: #ff1744; }
+        win-count { color: #00e676; margin-right: 8px; }
+        loss-count { color: #ff1744; }
         
         /* Seletores Responsivos */
-        .linha-seletores {
+        linha-seletores {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 8px;
@@ -127,7 +127,7 @@
             cursor: pointer;
             margin-top: 10px;
         }
-        .btn-alternar {
+        btn-alternar {
             background-color: transparent;
             color: #388e3c;
             font-size: 14px;
@@ -136,14 +136,14 @@
         }
         
         /* Gráfico Redimensionável para Celular */
-        .container-grafico {
+        container-grafico {
             background-color: #091220;
             border-radius: 8px;
             padding: 10px 6px;
             margin-bottom: 12px;
             border: 1px solid #12223a;
         }
-        .titulo-grafico {
+        titulo-grafico {
             display: flex;
             justify-content: space-between;
             font-size: 11px;
@@ -151,7 +151,7 @@
             margin-bottom: 10px;
             padding: 0 4px;
         }
-        .area-barras {
+        area-barras {
             display: flex;
             justify-content: space-between;
             align-items: flex-end;
@@ -159,31 +159,31 @@
             padding-bottom: 3px;
             border-bottom: 1px solid #1a3152;
         }
-        .coluna-barra {
+        coluna-barra {
             display: flex;
             flex-direction: column;
             align-items: center;
             flex: 1;
             margin: 0 1px;
         }
-        .porcentagem-barra { font-size: 9px; color: #90a4ae; margin-bottom: 2px; }
-        .corpo-barra {
+        porcentagem-barra { font-size: 9px; color: #90a4ae; margin-bottom: 2px; }
+        corpo-barra {
             width: 85%;
             height: 50px;
             background-color: #ffffff;
             border-radius: 2px 2px 0 0;
             transition: height 0.3s ease, background-color 0.3s ease;
         }
-        .label-barra { font-size: 10px; font-weight: bold; color: #90a4ae; margin-top: 3px; }
+        label-barra { font-size: 10px; font-weight: bold; color: #90a4ae; margin-top: 3px; }
 
         /* Controles: Engrenagem e Botão Único Play */
-        .linha-controle {
+        linha-controle {
             display: flex;
             align-items: center;
             gap: 8px;
             margin-bottom: 12px;
         }
-        .btn-icon {
+        btn-icon {
             background-color: #101f35;
             border: 1px solid #1a3152;
             border-radius: 6px;
@@ -197,7 +197,7 @@
             font-size: 16px;
             box-sizing: border-box;
         }
-        .btn-play-unico {
+        btn-play-unico {
             flex: 1;
             height: 42px;
             background-color: #e53935;
@@ -214,7 +214,7 @@
             transition: background-color 0.3s ease;
         }
 
-        .historico-lista {
+        historico-lista {
             background-color: #101f35;
             border-radius: 6px;
             padding: 8px;
@@ -224,7 +224,7 @@
         }
 
         /* Modal */
-.tela-robo {
+tela-robo {
     background:
         linear-gradient(
     rgba(6,13,26,0.40),
@@ -236,7 +236,7 @@
     background-position: center;
     background-repeat: no-repeat;
 }
-        .modal-config {
+        modal-config {
             display: none;
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -245,7 +245,7 @@
             align-items: center;
             z-index: 1000;
         }
-        .modal-conteudo {
+        modal-conteudo {
             background-color: #0c1524;
             padding: 16px;
             border-radius: 12px;
@@ -654,7 +654,7 @@ html += `
 
 <div class="porcentagem-barra" id="perc-${i}">${valoresMock[i]}%</div>
 
-<div class="corpo-barra" id="barra-${i}" styl="height: ${altura}px;"></div>
+<div class="corpo-barra" id="barra-${i}" style="height: ${altura}px;"></div>
 
 <div class="label-barra">${i}</div>
 
