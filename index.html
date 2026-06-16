@@ -675,7 +675,13 @@ function atualizarGraficoReal() {
 
     for (let i = 0; i <= 9; i++) {
         const barra = document.getElementById(`barra-${i}`);
-        const texto = document.getElementById(`perc-${i}`);
+        
+const texto = document.getElementById(`perc-${i}`);
+
+if (i === 0) {
+    document.getElementById('saldo-real').innerText =
+        texto ? "ACHOU perc-0" : "NAO ACHOU perc-0";
+}
         
         const percentual = ultimosDigitos.length > 0 
             ? Math.round((contagem[i] / ultimosDigitos.length) * 100) 
