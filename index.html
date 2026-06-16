@@ -557,9 +557,6 @@ ws.send(JSON.stringify({
 ws.onmessage = function (msg) {
 
 
-alert(event.data);
-
-
   const data = JSON.parse(msg.data);
 
 
@@ -598,6 +595,8 @@ Number(ultimoDigito)
 
 );
 
+document.getElementById('saldo-real').innerText =
+    JSON.stringify(ultimosDigitos.slice(-10));
 
 if (ultimosDigitos.length > 100) {
 
