@@ -550,39 +550,65 @@ ws.send(JSON.stringify({
  // <--- Garante que esta linha continua aqui para fechar a função!
 
 ws.onmessage = function (msg) {
-    // 1. Converte os dados recebidos com segurança
-    const data = JSON.parse(msg.data);
-    console.log(data);
 
-    // 2. Trata o Saldo (Sem misturar com os ticks)
-    if (data.msg_type === 'balance' && data.balance) {
-        const saldo = data.balance.balance;
-        const moeda = data.balance.currency;
-        const elem = document.getElementById('saldo-real');
-        if (elem) {
-            elem.innerText = `${Number(saldo).toFixed(2)} ${moeda}`;
-        }
-        return; // Sai da função aqui para poupar processamento
-    }
 
-    // 3. Trata os Ticks do Mercado e Atualiza o Gráfico
-    if (data.msg_type === 'tick' && data.tick) {
-        const precoAtual = data.tick.quote;
-        const ultimoDigito = String(precoAtual).slice(-1);
+alert(event.data);
 
-        // Atualiza a lista de dígitos para os robôs
-        ultimosDigitos.push(Number(ultimoDigito));
-        if (ultimosDigitos.length > 100) {
-            ultimosDigitos.shift();
-        }
 
-        // AGORA SIM: Passa o preço atual para a tua função atualizar as barras!
-        if (typeof atualizarGraficoReal === 'function') {
-            atualizarGraficoReal(precoAtual, data.tick.epoch);
-        }
-    }
+  const data = JSON.parse(msg.data);
+
+
+  console.log(data);
+
+
+  if (data.msg_type === 'balance' && data.balance) {
+
+
+    const saldo = data.balance.balance;
+
+    const moeda = data.balance.currency;
+
+
+    const elem = document.getElementById('saldo-real');
+
+
+    if (elem) {
+
+      elem.innerText = `${Number(saldo).toFixed(2)} ${moeda}`;
+
+    }
+
+  }
+
+
+if (data.tick) {
+
+
+const ultimoDigito = String(data.tick.quote) .slice(-1);
+
+
+ultimosDigitos.push(
+
+Number(ultimoDigito)
+
+);
+
+
+if (ultimosDigitos.length > 100) {
+
+ultimosDigitos.shift();
+
+}
+
+
+atualizarGraficoReal();
+
+
+
+} // FECHA if(data.tick)
+
+
 }; // FECHA ws.onmessage
-
 
 ws.onerror = function(err) {
     console.log("WS ERROR:", err);
