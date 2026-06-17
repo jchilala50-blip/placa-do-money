@@ -661,7 +661,7 @@ function renderizarBarrasIniciais() {
 }
 
     function atualizarCoresBarras() {
-
+alert("ATUALIZEI");
         const cores = ['#ff1744','#ffffff','#ffffff','#ff1744','#ffffff','#00e676','#ffffff','#ffffff','#ff1744','#ffffff'];
         for(let i = 0; i <= 9; i++) {
             const barra = document.getElementById(`barra-${i}`);
@@ -670,9 +670,7 @@ function renderizarBarrasIniciais() {
     }
 
 function atualizarGraficoReal() {
-
-document.getElementById('saldo-real').innerText =
-JSON.stringify(ultimosDigitos.slice(-10));
+alert("ENTREI");
 
     const contagem = Array(10).fill(0);
 
