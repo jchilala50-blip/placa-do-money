@@ -66,7 +66,7 @@ app.get('/api/deriv-auth-url', (req, res) => {
         maxAge: 600000, 
         httpOnly: true, 
         secure: true, 
-        sameSite: 'none' 
+        sameSite: 'lax'
     });
 
     // 5. Monta a URL final com o método S256 correto
