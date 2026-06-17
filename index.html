@@ -693,13 +693,13 @@ if (i === 0) {
             : 0;
 
         if (barra) {
-            let altura = Math.max(percentual * 3, 5);
+            let altura = Math.max(percentual * 2.5, 10);
             barra.style.height = altura + "px";
         }
 
         if (texto) {
     texto.innerText =
-        "X" + i;
+        percentual + "%";
       }
     }
 }
