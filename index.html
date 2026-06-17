@@ -670,38 +670,55 @@ function renderizarBarrasIniciais() {
     }
 
 function atualizarGraficoReal() {
+
+document.getElementById('saldo-real').innerText =
+JSON.stringify(ultimosDigitos.slice(-10));
+
     const contagem = Array(10).fill(0);
 
     ultimosDigitos.forEach(digito => {
+
         if (!isNaN(digito) && digito >= 0 && digito <= 9) {
             contagem[digito]++;
         }
+
     });
 
-    for (let i = 0; i <= 9; i++) {
-        const barra = document.getElementById(`barra-${i}`);
-        
-const texto = document.getElementById(`perc-${i}`);
+    console.log("ULTIMOS:", ultimosDigitos);
+    console.log("CONTAGEM:", contagem);
 
-if (i === 0) {
-    document.getElementById('saldo-real').innerText =
-        texto ? "ACHOU perc-0" : "NAO ACHOU perc-0";
-}
-        
-        const percentual = ultimosDigitos.length > 0 
-            ? Math.round((contagem[i] / ultimosDigitos.length) * 100) 
+    for (let i = 0; i <= 9; i++) {
+
+        const barra = document.getElementById(`barra-${i}`);
+        const texto = document.getElementById(`perc-${i}`);
+
+        const percentual =
+            ultimosDigitos.length > 0
+            ? Math.round((contagem[i] / ultimosDigitos.length) * 100)
             : 0;
 
+if (i === 0) {
+    document.getElementById('lucro-real').innerText =
+        JSON.stringify(contagem);
+}
+
+        console.log(
+            "DIGITO",
+            i,
+            "CONTAGEM",
+            contagem[i],
+            "PERCENTUAL",
+            percentual
+        );
+
         if (barra) {
-            let altura = Math.max(percentual * 2.5, 10);
-            barra.style.height = altura + "px";
+            barra.style.height =
+                Math.max(percentual * 2.5, 10) + "px";
         }
 
         if (texto) {
-    texto.style.color = "yellow";
-    texto.style.fontWeight = "bold";
-    texto.innerText = "TESTE";
-      }
+            texto.innerText = percentual + "%";
+        }
     }
 }
 
