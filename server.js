@@ -138,6 +138,7 @@ console.log("TOKEN DERIV GUARDADO");
 console.log("=== TESTE CONTAS DERIV ===");
 
 try {
+
     const contas = await axios.get(
         'https://api.derivws.com/trading/v1/options/accounts',
         {
@@ -150,43 +151,31 @@ try {
     );
 
     console.log("=== CONTAS DERIV ===");
-console.log(JSON.stringify(contas.data, null, 2));
+    console.log(JSON.stringify(contas.data, null, 2));
 
-const contas = await axios.get(
-    'https://api.derivws.com/trading/v1/options/accounts',
-    {
-        headers: {
-            'Authorization': `Bearer ${derivToken}`,
-            'Deriv-App-ID': CLIENT_ID
-        },
-        timeout: 15000
-    }
-);
+    const accountId = contas.data.data[0].account_id;
 
-const accountId = contas.data.data[0].account_id;
+    const otp = await axios.post(
+        `https://api.derivws.com/trading/v1/options/accounts/${accountId}/otp`,
+        {},
+        {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Deriv-App-ID': CLIENT_ID,
+                'Content-Type': 'application/json'
+            },
+            timeout: 15000
+        }
+    );
 
+    console.log("=== OTP DERIV ===");
+    console.log(JSON.stringify(otp.data, null, 2));
 
-const otp = await axios.post(
-    `https://api.derivws.com/trading/v1/options/accounts/${accountId}/otp`,
-    {},
-    {
-        headers: {
-            'Authorization': `Bearer ${token}`,
-            'Deriv-App-ID': CLIENT_ID,
-            'Content-Type': 'application/json'
-        },
-        timeout: 15000
-    }
-);
+    const wsUrl = otp.data.data.url;
 
-console.log("=== OTP DERIV ===");
-console.log(JSON.stringify(otp.data, null, 2));
-
-const wsUrl = otp.data.data.url;
-
-return res.redirect(
-    `/index.html?ws_url=${encodeURIComponent(wsUrl)}&auth=success`
-);
+    return res.redirect(
+        `/index.html?ws_url=${encodeURIComponent(wsUrl)}&auth=success`
+    );
 
 } catch (erroContas) {
 
