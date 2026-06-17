@@ -207,31 +207,42 @@ app.get('/api/novo-otp', async (req, res) => {
         });
     }
 
-    try {
+   try {
 
-        const accountId = contas.data.data[0].account_id;
+    const contas = await axios.get(
+        'https://api.derivws.com/trading/v1/options/accounts',
+        {
+            headers: {
+                'Authorization': `Bearer ${derivToken}`,
+                'Deriv-App-ID': CLIENT_ID
+            },
+            timeout: 15000
+        }
+    );
 
-const otp = await axios.post(
-    `https://api.derivws.com/trading/v1/options/accounts/${accountId}/otp`,
-    {},
-    {
-        headers: {
-            'Authorization': `Bearer ${derivToken}`,
-            'Deriv-App-ID': CLIENT_ID,
-            'Content-Type': 'application/json'
-        },
-        timeout: 15000
-    }
-);
+    const accountId = contas.data.data[0].account_id;
 
-        const wsUrl = otp.data.data.url;
+    const otp = await axios.post(
+        `https://api.derivws.com/trading/v1/options/accounts/${accountId}/otp`,
+        {},
+        {
+            headers: {
+                'Authorization': `Bearer ${derivToken}`,
+                'Deriv-App-ID': CLIENT_ID,
+                'Content-Type': 'application/json'
+            },
+            timeout: 15000
+        }
+    );
 
-        res.json({
-            success: true,
-            ws_url: wsUrl
-        });
+    const wsUrl = otp.data.data.url;
 
-    } catch (erro) {
+    res.json({
+        success: true,
+        ws_url: wsUrl
+    });
+
+} catch (erro) {
 
         console.log("=== ERRO NOVO OTP ===");
 
