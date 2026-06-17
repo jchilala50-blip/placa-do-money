@@ -152,7 +152,19 @@ try {
     console.log("=== CONTAS DERIV ===");
 console.log(JSON.stringify(contas.data, null, 2));
 
+const contas = await axios.get(
+    'https://api.derivws.com/trading/v1/options/accounts',
+    {
+        headers: {
+            'Authorization': `Bearer ${derivToken}`,
+            'Deriv-App-ID': CLIENT_ID
+        },
+        timeout: 15000
+    }
+);
+
 const accountId = contas.data.data[0].account_id;
+
 
 const otp = await axios.post(
     `https://api.derivws.com/trading/v1/options/accounts/${accountId}/otp`,
