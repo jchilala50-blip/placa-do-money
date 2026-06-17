@@ -714,12 +714,24 @@ if (i === 0) {
         );
 
         if (barra) {
-            barra.style.height =
-                Math.max(percentual * 2.5, 10) + "px";
-        }
+
+    barra.style.backgroundColor = "red";
+
+    let altura =
+        Math.max(percentual * 5, 20);
+
+    barra.style.height =
+        altura + "px";
+}
 
         if (texto) {
-            texto.innerText = percentual + "%";
+
+    texto.style.color = "yellow";
+    texto.style.fontSize = "20px";
+    texto.style.fontWeight = "bold";
+
+    texto.innerText =
+        "D" + i + "=" + percentual;
         }
     }
 }
