@@ -152,8 +152,10 @@ try {
     console.log("=== CONTAS DERIV ===");
 console.log(JSON.stringify(contas.data, null, 2));
 
+const accountId = contas.data.data[0].account_id;
+
 const otp = await axios.post(
-    'https://api.derivws.com/trading/v1/options/accounts/DOT91980903/otp',
+    `https://api.derivws.com/trading/v1/options/accounts/${accountId}/otp`,
     {},
     {
         headers: {
@@ -206,18 +208,20 @@ app.get('/api/novo-otp', async (req, res) => {
 
     try {
 
-        const otp = await axios.post(
-            'https://api.derivws.com/trading/v1/options/accounts/DOT91980903/otp',
-            {},
-            {
-                headers: {
-                    'Authorization': `Bearer ${derivToken}`,
-                    'Deriv-App-ID': CLIENT_ID,
-                    'Content-Type': 'application/json'
-                },
-                timeout: 15000
-            }
-        );
+        const accountId = contas.data.data[0].account_id;
+
+const otp = await axios.post(
+    `https://api.derivws.com/trading/v1/options/accounts/${accountId}/otp`,
+    {},
+    {
+        headers: {
+            'Authorization': `Bearer ${derivToken}`,
+            'Deriv-App-ID': CLIENT_ID,
+            'Content-Type': 'application/json'
+        },
+        timeout: 15000
+    }
+);
 
         const wsUrl = otp.data.data.url;
 
