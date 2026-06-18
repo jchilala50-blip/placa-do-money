@@ -690,6 +690,15 @@ alert("ENTREI");
         const barra = document.getElementById(`barra-${i}`);
         const texto = document.getElementById(`perc-${i}`);
 
+if (i === 0) {
+
+    alert(
+        "BARRA=" + barra +
+        " | TEXTO=" + texto
+    );
+
+}
+
         const percentual =
             ultimosDigitos.length > 0
             ? Math.round((contagem[i] / ultimosDigitos.length) * 100)
