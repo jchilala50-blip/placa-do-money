@@ -660,14 +660,42 @@ function renderizarBarrasIniciais() {
     return html;
 }
 
-    function atualizarCoresBarras() {
-alert("ATUALIZEI");
-        const cores = ['#ff1744','#ffffff','#ffffff','#ff1744','#ffffff','#00e676','#ffffff','#ffffff','#ff1744','#ffffff'];
-        for(let i = 0; i <= 9; i++) {
-            const barra = document.getElementById(`barra-${i}`);
-            if(barra) barra.style.backgroundColor = cores[i];
+    function atualizarCoresBarras(contagem) {
+
+    const total =
+        ultimosDigitos.length;
+
+    for(let i = 0; i <= 9; i++) {
+
+        const barra =
+            document.getElementById(`barra-${i}`);
+
+        if(!barra) continue;
+
+        const percentual =
+            total > 0
+            ? Math.round(
+                (contagem[i] / total) * 100
+              )
+            : 0;
+
+        if(percentual >= 15) {
+
+            barra.style.backgroundColor =
+                "#00e676";
+
+        } else if(percentual >= 8) {
+
+            barra.style.backgroundColor =
+                "#ffffff";
+
+        } else {
+
+            barra.style.backgroundColor =
+                "#ff1744";
         }
     }
+}
 
 function atualizarGraficoReal() {
     const contagem = Array(10).fill(0);
@@ -677,6 +705,8 @@ function atualizarGraficoReal() {
             contagem[digito]++;
         }
     });
+
+atualizarCoresBarras(contagem);
 
     for (let i = 0; i <= 9; i++) {
         const barra = document.getElementById(`barra-${i}`);
