@@ -670,81 +670,11 @@ alert("ATUALIZEI");
     }
 
 function atualizarGraficoReal() {
-alert("ENTREI VERSAO 999");
 
-    const contagem = Array(10).fill(0);
-
-    alert(
-    "TIPO=" + typeof ultimosDigitos +
-    " TAM=" + ultimosDigitos.length
-);
-
-    console.log("ULTIMOS:", ultimosDigitos);
-    alert(
-    "CONTAGEM=" +
-    JSON.stringify(contagem)
-);
-
-    for (let i = 0; i <= 9; i++) {
-
-        const barra = document.getElementById(`barra-${i}`);
-        const texto = document.getElementById(`perc-${i}`);
-
-if (i === 0) {
-
-    alert(
-        "BARRA=" + barra +
-        " | TEXTO=" + texto
-    );
+document.getElementById('lucro-real').innerText = "TAM=" + ultimosDigitos.length; 
 
 }
-
-        const percentual =
-            ultimosDigitos.length > 0
-            ? Math.round((contagem[i] / ultimosDigitos.length) * 100)
-            : 0;
-
-if (i === 0) {
-
-    alert(
-        "CONTAGEM=" +
-        JSON.stringify(contagem)
-    );
-
-}
-
-       console.log(
-            "DIGITO",
-            i,
-            "CONTAGEM",
-            contagem[i],
-            "PERCENTUAL",
-            percentual
-        );
-
-        if (barra) {
-
-    barra.style.backgroundColor = "red";
-
-    let altura =
-        Math.max(percentual * 5, 20);
-
-    barra.style.height =
-        altura + "px";
-}
-
-        if (texto) {
-
-    texto.style.color = "yellow";
-    texto.style.fontSize = "20px";
-    texto.style.fontWeight = "bold";
-
-    texto.innerText =
-        "D" + i + "=" + percentual;
-        }
-    }
-}
-
+      
 
     function abrirConfiguracoes() { document.getElementById('meu-modal').style.display = 'flex'; }
     function fecharConfiguracoes() { document.getElementById('meu-modal').style.display = 'none'; }
