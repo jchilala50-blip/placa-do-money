@@ -674,13 +674,10 @@ alert("ENTREI VERSAO 999");
 
     const contagem = Array(10).fill(0);
 
-    ultimosDigitos.forEach(digito => {
-
-        if (!isNaN(digito) && digito >= 0 && digito <= 9) {
-            contagem[digito]++;
-        }
-
-    });
+    alert(
+    "TIPO=" + typeof ultimosDigitos +
+    " TAM=" + ultimosDigitos.length
+);
 
     console.log("ULTIMOS:", ultimosDigitos);
     alert(
