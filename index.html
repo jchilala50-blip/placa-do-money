@@ -670,13 +670,32 @@ alert("ATUALIZEI");
     }
 
 function atualizarGraficoReal() {
+    const contagem = Array(10).fill(0);
 
-document.body.style.backgroundColor = "red";
+    ultimosDigitos.forEach(digito => {
+        if (!isNaN(digito) && digito >= 0 && digito <= 9) {
+            contagem[digito]++;
+        }
+    });
 
-document.getElementById('lucro-real').innerText = "TAM=" + ultimosDigitos.length; 
+    for (let i = 0; i <= 9; i++) {
+        const barra = document.getElementById(`barra-${i}`);
+        const texto = document.getElementById(`perc-${i}`);
+        
+        const percentual = ultimosDigitos.length > 0 ? Math.round(
+            (contagem[i] / ultimosDigitos.length) * 100
+        ) : 0;
 
+        if (barra) {
+            barra.style.height = Math.max(percentual * 2.5, 10) + "px";
+        }
+
+        if (texto) {
+            texto.innerText = percentual + "%";
+        }
+    }
 }
-      
+
 
     function abrirConfiguracoes() { document.getElementById('meu-modal').style.display = 'flex'; }
     function fecharConfiguracoes() { document.getElementById('meu-modal').style.display = 'none'; }
