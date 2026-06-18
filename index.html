@@ -687,8 +687,16 @@ function atualizarGraficoReal() {
         ) : 0;
 
         if (barra) {
-            barra.style.height = Math.max(percentual * 2.5, 10) + "px";
-        }
+
+    let altura = percentual * 1.5;
+
+    if (altura > 80) {
+        altura = 80;
+    }
+
+    barra.style.height =
+        Math.max(altura, 10) + "px";
+}
 
         if (texto) {
             texto.innerText = percentual + "%";
