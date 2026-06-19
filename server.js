@@ -235,9 +235,6 @@ const contaEscolhida =
 
     });
 
-const accountId =
-    contaEscolhida.account_id;
-
     const otp = await axios.post(
         `https://api.derivws.com/trading/v1/options/accounts/${accountId}/otp`,
         {},
