@@ -510,8 +510,15 @@ if (!params.get('ws_url')) {
 console.log("PEDINDO NOVA OTP");
 
     try {
+        
+const tipoConta =
+    document.getElementById('tipo-conta')
+    ? document.getElementById('tipo-conta').value
+    : 'REAL';
 
-        const resposta = await fetch('/api/novo-otp');
+const resposta = await fetch(
+    '/api/novo-otp?tipo=' + tipoConta
+);
         const dados = await resposta.json();
 
         if (dados.success && dados.ws_url) {
