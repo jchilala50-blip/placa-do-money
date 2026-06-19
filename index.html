@@ -463,7 +463,7 @@ ss="mini-placar">
 
             <div class="linha-controle">
                 <div class="btn-icon" onclick="abrirConfiguracoes()">⚙️</div>
-                <button class="btn-play-unico" id="btn-comecar-robo" onclick="alternarRobo()">▶</button>
+           <button class="btn-play-unico" id="btn-comecar-robo" onclick="alternarRobo()">🟥</button>
             </div>
             
             <div class="label-card" style="margin-bottom:6px;">Histórico de Transações:</div>
@@ -755,15 +755,15 @@ atualizarCoresBarras(contagem);
         roboLigado = !roboLigado;
         
         if(roboLigado) {
-        btn.innerText = "⏸";
-        btn.style.backgroundColor = "#00e676";
-        btn.style.color = "#000";
-        } else {
-        btn.innerText = "▶";
-        btn.style.backgroundColor = "#e53935";
-        btn.style.color = "#fff";
-        }
-    }
+
+    btn.innerText = "🟩";
+
+} else {
+
+    btn.innerText = "🟥";
+
+      }
+   }
 
     // Captura automática do WebSocket OTP da Deriv
 window.addEventListener('DOMContentLoaded', () => {
