@@ -208,8 +208,6 @@ app.get('/api/novo-otp', async (req, res) => {
 
    try {
 
-app.get('/api/novo-otp', async (req, res) => {
-
     const contas = await axios.get(
         'https://api.derivws.com/trading/v1/options/accounts',
         {
