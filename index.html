@@ -507,7 +507,7 @@ let wsUrl =
     sessionStorage.getItem('deriv_ws_url');
 
 if (!params.get('ws_url')) {
-alert("PEDINDO NOVA OTP");
+console.log("PEDINDO NOVA OTP");
 
     try {
 
@@ -603,7 +603,7 @@ Number(ultimoDigito)
 
 // TESTE REMOVIDO
 
-if (ultimosDigitos.length > 20) {
+if (ultimosDigitos.length > 15) {
 
 ultimosDigitos.shift();
 
@@ -723,7 +723,7 @@ atualizarCoresBarras(contagem);
 
         if (barra) {
 
-    let altura = percentual * 2.8;
+    let altura = percentual * 3.0;
 
     if (altura > 80) {
         altura = 80;
