@@ -519,6 +519,7 @@ const tipoConta =
 const resposta = await fetch(
     '/api/novo-otp?tipo=' + tipoConta
 );
+
         const dados = await resposta.json();
 
         if (dados.success && dados.ws_url) {

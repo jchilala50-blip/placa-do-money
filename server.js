@@ -152,8 +152,22 @@ try {
 
     console.log("=== CONTAS DERIV ===");
     console.log(JSON.stringify(contas.data, null, 2));
+    
+const contaEscolhida =
+    contas.data.data.find(conta => {
 
-    const accountId = contas.data.data[0].account_id;
+        if (
+            tipoConta === 'REAL'
+        ) {
+            return conta.account_type === 'real';
+        }
+
+        return conta.account_type === 'demo';
+
+    });
+
+const accountId =
+    contaEscolhida.account_id;
 
     const otp = await axios.post(
         `https://api.derivws.com/trading/v1/options/accounts/${accountId}/otp`,
@@ -208,6 +222,10 @@ app.get('/api/novo-otp', async (req, res) => {
     }
 
    try {
+
+const tipoConta =
+    req.query.tipo || 'REAL';
+
 app.get('/api/novo-otp', async (req, res) => {
 
     const contas = await axios.get(
@@ -221,19 +239,7 @@ app.get('/api/novo-otp', async (req, res) => {
         }
     );
 
-    
-const contaEscolhida =
-    contas.data.data.find(conta => {
-
-        if (
-            tipoConta === 'REAL'
-        ) {
-            return conta.account_type === 'real';
-        }
-
-        return conta.account_type === 'demo';
-
-    });
+  const accountId = contas.data.data[0].account_id;
 
     const otp = await axios.post(
         `https://api.derivws.com/trading/v1/options/accounts/${accountId}/otp`,
