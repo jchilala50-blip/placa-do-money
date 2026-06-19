@@ -210,9 +210,6 @@ app.get('/api/novo-otp', async (req, res) => {
 
    try {
 
-const tipoConta =
-    req.query.tipo || 'REAL';
-
 app.get('/api/novo-otp', async (req, res) => {
 
     const contas = await axios.get(
