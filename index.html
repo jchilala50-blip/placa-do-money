@@ -177,42 +177,26 @@
         .label-barra { font-size: 10px; font-weight: bold; color: #90a4ae; margin-top: 3px; }
 
         /* Controles: Engrenagem e Botão Único Play */
-        .linha-controle {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 12px;
-        }
-        .btn-icon {
-            background-color: #101f35;
-            border: 1px solid #1a3152;
-            border-radius: 6px;
-            color: #fff;
-            width: 42px;
-            height: 42px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            font-size: 16px;
-            box-sizing: border-box;
-        }
-        .btn-play-unico {
-            flex: 1;
-            height: 42px;
-            background-color: #e53935;
-            color: #fff;
-            font-weight: bold;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-sizing: border-box;
-            transition: background-color 0.3s ease;
-        }
+         .linha-controle {
+     display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 12px;
+}
+
+#sinalizadores-operacao {
+    display: flex;
+    gap: 4px;
+    font-size: 22px;
+}
+
+.btn-play-unico {
+    width: 42px;
+    min-width: 42px;
+    max-width: 42px;
+    height: 42px;
+    flex: none;
+}
 
         .historico-lista {
             background-color: #101f35;
@@ -461,9 +445,32 @@ ss="mini-placar">
                 </div>
             </div>
 
-            <div class="btn-icon" onclick="abrirConfiguracoes()"> ⚙️ </div> <button class="btn-play-unico" id="btn-comecar-robo" onclick="alternarRobo()"> 🟥 </button> <div id="sinalizadores-operacao"> <span id="sinal-loss">🔴</span> <span id="sinal-win">🟢</span> <span id="sinal-neutro">🔵</span> </div>
+            <div class="linha-controle">
 
-            
+    <div class="btn-icon"
+         onclick="abrirConfiguracoes()">
+         ⚙️
+    </div>
+
+    <button
+        class="btn-play-unico"
+        id="btn-comecar-robo"
+        onclick="alternarRobo()">
+        🟥
+    </button>
+
+    <div id="sinalizadores-operacao">
+
+        <span id="sinal-loss">🔴</span>
+
+        <span id="sinal-win">🟢</span>
+
+        <span id="sinal-neutro">🔵</span>
+
+    </div>
+
+</div>
+      
             <div class="label-card" style="margin-bottom:6px;">Histórico de Transações:</div>
             <div class="historico-lista" id="lista-historico">
                 <div style="color: #607d8b; text-align: center; padding-top: 15px; font-size:11px;">Aguardando execução do mercado...</div>
@@ -596,7 +603,7 @@ Number(ultimoDigito)
 
 // TESTE REMOVIDO
 
-if (ultimosDigitos.length > 100) {
+if (ultimosDigitos.length > 30) {
 
 ultimosDigitos.shift();
 
