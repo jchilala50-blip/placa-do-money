@@ -146,6 +146,33 @@ console.log(JSON.stringify(response.data, null, 2));
 req.session.derivToken = token;
 console.log("TOKEN DERIV GUARDADO");
 
+try {
+
+    const perfil = await axios.get(
+        'https://api.deriv.com/user/profile',
+        {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            },
+            timeout: 15000
+        }
+    );
+
+    console.log("=== PERFIL DERIV ===");
+    console.log(JSON.stringify(perfil.data, null, 2));
+
+} catch (erro) {
+
+    console.log("=== ERRO PERFIL ===");
+
+    if (erro.response) {
+        console.log(JSON.stringify(erro.response.data, null, 2));
+    } else {
+        console.log(erro.message);
+    }
+
+}
+
 console.log("=== TESTE CONTAS DERIV ===");
 
 try {
