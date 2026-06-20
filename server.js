@@ -163,6 +163,20 @@ try {
 
     console.log("=== CONTAS DERIV ===");
     console.log(JSON.stringify(contas.data, null, 2));
+
+console.log("=== TIPOS DE CONTA ===");
+
+contas.data.data.forEach(conta => {
+
+    console.log(
+        "ID:",
+        conta.account_id,
+        "| TYPE:",
+        conta.account_type
+    );
+
+});
+
   const accountId = contas.data.data[0].account_id;
 
     const otp = await axios.post(
