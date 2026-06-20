@@ -4,6 +4,7 @@ const pkceChallenge = require('pkce-challenge').default;
 const axios = require('axios');
 const path = require('path');
 const cookieParser = require('cookie-parser'); // CORREÇÃO AMY: Importar cookies
+const session = require('express-session');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -12,11 +13,21 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser()); // CORREÇÃO AMY: Ativar leitura de cookies
 
+app.use(session({
+    secret: 'placa-do-money-secret',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        maxAge: 24 * 60 * 60 * 1000
+    }
+}));
+
+
 // Armazenamento local (mantido apenas para o formulário se necessário)
 let usuarios = [];
 
 // criar variável global para guartoken acess  token
-let derivToken = null;
+// let derivToken = null;
 
 const CLIENT_ID = process.env.DERIV_APP_ID || '33syUeaX60IlPmcJHrdtB';
 const REDIRECT_URI = 'https://placa-do-money.onrender.com/callback';
@@ -132,7 +143,7 @@ console.log(JSON.stringify(response.data, null, 2));
         
         // Captura os dados que a Deriv nos enviou de volta
         const token = response.data.access_token;
-derivToken = token;
+req.session.derivToken = token;
 console.log("TOKEN DERIV GUARDADO");
 
 console.log("=== TESTE CONTAS DERIV ===");
@@ -200,7 +211,7 @@ try {
 
 app.get('/api/novo-otp', async (req, res) => {
 
-    if (!derivToken) {
+    if (!req.session.derivToken) {
         return res.status(401).json({
             erro: 'Nenhum token Deriv disponível.'
         });
@@ -214,7 +225,7 @@ const tipoConta =
         'https://api.derivws.com/trading/v1/options/accounts',
         {
             headers: {
-                'Authorization': `Bearer ${derivToken}`,
+                'Authorization': `Bearer ${req.session.derivToken}`,
                 'Deriv-App-ID': CLIENT_ID
             },
             timeout: 15000
@@ -242,7 +253,7 @@ const accountId =
         {},
         {
             headers: {
-                'Authorization': `Bearer ${derivToken}`,
+                'Authorization': `Bearer ${req.session.derivToken}`,
                 'Deriv-App-ID': CLIENT_ID,
                 'Content-Type': 'application/json'
             },
