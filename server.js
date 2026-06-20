@@ -85,7 +85,7 @@ app.get('/api/deriv-auth-url', (req, res) => {
         + `?response_type=code`
         + `&client_id=${CLIENT_ID}`
         + `&redirect_uri=${encodeURIComponent(REDIRECT_URI)}`
-        + `&servertrade+account management`
+        + `&scope=trade+account management`
         + `&state=${state}`
         + `&code_challenge=${code_challenge}`
         + `&code_challenge_method=S256`;
