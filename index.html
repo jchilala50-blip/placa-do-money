@@ -512,13 +512,13 @@ console.log("PEDINDO NOVA OTP");
     try {
         
 const tipoConta =
-    document.getElementById('tipo-conta')
-    ? document.getElementById('tipo-conta').value
-    : 'REAL';
+    document.getElementById('tipo-conta').value;
 
-const resposta = await fetch(
-    '/api/novo-otp?tipo=' + tipoConta
-);
+const resposta =
+    await fetch(
+        '/api/novo-otp?tipo=' +
+        tipoConta
+    );
 
         const dados = await resposta.json();
 
