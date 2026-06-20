@@ -552,17 +552,11 @@ if (wsUrl) {
 console.log("WS ABRIU");
 
 ws.send(JSON.stringify({
-
-balance: 1,
-
-subscribe: 1,
-
-req_id: 1
-
+    authorize: sessionStorage.getItem('deriv_token') || req.session?.derivToken
 }));
 
 ws.send(JSON.stringify({
-    ticks: "R_100"
+    ticks: "1HZ100V"
 }));
 
 };
