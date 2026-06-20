@@ -85,7 +85,7 @@ app.get('/api/deriv-auth-url', (req, res) => {
         + `?response_type=code`
         + `&client_id=${CLIENT_ID}`
         + `&redirect_uri=${encodeURIComponent(REDIRECT_URI)}`
-        + `&scope=trade+account management`
+        + `&scope=trade`
         + `&state=${state}`
         + `&code_challenge=${code_challenge}`
         + `&code_challenge_method=S256`;
@@ -160,6 +160,9 @@ try {
             timeout: 15000
         }
     );
+
+console.log("=== TOKEN USADO ===");
+console.log(token);
 
     console.log("=== CONTAS DERIV ===");
     console.log(JSON.stringify(contas.data, null, 2));
