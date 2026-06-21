@@ -613,6 +613,74 @@ ultimosDigitos.shift();
 
 }
 
+// ==========================
+// MOTOR ESTRATÉGIA ÍMPAR
+// ==========================
+
+if (roboLigado) {
+
+    const digitoAtual =
+        Number(ultimoDigito);
+
+    // Resolver operação anterior
+    if (
+        aguardandoResultado &&
+        operacaoAtual
+    ) {
+
+        if (
+            digitoAtual % 2 !== 0
+        ) {
+
+            operacaoAtual.resultado =
+                "WIN";
+
+            lucroVirtual += 0.35;
+
+        } else {
+
+            operacaoAtual.resultado =
+                "LOSS";
+
+            perdaVirtual += 0.35;
+
+        }
+
+        historicoOperacoes.unshift(
+            operacaoAtual
+        );
+
+        aguardandoResultado = false;
+
+        operacaoAtual = null;
+
+        console.log(
+            historicoOperacoes
+        );
+    }
+
+    // Criar nova operação
+    if (
+        !aguardandoResultado &&
+        digitoAtual % 2 !== 0
+    ) {
+
+        operacaoAtual = {
+
+            tipo: "ÍMPAR",
+
+            ultimo: digitoAtual,
+
+            preco: 0.35,
+
+            resultado: "PENDENTE"
+
+        };
+
+        aguardandoResultado = true;
+    }
+}
+
 
 atualizarGraficoReal();
 
@@ -835,6 +903,17 @@ async function alternarAmbienteConta() {
 }
 
     let roboLigado = false;
+
+let historicoOperacoes = [];
+
+let lucroVirtual = 0;
+
+let perdaVirtual = 0;
+
+let aguardandoResultado = false;
+
+let operacaoAtual = null;
+
     function alternarRobo() {
         const est = document.getElementById('estrategia-robo').value;
         const btn = document.getElementById('btn-comecar-robo');
