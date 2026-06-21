@@ -746,10 +746,63 @@ atualizarCoresBarras(contagem);
 
     function abrirConfiguracoes() { document.getElementById('meu-modal').style.display = 'flex'; }
     function fecharConfiguracoes() { document.getElementById('meu-modal').style.display = 'none'; }
-    function alternarAmbienteConta() { 
-        const tipo = document.getElementById('tipo-conta').value;
-        alert("Modo alterado para: " + (tipo === 'REAL' ? 'CONTA REAL' : 'CONTA DEMO')); 
+    
+async function alternarAmbienteConta() {
+    const tipo = document.getElementById('tipo-conta').value;
+
+    try {
+        console.log("A trocar conta para:", tipo);
+
+        // 1. pede novo OTP ao backend
+        const resposta = await fetch(`/api/novo-otp?tipo=${tipo}`);
+        const dados = await resposta.json();
+
+        if (!dados.ws_url) {
+            alert("Erro ao obter ligação da conta");
+            return;
+        }
+
+        // 2. guarda novo ws_url
+        sessionStorage.setItem('deriv_ws_url', dados.ws_url);
+
+        // 3. fecha WebSocket antigo (se existir)
+        if (window.derivWS) {
+            window.derivWS.close();
+        }
+
+        // 4. abre nova ligação WebSocket
+        const ws = new WebSocket(dados.ws_url);
+        window.derivWS = ws;
+
+        ws.onopen = function () {
+            console.log("WS REABRIU COM CONTA:", tipo);
+
+            ws.send(JSON.stringify({
+                balance: 1,
+                subscribe: 1,
+                req_id: 1
+            }));
+        };
+
+        ws.onmessage = function (msg) {
+            const data = JSON.parse(msg.data);
+
+            if (data.msg_type === 'balance' && data.balance) {
+                const saldo = data.balance.balance;
+                const moeda = data.balance.currency;
+
+                const elem = document.getElementById('saldo-real');
+                if (elem) {
+                    elem.innerText = `${Number(saldo).toFixed(2)} ${moeda}`;
+                }
+            }
+        };
+
+    } catch (erro) {
+        console.error(erro);
+        alert("Falha ao trocar de conta");
     }
+}
 
     let roboLigado = false;
     function alternarRobo() {
