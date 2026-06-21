@@ -753,7 +753,7 @@ async function alternarAmbienteConta() {
     try {
         console.log("A trocar conta para:", tipo);
 
-        // 1. pede novo OTP ao backend
+        // 1. pedir novo OTP
         const resposta = await fetch(`/api/novo-otp?tipo=${tipo}`);
         const dados = await resposta.json();
 
@@ -762,31 +762,39 @@ async function alternarAmbienteConta() {
             return;
         }
 
-        // 2. guarda novo ws_url
+        // 2. guardar URL
         sessionStorage.setItem('deriv_ws_url', dados.ws_url);
 
-        // 3. fecha WebSocket antigo (se existir)
+        // 3. fechar WS antigo
         if (window.derivWS) {
-            window.derivWS.close();
+            try {
+                window.derivWS.close();
+            } catch (e) {}
         }
 
-        // 4. abre nova ligação WebSocket
+        // 4. criar novo WS
         const ws = new WebSocket(dados.ws_url);
         window.derivWS = ws;
 
         ws.onopen = function () {
             console.log("WS REABRIU COM CONTA:", tipo);
 
+            // 🔥 IMPORTANTE: subscrição completa
             ws.send(JSON.stringify({
                 balance: 1,
                 subscribe: 1,
                 req_id: 1
+            }));
+
+            ws.send(JSON.stringify({
+                ticks: "1HZ100V"
             }));
         };
 
         ws.onmessage = function (msg) {
             const data = JSON.parse(msg.data);
 
+            // 💰 SALDO
             if (data.msg_type === 'balance' && data.balance) {
                 const saldo = data.balance.balance;
                 const moeda = data.balance.currency;
@@ -796,6 +804,28 @@ async function alternarAmbienteConta() {
                     elem.innerText = `${Number(saldo).toFixed(2)} ${moeda}`;
                 }
             }
+
+            // 📊 TICKS (BARRAS)
+            if (data.tick) {
+
+                const ultimoDigito = String(data.tick.quote).slice(-1);
+
+                ultimosDigitos.push(Number(ultimoDigito));
+
+                if (ultimosDigitos.length > 15) {
+                    ultimosDigitos.shift();
+                }
+
+                atualizarGraficoReal();
+            }
+        };
+
+        ws.onerror = function (err) {
+            console.log("WS ERROR:", err);
+        };
+
+        ws.onclose = function (event) {
+            console.log("WS FECHOU:", event.code);
         };
 
     } catch (erro) {
