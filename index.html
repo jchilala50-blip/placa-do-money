@@ -267,7 +267,7 @@
 
 <script>
     window.onerror = function(msg, url, line) {
-        Console.log("Erro no código:\n" + msg + "\nLinha: " + line);
+        console.log("Erro no código:\n" + msg + "\nLinha: " + line);
         return true;
     };
 
@@ -1054,19 +1054,6 @@ function trocarVolatilidade() {
 }
 
 let roboLigado = false;
-let simboloAtual = "1HZ100V";
-let historicoOperacoes = [];
-
-let lucroVirtual = 0;
-
-let perdaVirtual = 0;
-
-let aguardandoResultado = false;
-
-let operacaoAtual = null;
-
-
-    let roboLigado = false;
 let simboloAtual = "1HZ100V";
 let historicoOperacoes = [];
 
