@@ -436,7 +436,10 @@ ss="mini-placar">
 
             <div class="container-grafico">
                 <div class="titulo-grafico">
-                    <div>Últimos Dígitos</div>
+                    <div>
+    Últimos Dígitos:
+    <span id="ultimo-digito-real">-</span>
+</div>
                     <div>100 ticks</div>
                 </div>
                 <div class="area-barras" id="render-grafico">
@@ -615,6 +618,15 @@ if (data.tick) {
 
 const ultimoDigito = String(data.tick.quote) .slice(-1);
 
+const visor =
+    document.getElementById(
+        'ultimo-digito-real'
+    );
+
+if (visor) {
+    visor.innerText =
+        ultimoDigito;
+}
 
 ultimosDigitos.push(
 
