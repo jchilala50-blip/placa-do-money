@@ -487,21 +487,36 @@ onchange="trocarVolatilidade()"
 
     <div id="sinalizadores-operacao">
 
-    <span id="etapa-1">○</span>
+    <span id="etapa-1">⚪</span>
 
     <span style="
         color:#607d8b;
         margin:0 12px;
     ">────</span>
 
-    <span id="etapa-2">○</span>
+    <span id="etapa-2">⚪</span>
 
     <span style="
         color:#607d8b;
         margin:0 12px;
     ">────</span>
 
-    <span id="etapa-3">○</span>
+    <span id="etapa-3">⚪</span>
+
+
+<span id="etapa-3">○</span>
+
+<span
+    onclick="limparHistorico()"
+    title="Limpar histórico"
+    style="
+        margin-left:15px;
+        cursor:pointer;
+        font-size:22px;
+    "
+>
+    🗑️
+</span>
 
 </div>
 
@@ -1153,6 +1168,53 @@ function atualizarEtapas(etapa) {
 }
 
  
+
+function limparHistorico() {
+
+    if (!confirm("Deseja limpar todo o histórico?")) {
+        return;
+    }
+
+    historicoOperacoes = [];
+
+    const historico =
+        document.getElementById(
+            'lista-historico'
+        );
+
+    if (historico) {
+
+        historico.innerHTML = `
+            <div style="
+                color:#607d8b;
+                text-align:center;
+                padding-top:15px;
+                font-size:14px;
+            ">
+                Aguardando execução do mercado...
+            </div>
+        `;
+    }
+
+    const wins =
+        document.getElementById(
+            'cont-wins'
+        );
+
+    const losses =
+        document.getElementById(
+            'cont-losses'
+        );
+
+    if (wins) wins.innerText = "0";
+    if (losses) losses.innerText = "0";
+
+    console.log(
+        "Histórico apagado."
+    );
+}
+
+
    function alternarRobo() {
 
     const est =
