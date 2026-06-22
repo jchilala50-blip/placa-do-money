@@ -952,20 +952,14 @@ function renderizarHistorico() {
     let html = `
 
         <div style="
-    display:grid;
-    grid-template-columns:
-    1fr 1fr 1fr 1fr;
-    margin-bottom:4px;
-    padding:4px;
-    border-left:4px solid ${
-        op.resultado === "WIN"
-        ? "#00e676"
-        : op.resultado === "LOSS"
-        ? "#ff1744"
-        : "#ffeb3b"
-    };
-    background:#0d1828;
-">
+            display:grid;
+            grid-template-columns:
+            1fr 1fr 1fr 1fr;
+            margin-bottom:4px;
+            padding:4px;
+            background:#0d1828;
+        ">
+`;
 
             <span>TIPO</span>
             <span>ÚLTIMO</span>
@@ -995,22 +989,22 @@ function renderizarHistorico() {
 
                 <span style="
     font-weight:bold;
-    color:
-    ${
-        op.resultado === "WIN"
-        ? "#00e676"
-        : op.resultado === "LOSS"
-        ? "#ff1744"
-        : "#ffeb3b"
-    };
+    color:#fff;
 ">
-    ${
-        op.resultado === "WIN"
-        ? "🟩 WIN"
-        : op.resultado === "LOSS"
-        ? "🟥 LOSS"
-        : "🟨 PENDENTE"
-    }
+    <span style="
+        padding:2px 6px;
+        border-radius:4px;
+        background:${
+            op.resultado === "WIN"
+            ? "#00e676"
+            : op.resultado === "LOSS"
+            ? "#ff1744"
+            : "#ffeb3b"
+        };
+        color:#000;
+    ">
+        ${op.resultado}
+    </span>
 </span>
 
             </div>
