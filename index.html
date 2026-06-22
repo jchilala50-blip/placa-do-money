@@ -186,8 +186,17 @@
 
 #sinalizadores-operacao {
     display: flex;
-    gap: 4px;
-    font-size: 22px;
+    align-items: center;
+    gap: 2px;
+    font-size: 18px;
+}
+
+#etapa-1,
+#etapa-2,
+#etapa-3 {
+    color: #607d8b;
+    font-weight: bold;
+    transition: 0.3s;
 }
 
 .btn-play-unico {
@@ -473,18 +482,28 @@ onchange="trocarVolatilidade()"
         class="btn-play-unico"
         id="btn-comecar-robo"
         onclick="alternarRobo()">
-        🟥
+        🔘
     </button>
 
     <div id="sinalizadores-operacao">
 
-        <span id="sinal-loss">🔴</span>
+    <span id="etapa-1">○</span>
 
-        <span id="sinal-win">🟢</span>
+    <span style="
+        color:#607d8b;
+        margin:0 12px;
+    ">────────</span>
 
-        <span id="sinal-neutro">🔵</span>
+    <span id="etapa-2">○</span>
 
-    </div>
+    <span style="
+        color:#607d8b;
+        margin:0 12px;
+    ">────────</span>
+
+    <span id="etapa-3">○</span>
+
+</div>
 
 </div>
 
@@ -692,6 +711,8 @@ if (
 
         }
 
+atualizarEtapas(3);
+
         historicoOperacoes.unshift(
             operacaoAtual
         );
@@ -724,6 +745,8 @@ if (
             resultado: "PENDENTE"
 
         };
+
+atualizarEtapas(1);
 
         aguardandoResultado = true;
     }
@@ -1053,6 +1076,33 @@ function trocarVolatilidade() {
 
 }
 
+
+function apagarEtapas() {
+
+    document.getElementById("etapa-1").style.color =
+        "#607d8b";
+
+    document.getElementById("etapa-2").style.color =
+        "#607d8b";
+
+    document.getElementById("etapa-3").style.color =
+        "#607d8b";
+}
+
+function ativarEtapa(numero) {
+
+    const cor = "#00e5ff";
+
+    if (numero >= 1)
+        document.getElementById("etapa-1").style.color = cor;
+
+    if (numero >= 2)
+        document.getElementById("etapa-2").style.color = cor;
+
+    if (numero >= 3)
+        document.getElementById("etapa-3").style.color = cor;
+}
+
 let roboLigado = false;
 let simboloAtual = "1HZ100V";
 let historicoOperacoes = [];
@@ -1065,26 +1115,115 @@ let aguardandoResultado = false;
 
 let operacaoAtual = null;
 
-    function alternarRobo() {
-        const est = document.getElementById('estrategia-robo').value;
-        const btn = document.getElementById('btn-comecar-robo');
-        
-        if (est === 'nenhuma') {
-            alert("Por favor, selecione uma estratégia antes de iniciar o robô!");
-            return;
-        }
-        
-        roboLigado = !roboLigado;
-        if(roboLigado) {
 
-    btn.innerText = "🟩";
+function atualizarEtapas(etapa) {
 
-} else {
+    const etapa1 =
+        document.getElementById('etapa-1');
 
-    btn.innerText = "🟥";
+    const etapa2 =
+        document.getElementById('etapa-2');
 
-      }
-   }
+    const etapa3 =
+        document.getElementById('etapa-3');
+
+    const azul =
+        "#00e5ff";
+
+    const cinza =
+        "#607d8b";
+
+    if (etapa1)
+        etapa1.style.color =
+            etapa >= 1
+            ? azul
+            : cinza;
+
+    if (etapa2)
+        etapa2.style.color =
+            etapa >= 2
+            ? azul
+            : cinza;
+
+    if (etapa3)
+        etapa3.style.color =
+            etapa >= 3
+            ? azul
+            : cinza;
+}
+
+ 
+   function alternarRobo() {
+
+    const est =
+        document.getElementById(
+            'estrategia-robo'
+        ).value;
+
+    const btn =
+        document.getElementById(
+            'btn-comecar-robo'
+        );
+
+    if (est === 'nenhuma') {
+
+        alert(
+            "Por favor, selecione uma estratégia antes de iniciar o robô!"
+        );
+
+        return;
+    }
+
+    roboLigado = !roboLigado;
+
+    const etapa1 =
+        document.getElementById(
+            'etapa-1'
+        );
+
+    const etapa2 =
+        document.getElementById(
+            'etapa-2'
+        );
+
+    const etapa3 =
+        document.getElementById(
+            'etapa-3'
+        );
+
+    if (roboLigado) {
+
+        btn.innerText = "🟩";
+
+        if (etapa1)
+            etapa1.style.color =
+                "#00e5ff";
+
+        if (etapa2)
+            etapa2.style.color =
+                "#607d8b";
+
+        if (etapa3)
+            etapa3.style.color =
+                "#607d8b";
+
+    } else {
+
+        btn.innerText = "🟥";
+
+        if (etapa1)
+            etapa1.style.color =
+                "#607d8b";
+
+        if (etapa2)
+            etapa2.style.color =
+                "#607d8b";
+
+        if (etapa3)
+            etapa3.style.color =
+                "#607d8b";
+    }
+}
 
     // Captura automática do WebSocket OTP da Deriv
 window.addEventListener('DOMContentLoaded', () => {
