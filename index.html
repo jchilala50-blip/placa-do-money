@@ -431,6 +431,7 @@ ss="mini-placar">
                         <option value="nenhuma">Nenhuma</option>
                         <option value="maestro">Maestro (Dígitos)</option>
                         <option value="predector">Predector Pro</option>
+<option value="impar">ÍMPAR</option>
                     </select>
                 </div>
             </div>
@@ -617,7 +618,10 @@ ultimosDigitos.shift();
 // MOTOR ESTRATÉGIA ÍMPAR
 // ==========================
 
-if (roboLigado) {
+if (
+    roboLigado &&
+    document.getElementById('estrategia-robo').value === 'impar'
+) {
 
     const digitoAtual =
         Number(ultimoDigito);
