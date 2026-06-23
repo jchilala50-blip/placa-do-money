@@ -1324,6 +1324,15 @@ if (data.tick) {
 
 const ultimoDigito = String(data.tick.quote).slice(-1);
 
+const visor =
+    document.getElementById(
+        'ultimo-digito-real'
+    );
+
+if (visor) {
+    visor.innerText =
+        ultimoDigito;
+}
 
 ultimosDigitos.push(Number(ultimoDigito));
 
