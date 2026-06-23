@@ -1384,6 +1384,42 @@ function configurarEventosDoWS(ws) {
     };
 }
 
+
+// === PROCESSAR PLACAR E LIBERTAR O ROBÔ ===
+function processarResultadoOperacao(resultado, lucro) {
+    const winsElem = document.getElementById('cont-wins');
+    const lossesElem = document.getElementById('cont-losses');
+
+    if (resultado === 'won') {
+        if (winsElem) winsElem.innerText = Number(winsElem.innerText) + 1;
+        atualizarEtapas(2); // Muda o visual das etapas para indicar sucesso
+    } else {
+        if (lossesElem) lossesElem.innerText = Number(lossesElem.innerText) + 1;
+        atualizarEtapas(3); // Indica que passou pela validação final
+    }
+
+    // Atualiza o histórico visual se necessário
+    if (typeof renderizarHistorico === 'function') {
+        renderizarHistorico();
+    }
+
+    // Voltar a permitir novas operações
+    aguardandoResultado = false;
+    operacaoAtual = null;
+}
+
+// Função auxiliar para mudar a cor das bolinhas/etapas do robô
+function atualizarEtapas(etapa ativa) {
+    const e1 = document.getElementById('etapa-1');
+    const e2 = document.getElementById('etapa-2');
+    const e3 = document.getElementById('etapa-3');
+
+    if (e1) e1.style.color = ativa === 1 ? "#00e5ff" : "#607d8b";
+    if (e2) e2.style.color = ativa === 2 ? "#00e676" : "#607d8b";
+    if (e3) e3.style.color = ativa === 3 ? "#ff5252" : "#607d8b";
+}
+
+
 function atualizarEtapas(etapa) {
 
     const etapa1 =
