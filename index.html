@@ -499,21 +499,21 @@ onchange="trocarVolatilidade()"
 
     <div id="sinalizadores-operacao">
 
-    <span id="etapa-1">⚪</span>
+    <span id="etapa-1">○</span>
 
     <span style="
         color:#607d8b;
         margin:0 12px;
     ">───</span>
 
-    <span id="etapa-2">⚪</span>
+    <span id="etapa-2">○</span>
 
     <span style="
         color:#607d8b;
         margin:0 12px;
     ">───</span>
 
-    <span id="etapa-3">⚪</span>
+    <span id="etapa-3">○</span>
 
 <span
     onclick="limparHistorico()"
@@ -761,143 +761,12 @@ Number(ultimoDigito)
 );
 
 
-// TESTE REMOVIDO
-
-
 if (ultimosDigitos.length > 15) {
-
 
 ultimosDigitos.shift();
 
 
 }
-
-
-// ==========================
-
-// MOTOR ESTRATÉGIA ÍMPAR
-
-// ==========================
-
-
-if (
-
-roboLigado &&
-
-document.getElementById('estrategia-robo').value === 'impar'
-
-) {
-
-const digitoAtual =
-
-Number(ultimoDigito);
-
-
-// Resolver operação anterior
-
-if (
-
-aguardandoResultado &&
-
-operacaoAtual
-
-) {
-
-
-if (
-
-digitoAtual % 2 !== 0
-
-) {
-
-
-operacaoAtual.resultado =
-
-"WIN";
-
-
-lucroVirtual += 0.35;
-
-
-} else {
-
-
-operacaoAtual.resultado =
-
-"LOSS";
-
-
-perdaVirtual += 0.35;
-
-
-}
-
-
-atualizarEtapas(3);
-
-
-historicoOperacoes.unshift(
-
-operacaoAtual
-
-);
-
-
-renderizarHistorico();
-
-
-aguardandoResultado = false;
-
-
-operacaoAtual = null;
-
-
-console.log(
-
-historicoOperacoes
-
-);
-
-}
-
-
-// Criar nova operação
-
-if (
-
-!aguardandoResultado &&
-
-digitoAtual % 2 !== 0
-
-) {
-
-
-operacaoAtual = {
-
-
-tipo: "ÍMPAR",
-
-
-ultimo: digitoAtual,
-
-
-preco: 0.35,
-
-
-resultado: "PENDENTE"
-
-
-};
-
-atualizarEtapas(1);
-
-
-aguardandoResultado = true;
-
-}
-
-}
-
 
 atualizarGraficoReal();
 
