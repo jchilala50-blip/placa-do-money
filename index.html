@@ -756,20 +756,6 @@ async function alternarAmbienteConta() {
             }));
         };
 
-                window.derivWS = ws;
-
-        ws.onopen = function () {
-            console.log("WS REABRIU COM CONTA:", tipo);
-            ws.send(JSON.stringify({
-                balance: 1,
-                subscribe: 1,
-                req_id: 1
-            }));
-            ws.send(JSON.stringify({
-                ticks: simboloAtual
-            }));
-        };
-
         // Chamamos a mesma função centralizada aqui também!
         configurarEventosDoWS(ws);
 
