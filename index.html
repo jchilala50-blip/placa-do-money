@@ -970,6 +970,68 @@ function comprarContratoDeriv(tipoContrato, duracaoTicks, barreira) {
 }
 
 
+// === MOTOR DE PROCESSAMENTO DAS 5 ESTRATÉGIAS ===
+function executarMotorEstrategias(ultimoDigito) {
+    if (aguardandoResultado) return; // Se já tiver uma operação aberta, espera terminar
+
+    const estrategia = document.getElementById('estrategia-robo').value;
+    if (estrategia === 'nenhuma') return;
+
+    console.log(`Robô analisando dígito [${ultimoDigito}] na estratégia: ${estrategia}`);
+
+    // 1. ESTRATÉGIA ÍMPAR
+    if (estrategia === 'impar' && ultimoDigito % 2 !== 0) {
+        atualizarEtapas(1);
+        operacaoAtual = { tipo: "ÍMPAR", ultimo: ultimoDigito, preco: 0.35, resultado: "PENDENTE" };
+        aguardandoResultado = true;
+        comprarContratoDeriv('DIGITODD', 1);
+    }
+    
+    // 2. ESTRATÉGIA PAR
+    else if (estrategia === 'par' && ultimoDigito % 2 === 0) {
+        atualizarEtapas(1);
+        operacaoAtual = { tipo: "PAR", ultimo: ultimoDigito, preco: 0.35, resultado: "PENDENTE" };
+        aguardandoResultado = true;
+        comprarContratoDeriv('DIGITEVEN', 1);
+    }
+
+    // 3. ESTRATÉGIA OVER (Acima de 5)
+    else if (estrategia === 'over' && ultimoDigito > 5) {
+        atualizarEtapas(1);
+        operacaoAtual = { tipo: "OVER 5", ultimo: ultimoDigito, preco: 0.35, resultado: "PENDENTE" };
+        aguardandoResultado = true;
+        comprarContratoDeriv('DIGITOVER', 1, 5); // Passa a barreira 5
+    }
+
+    // 4. ESTRATÉGIA UNDER (Abaixo de 5)
+    else if (estrategia === 'under' && ultimoDigito < 5) {
+        atualizarEtapas(1);
+        operacaoAtual = { tipo: "UNDER 5", ultimo: ultimoDigito, preco: 0.35, resultado: "PENDENTE" };
+        aguardandoResultado = true;
+        comprarContratoDeriv('DIGITUNDER', 1, 5); // Passa a barreira 5
+    }
+
+    // 5. ESTRATÉGIA REPETIÇÃO
+    else if (estrategia === 'repeticao') {
+        // Precisamos de pelo menos dois dígitos no histórico para comparar
+        if (ultimosDigitos.length >= 2) {
+            const penultimoDigito = ultimosDigitos[ultimosDigitos.length - 2];
+            
+            if (ultimoDigito === penultimoDigito) {
+                console.log(`Dígito repetido detetado! [${ultimoDigito} = ${penultimoDigito}]`);
+                atualizarEtapas(1);
+                operacaoAtual = { tipo: "REPETIÇÃO", ultimo: ultimoDigito, preco: 0.35, resultado: "PENDENTE" };
+                aguardandoResultado = true;
+                
+                // Compra Ímpar se o repetido for ímpar, ou Par se for par
+                const tipoContrato = ultimoDigito % 2 !== 0 ? 'DIGITODD' : 'DIGITEVEN';
+                comprarContratoDeriv(tipoContrato, 1);
+            }
+        }
+    }
+}
+
+
 function renderizarBarrasIniciais() {
 
 let html = '';
