@@ -877,7 +877,6 @@ resultado: "PENDENTE"
 
 };
 
-
 atualizarEtapas(1);
 
 
@@ -888,14 +887,10 @@ aguardandoResultado = true;
 }
 
 
-
 atualizarGraficoReal();
 
 
-
-
 } // FECHA if(data.tick)
-
 
 
 }; // FECHA ws.onmessage
@@ -940,6 +935,38 @@ atualizarCoresBarras();
 
 }, 1000);
 
+}
+// === FUNÇÃO PARA COMPRAR CONTRATO REAL NA DERIV (API v3) ===
+function comprarContratoDeriv(tipoContrato, duracaoTicks, barreira) {
+    if (!window.derivWS || window.derivWS.readyState !== 1) {
+        console.log("Erro: WebSocket não está conectado!");
+        return;
+    }
+
+    const stake = document.getElementById('config-stake') ? Number(document.getElementById('config-stake').value) : 0.35;
+
+    // Conforme a documentação da Deriv, passamos os parâmetros dentro do objeto 'proposal'
+    const requisicaoCompra = {
+        "buy": 1,
+        "price": stake,
+        "parameters": {
+            "amount": stake,
+            "basis": "stake",
+            "contract_type": tipoContrato, // 'DIGITODD' (Ímpar), 'DIGITEVEN' (Par), 'DIGITOVER', 'DIGITUNDER'
+            "currency": "USD",
+            "duration": Number(duracaoTicks), // Geralmente 1
+            "duration_unit": "t",
+            "symbol": simboloAtual            // Volatilidade (Ex: '1HZ100V')
+        }
+    };
+
+    // Se a estratégia for Over (Acima) ou Under (Abaixo), a API exige a barreira (Prediction)
+    if (barreira !== undefined) {
+        requisicaoCompra.parameters.barrier = String(barreira);
+    }
+
+    console.log("Enviando ordem oficial para a Deriv:", requisicaoCompra);
+    window.derivWS.send(JSON.stringify(requisicaoCompra));
 }
 
 
