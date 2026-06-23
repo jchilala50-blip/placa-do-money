@@ -1408,11 +1408,17 @@ function processarResultadoOperacao(resultado, lucro) {
     operacaoAtual = null;
 }
 
-// Função auxiliar para mudar a cor das bolinhas/etapas do robô
-function atualizarEtapas(etapa ativa) {
+// Função auxiliar corrigida para mudar a cor das bolinhas/etapas do robô
+function atualizarEtapas(etapaAtiva) {
     const e1 = document.getElementById('etapa-1');
     const e2 = document.getElementById('etapa-2');
     const e3 = document.getElementById('etapa-3');
+
+    if (e1) e1.style.color = etapaAtiva === 1 ? "#00e5ff" : "#607d8b";
+    if (e2) e2.style.color = etapaAtiva === 2 ? "#00e676" : "#607d8b";
+    if (e3) e3.style.color = etapaAtiva === 3 ? "#ff5252" : "#607d8b";
+}
+
 
     if (e1) e1.style.color = ativa === 1 ? "#00e5ff" : "#607d8b";
     if (e2) e2.style.color = ativa === 2 ? "#00e676" : "#607d8b";
