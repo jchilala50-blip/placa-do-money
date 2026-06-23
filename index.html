@@ -1314,7 +1314,8 @@ let aguardandoResultado = false;
 
 let operacaoAtual = null;
 
-// === NOVA FUNÇÃO CENTRALIZADORA DO WEBSOCKET ===
+
+// === FUNÇÃO CENTRALIZADORA DO WEBSOCKET (ATUALIZADA) ===
 function configurarEventosDoWS(ws) {
     ws.onmessage = function (msg) {
         const data = JSON.parse(msg.data);
@@ -1339,18 +1340,37 @@ function configurarEventosDoWS(ws) {
                 visor.innerText = ultimoDigito;
             }
 
-            ultimosDigitos.push(Number(ultimoDigito));
-
-            if (ultimosDigitos.length > 15) {
-                ultimosDigitos.shift();
+            if (typeof ultimosDigitos !== 'undefined') {
+                ultimosDigitos.push(Number(ultimoDigito));
+                if (ultimosDigitos.length > 15) {
+                    ultimosDigitos.shift();
+                }
             }
 
-            // Atualiza o teu gráfico de barras
-            atualizarGraficoReal();
+            if (typeof atualizarGraficoReal === 'function') {
+                atualizarGraficoReal();
+            }
 
-            // == O MOTOR DE ESTRATÉGIAS VAI ENTRAR AQUI NO PASSO SEGUINTE ==
-            if (roboLigado) {
+            // 🔥 GATILHO DO ROBÔ: Se o robô estiver ligado, envia o dígito para o motor
+            if (typeof roboLigado !== 'undefined' && roboLigado) {
                 executarMotorEstrategias(Number(ultimoDigito));
+            }
+        }
+
+        // 🎯 3. TRATAR RESULTADO DA COMPRA E CONTRATOS (PROPOSAL_OPEN_CONTRACT)
+        // A Deriv envia o tipo 'proposal_open_contract' para atualizar o estado da nossa ordem
+        if (data.msg_type === 'proposal_open_contract' && data.proposal_open_contract) {
+            const contrato = data.proposal_open_contract;
+
+            // Se o contrato foi finalizado (is_expired ou status === 'won'/'lost')
+            if (contrato.is_valid_to_sell && contrato.status !== 'open') {
+                const resultado = contrato.status; // 'won' (ganhou) ou 'lost' (perdeu)
+                const lucroObtido = Number(contrato.profit).toFixed(2);
+
+                console.log(`Operação finalizada! Resultado: ${resultado} | Lucro: ${lucroObtido}`);
+
+                // Processa o placar e liberta o robô para a próxima entrada
+                processarResultadoOperacao(resultado, lucroObtido);
             }
         }
     };
@@ -1363,7 +1383,6 @@ function configurarEventosDoWS(ws) {
         console.log("WS FECHOU | code=" + event.code);
     };
 }
-
 
 function atualizarEtapas(etapa) {
 
