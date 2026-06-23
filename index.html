@@ -630,167 +630,24 @@ ws.send(JSON.stringify({
 };
  // <--- Garante que esta linha continua aqui para fechar a função!
 
-ws.onmessage = function (msg) {
-
-
-  const data = JSON.parse(msg.data);
-
-
-  console.log(data);
-
-
-  if (data.msg_type === 'balance' && data.balance) {
-
-
-    const saldo = data.balance.balance;
-
-    const moeda = data.balance.currency;
-
-
-    const elem = document.getElementById('saldo-real');
-
-
-    if (elem) {
-
-      elem.innerText = `${Number(saldo).toFixed(2)} ${moeda}`;
-
-    }
-
-  }
-
-
-if (data.tick) {
-
-
-const ultimoDigito = String(data.tick.quote) .slice(-1);
-
-const visor =
-    document.getElementById(
-        'ultimo-digito-real'
-    );
-
-if (visor) {
-    visor.innerText =
-        ultimoDigito;
-}
-
-ultimosDigitos.push(
-
-Number(ultimoDigito)
-
-);
-
-// TESTE REMOVIDO
-
-if (ultimosDigitos.length > 15) {
-
-ultimosDigitos.shift();
-
-}
-
-// ==========================
-// MOTOR ESTRATÉGIA ÍMPAR
-// ==========================
-
-if (
-    roboLigado &&
-    document.getElementById('estrategia-robo').value === 'impar'
-) {
-    const digitoAtual =
-        Number(ultimoDigito);
-
-    // Resolver operação anterior
-    if (
-        aguardandoResultado &&
-        operacaoAtual
-    ) {
-
-        if (
-            digitoAtual % 2 !== 0
-        ) {
-
-            operacaoAtual.resultado =
-                "WIN";
-
-            lucroVirtual += 0.35;
-
-        } else {
-
-            operacaoAtual.resultado =
-                "LOSS";
-
-            perdaVirtual += 0.35;
-
-        }
-
-atualizarEtapas(3);
-
-        historicoOperacoes.unshift(
-            operacaoAtual
-        );
-
- renderizarHistorico();
-
-        aguardandoResultado = false;
-
-        operacaoAtual = null;
-
-        console.log(
-            historicoOperacoes
-        );
-    }
-
-    // Criar nova operação
-    if (
-        !aguardandoResultado &&
-        digitoAtual % 2 !== 0
-    ) {
-
-        operacaoAtual = {
-
-            tipo: "ÍMPAR",
-
-            ultimo: digitoAtual,
-
-            preco: 0.35,
-
-            resultado: "PENDENTE"
-
-        };
-
-atualizarEtapas(1);
-
-        aguardandoResultado = true;
-    }
-}
-
-
-atualizarGraficoReal();
-
-
-
-} // FECHA if(data.tick)
-
-
-}; // FECHA ws.onmessage
-
-ws.onerror = function(err) {
-    console.log("WS ERROR:", err);
-};
-
-ws.onclose = function(event) {
-    console.log(
-        "WS FECHOU | code=" +
-        event.code +
-        " | reason=" +
-        event.reason
-    );
-
-    console.log("CLOSE:", event);
-};
+    window.derivWS = ws;
+
+    ws.onopen = function () {
+        console.log("WS ABRIU");
+        ws.send(JSON.stringify({
+            balance: 1,
+            subscribe: 1,
+            req_id: 1
+        }));
+        ws.send(JSON.stringify({
+            ticks: simboloAtual
+        }));
+    };
+
+    // Chamamos a nossa nova função centralizada aqui!
+    configurarEventosDoWS(ws);
 
 } // FECHA if (wsUrl)
-
 
     // Delay de 1 segundo para o HTML assentar antes de pintar as barras
     setTimeout(() => {
@@ -942,42 +799,28 @@ async function alternarAmbienteConta() {
             }));
         };
 
-        ws.onmessage = function (msg) {
-            const data = JSON.parse(msg.data);
+                window.derivWS = ws;
 
-            // 💰 SALDO
-            if (data.msg_type === 'balance' && data.balance) {
-                const saldo = data.balance.balance;
-                const moeda = data.balance.currency;
-
-                const elem = document.getElementById('saldo-real');
-                if (elem) {
-                    elem.innerText = `${Number(saldo).toFixed(2)} ${moeda}`;
-                }
-            }
-
-            // 📊 TICKS (BARRAS)
-            if (data.tick) {
-
-                const ultimoDigito = String(data.tick.quote).slice(-1);
-
-                ultimosDigitos.push(Number(ultimoDigito));
-
-                if (ultimosDigitos.length > 15) {
-                    ultimosDigitos.shift();
-                }
-
-                atualizarGraficoReal();
-            }
+        ws.onopen = function () {
+            console.log("WS REABRIU COM CONTA:", tipo);
+            ws.send(JSON.stringify({
+                balance: 1,
+                subscribe: 1,
+                req_id: 1
+            }));
+            ws.send(JSON.stringify({
+                ticks: simboloAtual
+            }));
         };
 
-        ws.onerror = function (err) {
-            console.log("WS ERROR:", err);
-        };
+        // Chamamos a mesma função centralizada aqui também!
+        configurarEventosDoWS(ws);
 
-        ws.onclose = function (event) {
-            console.log("WS FECHOU:", event.code);
-        };
+    } catch (erro) {
+        console.error(erro);
+        alert("Falha ao trocar de conta");
+    }
+}
 
     } catch (erro) {
         console.error(erro);
@@ -1126,6 +969,62 @@ let perdaVirtual = 0;
 let aguardandoResultado = false;
 
 let operacaoAtual = null;
+
+// === NOVA FUNÇÃO CENTRALIZADORA DO WEBSOCKET ===
+function configurarEventosDoWS(ws) {
+    ws.onmessage = function (msg) {
+        const data = JSON.parse(msg.data);
+        console.log("Mensagem recebida do WS:", data);
+
+        // 💰 1. TRATAR SALDO (BALANCE)
+        if (data.msg_type === 'balance' && data.balance) {
+            const saldo = data.balance.balance;
+            const moeda = data.balance.currency;
+            const elem = document.getElementById('saldo-real');
+            if (elem) {
+                elem.innerText = `${Number(saldo).toFixed(2)} ${moeda}`;
+            }
+        }
+
+        // 📊 2. TRATAR TICKS (ÚLTIMOS DÍGITOS E GRÁFICO)
+        if (data.tick) {
+            const ultimoDigito = String(data.tick.quote).slice(-1);
+            const visor = document.getElementById('ultimo-digito-real');
+            
+            if (visor) {
+                visor.innerText = ultimoDigito;
+            }
+
+            ultimosDigitos.push(Number(ultimoDigito));
+
+            if (ultimosDigitos.length > 15) {
+                ultimosDigitos.shift();
+            }
+
+            // Atualiza o teu gráfico de barras
+            atualizarGraficoReal();
+
+            // == O MOTOR DE ESTRATÉGIAS VAI ENTRAR AQUI NO PASSO SEGUINTE ==
+            if (roboLigado) {
+                executarMotorEstrategias(Number(ultimoDigito));
+            }
+        }
+    };
+
+    ws.onerror = function(err) {
+        console.log("WS ERROR:", err);
+    };
+
+    ws.onclose = function(event) {
+        console.log("WS FECHOU | code=" + event.code);
+    };
+}
+
+// Função auxiliar temporária para não quebrar o código enquanto não pomos as 5 estratégias
+function executarMotorEstrategias(digitoAtual) {
+    // Por enquanto fica vazia, vamos populá-la com as 5 estratégias reais muito em breve!
+    console.log("Robô lendo dígito:", digitoAtual);
+}
 
 
 function atualizarEtapas(etapa) {
