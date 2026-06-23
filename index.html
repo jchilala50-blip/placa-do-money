@@ -565,71 +565,29 @@ onchange="trocarVolatilidade()"
         `;
         atualizarCoresBarras();
 
-              // LIGAÇÃO REAL COM A DERIV VIA WEBSOCKET
+                            // LIGAÇÃO REAL COM A DERIV VIA WEBSOCKET
 const params = new URLSearchParams(window.location.search);
 
-let wsUrl =
-    params.get('ws_url') ||
-    sessionStorage.getItem('deriv_ws_url');
+let wsUrl = params.get('ws_url') || sessionStorage.getItem('deriv_ws_url');
 
 if (!params.get('ws_url')) {
-console.log("PEDINDO NOVA OTP");
-
+    console.log("PEDINDO NOVA OTP");
     try {
-        
-const tipoConta =
-    document.getElementById('tipo-conta').value;
-
-const resposta =
-    await fetch(
-        '/api/novo-otp?tipo=' +
-        tipoConta
-    );
-
+        const tipoConta = document.getElementById('tipo-conta').value;
+        const resposta = await fetch('/api/novo-otp?tipo=' + tipoConta);
         const dados = await resposta.json();
 
         if (dados.success && dados.ws_url) {
-
             wsUrl = dados.ws_url;
-
-            sessionStorage.setItem(
-                'deriv_ws_url',
-                wsUrl
-            );
+            sessionStorage.setItem('deriv_ws_url', wsUrl);
         }
-
     } catch (erro) {
-
-        console.log(
-            "Falha ao obter OTP nova:",
-            erro
-        );
+        console.log("Falha ao obter OTP nova:", erro);
     }
 }
 
 if (wsUrl) {
-
     const ws = new WebSocket(wsUrl);
-
-    window.derivWS = ws;
-
-    ws.onopen = function () {
-
-console.log("WS ABRIU");
-
-ws.send(JSON.stringify({
-    balance: 1,
-    subscribe: 1,
-    req_id: 1
-}));
-
-ws.send(JSON.stringify({
-    ticks: simboloAtual
-}));
-
-};
- // <--- Garante que esta linha continua aqui para fechar a função!
-
     window.derivWS = ws;
 
     ws.onopen = function () {
@@ -644,18 +602,17 @@ ws.send(JSON.stringify({
         }));
     };
 
-    // Chamamos a nossa nova função centralizada aqui!
     configurarEventosDoWS(ws);
-
-} // FECHA if (wsUrl)
+}
 
     // Delay de 1 segundo para o HTML assentar antes de pintar as barras
     setTimeout(() => {
         atualizarCoresBarras();
     }, 1000);
-}
+} // <--- ESTA CHAVETA FECHA A FUNÇÃO irParaDashboardReal QUE ESTAVA EM FALTA!
 
 function renderizarBarrasIniciais() {
+
     let html = '';
 
     for(let i = 0; i <= 9; i++) {
