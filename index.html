@@ -1315,6 +1315,29 @@ let aguardandoResultado = false;
 let operacaoAtual = null;
 
 
+// === PROCESSAR PLACAR E LIBERTAR O ROBÔ ===
+function processarResultadoOperacao(resultado, lucro) {
+    const winsElem = document.getElementById('cont-wins');
+    const lossesElem = document.getElementById('cont-losses');
+
+    if (resultado === 'won') {
+        if (winsElem) winsElem.innerText = Number(winsElem.innerT>
+        atualizarEtapas(2); // Muda o visual das etapas para indi>
+    } else {
+        if (lossesElem) lossesElem.innerText = Number(lossesElem.>
+        atualizarEtapas(3); // Indica que passou pela validação f>
+    }
+
+    // Atualiza o histórico visual se necessário
+    if (typeof renderizarHistorico === 'function') {
+        renderizarHistorico();
+    }
+
+    // Voltar a permitir novas operações
+    aguardandoResultado = false;
+    operacaoAtual = null;
+}
+
 // === FUNÇÃO CENTRALIZADORA DO WEBSOCKET (ATUALIZADA) ===
 function configurarEventosDoWS(ws) {
     ws.onmessage = function (msg) {
@@ -1384,30 +1407,6 @@ function configurarEventosDoWS(ws) {
     };
 }
 
-
-
-// === PROCESSAR PLACAR E LIBERTAR O ROBÔ ===
-function processarResultadoOperacao(resultado, lucro) {
-    const winsElem = document.getElementById('cont-wins');
-    const lossesElem = document.getElementById('cont-losses');
-
-    if (resultado === 'won') {
-        if (winsElem) winsElem.innerText = Number(winsElem.innerT>
-        atualizarEtapas(2); // Muda o visual das etapas para indi>
-    } else {
-        if (lossesElem) lossesElem.innerText = Number(lossesElem.>
-        atualizarEtapas(3); // Indica que passou pela validação f>
-    }
-
-    // Atualiza o histórico visual se necessário
-    if (typeof renderizarHistorico === 'function') {
-        renderizarHistorico();
-    }
-
-    // Voltar a permitir novas operações
-    aguardandoResultado = false;
-    operacaoAtual = null;
-}
 
 function atualizarEtapas(etapa) {
 
