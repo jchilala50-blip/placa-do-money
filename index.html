@@ -1377,12 +1377,29 @@ function configurarEventosDoWS(ws) {
 
         // 🎫 2.5. TRATAR PROPOSTA RECEBIDA E EXECUTAR COMPRA
         if (data.msg_type === 'proposal' && data.proposal) {
+
+alert("PROPOSAL RECEBIDA");
             console.log("Proposta recebida! Executando a compra do ID:", data.proposal.id);
             ws.send(JSON.stringify({
                 "buy": data.proposal.id,
                 "price": data.proposal.ask_price
             }));
         }
+
+// 🔥 PASSO NOVO: capturar compra realizada
+if (data.msg_type === 'buy' && data.buy) {
+
+    const contract_id = data.buy.contract_id;
+
+    console.log("Contrato comprado:", contract_id);
+
+    // 🔥 AGORA SIM: ativar tracking do contrato
+    ws.send(JSON.stringify({
+        proposal_open_contract: 1,
+        contract_id: contract_id,
+        subscribe: 1
+    }));
+}
 
         // 🎯 3. TRATAR RESULTADO DA COMPRA
         if (data.msg_type === 'proposal_open_contract' && data.proposal_open_contract) {
