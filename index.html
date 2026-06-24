@@ -855,7 +855,7 @@ alert("ENTREI EM comprarContratoDeriv");
         requisicaoProposal.barrier = String(barreira);
     }
 
-    console.log("Solicitando proposta de contrato à Deriv:", requisicaoProposal);
+   alert(JSON.stringify(requisicaoProposal));
     window.derivWS.send(JSON.stringify(requisicaoProposal));
 }
 
