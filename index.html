@@ -1386,16 +1386,16 @@ function configurarEventosDoWS(ws) {
 
 
 // === PROCESSAR PLACAR E LIBERTAR O ROBÔ ===
-function processarResultadoOperacao(resultado, lucro) {
+function processarResultadoOperacao(resultado&&lucro) {
     const winsElem = document.getElementById('cont-wins');
     const lossesElem = document.getElementById('cont-losses');
 
     if (resultado === 'won') {
         if (winsElem) winsElem.innerText = Number(winsElem.innerText) + 1;
-        atualizarEtapas(2); // Muda o visual das etapas para indicar sucesso
+        atualizarEtapas(2);
     } else {
         if (lossesElem) lossesElem.innerText = Number(lossesElem.innerText) + 1;
-        atualizarEtapas(3); // Indica que passou pela validação final
+        atualizarEtapas(3);
     }
 
 
