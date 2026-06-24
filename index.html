@@ -828,30 +828,25 @@ function comprarContratoDeriv(tipoContrato, duracaoTicks, barreira) {
 
     const stake = document.getElementById('config-stake') ? Number(document.getElementById('config-stake').value) : 0.35;
 
-    // Conforme a documentação da Deriv, passamos os parâmetros dentro do objeto 'proposal'
-    const requisicaoCompra = {
-        "buy": 1,
-        "price": stake,
-        "parameters": {
-            "amount": stake,
-            "basis": "stake",
-            "contract_type": tipoContrato, // 'DIGITODD' (Ímpar), 'DIGITEVEN' (Par), 'DIGITOVER', 'DIGITUNDER'
-            "currency": "USD",
-            "duration": Number(duracaoTicks), // Geralmente 1
-            "duration_unit": "t",
-            "symbol": simboloAtual            // Volatilidade (Ex: '1HZ100V')
-        }
+    // Formato oficial da API Deriv para solicitar um contrato (Proposal)
+    const requisicaoProposal = {
+        "proposal": 1,
+        "amount": stake,
+        "basis": "stake",
+        "contract_type": tipoContrato,
+        "currency": "USD",
+        "duration": Number(duracaoTicks),
+        "duration_unit": "t",
+        "symbol": typeof simboloAtual !== 'undefined' ? simboloAtual : 'R_100'
     };
 
-    // Se a estratégia for Over (Acima) ou Under (Abaixo), a API exige a barreira (Prediction)
     if (barreira !== undefined) {
-        requisicaoCompra.parameters.barrier = String(barreira);
+        requisicaoProposal.barrier = String(barreira);
     }
 
-    console.log("Enviando ordem oficial para a Deriv:", requisicaoCompra);
-    window.derivWS.send(JSON.stringify(requisicaoCompra));
+    console.log("Solicitando proposta de contrato à Deriv:", requisicaoProposal);
+    window.derivWS.send(JSON.stringify(requisicaoProposal));
 }
-
 
 // === MOTOR DE PROCESSAMENTO DAS 5 ESTRATÉGIAS ===
 function executarMotorEstrategias(ultimoDigito) {
