@@ -1389,13 +1389,6 @@ function configurarEventosDoWS(ws) {
 function processarResultadoOperacao(resultado&&lucro) {
     const winsElem = document.getElementById('cont-wins');
     const lossesElem = document.getElementById('cont-losses');
-
-    if (resultado === 'won') {
-        if (winsElem) winsElem.innerText = Number(winsElem.innerText) + 1;
-        atualizarEtapas(2);
-    } else {
-        if (lossesElem) lossesElem.innerText = Number(lossesElem.innerText) + 1;
-        atualizarEtapas(3);
     }
 
 
