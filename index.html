@@ -831,6 +831,7 @@ atualizarCoresBarras();
 }
 // === FUNÇÃO PARA COMPRAR CONTRATO REAL NA DERIV (API v3) ===
 function comprarContratoDeriv(tipoContrato, duracaoTicks, barreira) {
+alert("ENTREI EM comprarContratoDeriv");
     if (!window.derivWS || window.derivWS.readyState !== 1) {
         console.log("Erro: WebSocket não está conectado!");
         return;
@@ -1520,7 +1521,6 @@ function limparHistorico() {
 
 
    function alternarRobo() {
-alert("ROBO LIGA");
 
     const est =
         document.getElementById(
