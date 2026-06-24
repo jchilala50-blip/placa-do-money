@@ -701,11 +701,8 @@ ticks: simboloAtual
 
 ws.onmessage = function (msg) {
 
-
-
   const data = JSON.parse(msg.data);
-
-
+alert("MSG: " + JSON.stringify(data));
 
   console.log(data);
 
