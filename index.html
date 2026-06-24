@@ -656,27 +656,45 @@ if (wsUrl) {
 
 const ws = new WebSocket(wsUrl);
 
+
+
 window.derivWS = ws;
 
+
+
 ws.onopen = function () {
-    console.log("WS ABRIU - Autenticando...");
 
-    // 🔑 AUTORIZAÇÃO OBRIGATÓRIA DA DERIV
-    const token = document.getElementById('token-usuario') ? document.getElementById('token-usuario').value : '';
-    if (token) {
-        ws.send(JSON.stringify({ "authorize": token }));
-    }
 
-    ws.send(JSON.stringify({
-        balance: 1,
-        subscribe: 1,
-        req_id: 1
-    }));
 
-    ws.send(JSON.stringify({
-        ticks: simboloAtual
-    }));
+console.log("WS ABRIU");
+
+
+
+ws.send(JSON.stringify({
+
+
+balance: 1,
+
+
+subscribe: 1,
+
+
+req_id: 1
+
+
+}));
+
+ws.send(JSON.stringify({
+
+
+ticks: simboloAtual
+
+
+}));
+
+
 };
+
 
 // <--- Garante que esta linha continua aqui para fechar a função!
 
