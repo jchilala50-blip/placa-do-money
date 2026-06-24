@@ -1357,35 +1357,39 @@ function configurarEventosDoWS(ws) {
             }
         }
 
-        // 🎯 3. TRATAR RESULTADO DA COMPRA E CONTRATOS (PROPOSAL_OPEN_CONTRACT)
-        // A Deriv envia o tipo 'proposal_open_contract' para atualizar o estado da nossa ordem
+        // 🎯 3. TRATAR RESULTADO DA COMPRA
         if (data.msg_type === 'proposal_open_contract' && data.proposal_open_contract) {
             const contrato = data.proposal_open_contract;
-
-            // Se o contrato foi finalizado (is_expired ou status === 'won'/'lost')
             if (contrato.is_valid_to_sell && contrato.status !== 'open') {
-                const resultado = contrato.status; // 'won' (ganhou) ou 'lost' (perdeu)
-                const lucroObtido = Number(contrato.profit).toFixed(2);
-
-                console.log(`Operação finalizada! Resultado: ${resultado} | Lucro: ${lucroObtido}`);
-
-                // Processa o placar e liberta o robô para a próxima entrada
-                processarResultadoOperacao(resultado, lucroObtido);
+                processarResultadoOperacao(contrato.status, Number(contrato.profit).toFixed(2));
             }
         }
     };
 
-    ws.onerror = function(err) {
-        console.log("WS ERROR:", err);
-    };
-
-    ws.onclose = function(event) {
-        console.log("WS FECHOU | code=" + event.code);
-    };
+    ws.onerror = function(err) { console.log("WS ERROR:", err); };
+    ws.onclose = function(event) { console.log("WS FECHOU | code=" + event.code); };
 }
 
-
 // === PROCESSAR PLACAR E LIBERTAR O ROBÔ ===
+function processarResultadoOperacao(resultado, lucro) {
+    const winsElem = document.getElementById('cont-wins');
+    const lossesElem = document.getElementById('cont-losses');
+
+    if (resultado === 'won') {
+        if (winsElem) winsElem.innerText = Number(winsElem.innerText) + 1;
+        atualizarEtapas(2);
+    } else {
+        if (lossesElem) lossesElem.innerText = Number(lossesElem.innerText) + 1;
+        atualizarEtapas(3);
+    }
+
+    if (typeof renderizarHistorico === 'function') {
+        renderizarHistorico();
+    }
+
+    aguardandoResultado = false;
+    operacaoAtual = null;
+}            
 
 
 function atualizarEtapas(etapa) {
