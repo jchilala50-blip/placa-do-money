@@ -275,18 +275,15 @@
 </div>
 
 <script>
-    window.onerror = function(msg, url, line) {
-    alert("Erro detetado: " + msg + "\nLinha: " + line);
-    return true;
-};
+      window.onerror = function(msg, url, line) {
+        console.log("Erro no código:\n" + msg + "\nLinha: " + lin>
+        return true;
+    };
 
     let modoCadastro = false;
     const API_URL = '';
 
 let ultimosDigitos = [];
-
-let aguardandoResultado = false;
-let operacaoAtual = null;
 
     function alternarTela() {
         modoCadastro = !modoCadastro;
