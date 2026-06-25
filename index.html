@@ -1406,9 +1406,8 @@ if (data.msg_type === 'proposal') {
 
     window.lastProposal = proposal;
 
-    alert(JSON.stringify(data.proposal));
+    alert(JSON.stringify(data));
 }
-
 
 // 🔥 PASSO NOVO: capturar compra realizada
 if (data.msg_type === 'buy' && data.buy) {
