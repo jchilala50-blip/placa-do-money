@@ -1390,23 +1390,27 @@ if (data.error) {
         }
 
 
-
         // 🎫 2.5. TRATAR PROPOSTA RECEBIDA E EXECUTAR COMPRA
         
 if (data.msg_type === 'proposal') {
 
-    console.log("PROPOSAL FULL:", data);
+    const proposalId =
+        data.proposal.contract_details.id;
 
-    const proposal = data.proposal;
+    const preco =
+        data.proposal.ask_price;
 
-    if (!proposal || !proposal.id) {
-        console.log("PROPOSAL INVÁLIDO");
-        return;
-    }
+    alert(
+        "ID: " +
+        proposalId +
+        "\nPREÇO: " +
+        preco
+    );
 
-    window.lastProposal = proposal;
-
-    alert(JSON.stringify(data));
+    ws.send(JSON.stringify({
+        buy: proposalId,
+        price: preco
+    }));
 }
 
 // 🔥 PASSO NOVO: capturar compra realizada
