@@ -1390,10 +1390,8 @@ if (data.error) {
     window.lastProposalId = data.proposal.id;
 
     ws.send(JSON.stringify({
-        buy: data.proposal.id,
-        price: data.proposal.ask_price
-    }));
-}
+    buy: data.proposal.id
+}));
 
 // 🔥 PASSO NOVO: capturar compra realizada
 if (data.msg_type === 'buy' && data.buy) {
