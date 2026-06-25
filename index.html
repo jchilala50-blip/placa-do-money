@@ -698,51 +698,49 @@ ticks: simboloAtual
 
 // <--- Garante que esta linha continua aqui para fechar a função!
 
-
 ws.onmessage = function (msg) {
 
-  const data = JSON.parse(msg.data);
+    const data = JSON.parse(msg.data);
 
+    // 👇 ERROS DA DERIV
     if (data.error) {
         alert("❌ DERIV ERROR: " + JSON.stringify(data.error));
     }
 
-if (data.msg_type === 'buy') {
-    console.log("🔥 BUY OK:", data.buy);
-}
+    // 👇 PROPOSAL RECEBIDA
+    if (data.msg_type === 'proposal') {
 
-console.log("MSG: " + JSON.stringify(data));
+        const proposalId = data.proposal.contract_details.id;
+        const price = data.proposal.ask_price;
 
-  console.log(data);
+        alert("PROPOSAL OK\nID: " + proposalId + "\nPRICE: " + price);
 
+        window.lastProposalId = proposalId;
+        window.lastPrice = price;
 
+        // NÃO FAZ BUY AQUI
+    }
 
-  if (data.msg_type === 'balance' && data.balance) {
+    // 👇 BUY RESPONSE
+    if (data.msg_type === 'buy') {
+        alert("🔥 BUY RESPONSE: " + JSON.stringify(data));
+    }
 
+    // 👇 BALANCE
+    if (data.msg_type === 'balance' && data.balance) {
 
+        const saldo = data.balance.balance;
+        const moeda = data.balance.currency;
 
-    const saldo = data.balance.balance;
+        const elem = document.getElementById('saldo-real');
 
+        if (elem) {
+            elem.innerText = `${Number(saldo).toFixed(2)} ${moeda}`;
+        }
+    }
 
-    const moeda = data.balance.currency;
-
-
-
-    const elem = document.getElementById('saldo-real');
-
-
-
-    if (elem) {
-
-
-      elem.innerText = `${Number(saldo).toFixed(2)} ${moeda}`;
-
-
-    }
-
-
-  }
-
+    console.log("MSG:", data);
+};
 
 
 if (data.tick) {
@@ -1394,9 +1392,21 @@ if (data.error) {
         
 if (data.msg_type === 'proposal') {
 
-    alert(JSON.stringify(data.proposal));
+    const proposalId =
+        data.proposal.contract_details.id;
 
-return;
+    const price =
+        data.proposal.ask_price;
+
+    alert(
+        "ID: " + proposalId +
+        "\nPRICE: " + price
+    );
+
+    window.lastProposalId = proposalId;
+    window.lastPrice = price;
+
+executarCompra();
 
 }
 
@@ -1449,6 +1459,17 @@ alert("RESULTADO RECEBIDO");
     aguardandoResultado = false;
     operacaoAtual = null;
 }            
+
+
+function executarCompra() {
+
+    if (!window.derivWS || window.derivWS.readyState !== 1) return;
+
+    window.derivWS.send(JSON.stringify({
+        buy: window.lastProposalId,
+        price: window.lastPrice
+    }));
+}
 
 
 function atualizarEtapas(etapa) {
