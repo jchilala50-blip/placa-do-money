@@ -702,6 +702,15 @@ ticks: simboloAtual
 ws.onmessage = function (msg) {
 
   const data = JSON.parse(msg.data);
+
+    if (data.error) {
+        alert("❌ DERIV ERROR: " + JSON.stringify(data.error));
+    }
+
+if (data.msg_type === 'buy') {
+    console.log("🔥 BUY OK:", data.buy);
+}
+
 console.log("MSG: " + JSON.stringify(data));
 
   console.log(data);
@@ -1383,17 +1392,25 @@ if (data.error) {
 
 
         // 🎫 2.5. TRATAR PROPOSTA RECEBIDA E EXECUTAR COMPRA
-        if (data.msg_type === 'proposal' && data.proposal) {
+        
+if (data.msg_type === 'proposal') {
 
-    console.log("PROPOSAL OK:", data.proposal);
+    console.log("PROPOSAL FULL:", data);
 
-    window.lastProposalId = data.proposal.id;
+    const proposal = data.proposal;
+
+    if (!proposal || !proposal.id) {
+        console.log("PROPOSAL INVÁLIDO");
+        return;
+    }
+
+    window.lastProposal = proposal;
 
     ws.send(JSON.stringify({
-    buy: data.proposal.id
-}));
-
+        buy: proposal.id
+    }));
 }
+
 
 // 🔥 PASSO NOVO: capturar compra realizada
 if (data.msg_type === 'buy' && data.buy) {
