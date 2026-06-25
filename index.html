@@ -1385,13 +1385,15 @@ if (data.error) {
         // 🎫 2.5. TRATAR PROPOSTA RECEBIDA E EXECUTAR COMPRA
         if (data.msg_type === 'proposal' && data.proposal) {
 
-alert("PROPOSAL RECEBIDA");
-            console.log("Proposta recebida! Executando a compra do ID:", data.proposal.id);
-            ws.send(JSON.stringify({
-                "buy": data.proposal.id,
-                "price": data.proposal.ask_price
-            }));
-        }
+    console.log("PROPOSAL OK:", data.proposal);
+
+    window.lastProposalId = data.proposal.id;
+
+    ws.send(JSON.stringify({
+        buy: data.proposal.id,
+        price: data.proposal.ask_price
+    }));
+}
 
 // 🔥 PASSO NOVO: capturar compra realizada
 if (data.msg_type === 'buy' && data.buy) {
