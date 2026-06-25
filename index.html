@@ -1406,9 +1406,7 @@ if (data.msg_type === 'proposal') {
 
     window.lastProposal = proposal;
 
-    ws.send(JSON.stringify({
-        buy: proposal.id
-    }));
+    alert(JSON.stringify(data.proposal));
 }
 
 
