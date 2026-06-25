@@ -779,6 +779,9 @@ ultimosDigitos.shift();
 
 atualizarGraficoReal();
 
+if (typeof roboLigado !== 'undefined' && roboLigado) {
+    executarMotorEstrategias(Number(ultimoDigito));
+}
 
 } // FECHA if(data.tick)
 
