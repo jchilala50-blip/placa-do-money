@@ -1394,23 +1394,10 @@ if (data.error) {
         
 if (data.msg_type === 'proposal') {
 
-    const proposalId =
-        data.proposal.contract_details.id;
+    alert(JSON.stringify(data.proposal));
 
-    const preco =
-        data.proposal.ask_price;
+return;
 
-    alert(
-        "ID: " +
-        proposalId +
-        "\nPREÇO: " +
-        preco
-    );
-
-    ws.send(JSON.stringify({
-        buy: proposalId,
-        price: preco
-    }));
 }
 
 // 🔥 PASSO NOVO: capturar compra realizada
