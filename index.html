@@ -860,6 +860,7 @@ alert("WS STATE: " + window.derivWS.readyState);
 
 // === MOTOR DE PROCESSAMENTO DAS 5 ESTRATÉGIAS ===
 function executarMotorEstrategias(ultimoDigito) {
+alert("MOTOR: " + ultimoDigito);
     if (aguardandoResultado) return; // Se já tiver uma operação aberta, espera terminar
 
     const estrategia = document.getElementById('estrategia-robo').value;
