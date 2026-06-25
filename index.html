@@ -1333,6 +1333,9 @@ let operacaoAtual = null;
 function configurarEventosDoWS(ws) {
     ws.onmessage = function (msg) {
         const data = JSON.parse(msg.data);
+if (data.error) {
+    alert("ERRO DERIV: " + data.error.message);
+}
         console.log("Mensagem recebida do WS:", data);
 
         // 💰 1. TRATAR SALDO (BALANCE)
