@@ -829,6 +829,8 @@ atualizarCoresBarras();
 // === FUNÇÃO PARA COMPRAR CONTRATO REAL NA DERIV (API v3) ===
 function comprarContratoDeriv(tipoContrato, duracaoTicks, barreira) {
 alert("ENTREI EM comprarContratoDeriv");
+alert("WS STATE: " + window.derivWS.readyState);
+
     if (!window.derivWS || window.derivWS.readyState !== 1) {
         console.log("Erro: WebSocket não está conectado!");
         return;
