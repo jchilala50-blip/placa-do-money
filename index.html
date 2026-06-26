@@ -1242,16 +1242,13 @@ if (data.error) {
 
 
         // 🎫 2.5. TRATAR PROPOSTA RECEBIDA E EXECUTAR COMPRA
+if (data.msg_type === 'proposal') {
 
-  if (data.msg_type === 'proposal') {
-
-    const proposalId =
-        data.proposal.contract_details.id;
-
-    const price =
-        data.proposal.ask_price;
+    const proposalId = data.proposal.id;
+    const price = data.proposal.ask_price;
 
     alert(
+        "📌 PROPOSAL RECEBIDA\n" +
         "ID: " + proposalId +
         "\nPRICE: " + price
     );
@@ -1260,7 +1257,7 @@ if (data.error) {
     window.lastPrice = price;
 
     executarCompra();
-}
+} 
 
 // 🔥 PASSO NOVO: capturar compra realizada
 if (data.msg_type === 'buy' && data.buy) {
@@ -1312,14 +1309,19 @@ alert("RESULTADO RECEBIDO");
     operacaoAtual = null;
 }            
 
+
 function executarCompra() {
 
     alert(
-        "BUY\nID=" + window.lastProposalId +
-        "\nPRICE=" + window.lastPrice
+        "🚀 ENVIANDO BUY\n" +
+        "ID: " + window.lastProposalId +
+        "\nPRICE: " + window.lastPrice
     );
 
-    if (!window.derivWS || window.derivWS.readyState !== 1) return;
+    if (!window.derivWS || window.derivWS.readyState !== 1) {
+        alert("❌ WS NÃO CONECTADO");
+        return;
+    }
 
     window.derivWS.send(JSON.stringify({
         buy: window.lastProposalId,
