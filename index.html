@@ -650,189 +650,42 @@ erro
 
 }
 
-
 if (wsUrl) {
 
+    const ws = new WebSocket(wsUrl);
 
-const ws = new WebSocket(wsUrl);
+    window.derivWS = ws;
 
+    configurarEventosDoWS(ws);
 
+    ws.onopen = function () {
 
-window.derivWS = ws;
+        console.log("WS ABRIU");
 
-configurarEventosDoWS(ws);
+        ws.send(JSON.stringify({
+            balance: 1,
+            subscribe: 1,
+            req_id: 1
+        }));
 
-ws.onopen = function () {
+        ws.send(JSON.stringify({
+            ticks: simboloAtual
+        }));
+    };
 
+    ws.onerror = function(err) {
+        console.log("WS ERROR:", err);
+    };
 
+    ws.onclose = function(event) {
+        console.log("WS FECHOU", event.code);
+    };
 
-console.log("WS ABRIU");
-
-
-
-ws.send(JSON.stringify({
-
-
-balance: 1,
-
-
-subscribe: 1,
-
-
-req_id: 1
-
-
-}));
-
-ws.send(JSON.stringify({
-
-
-ticks: simboloAtual
-
-
-}));
-
-
-};
-
-
-// <--- Garante que esta linha continua aqui para fechar a função!
-
-ws.onmessage = function (msg) {
-
-    const data = JSON.parse(msg.data);
-
-    // 👇 ERROS DA DERIV
-    if (data.error) {
-        alert("❌ DERIV ERROR: " + JSON.stringify(data.error));
-    }
-
-    // 👇 PROPOSAL RECEBIDA
-    if (data.msg_type === 'proposal') {
-
-        const proposalId = data.proposal.contract_details.id;
-        const price = data.proposal.ask_price;
-
-        alert("PROPOSAL OK\nID: " + proposalId + "\nPRICE: " + price);
-
-        window.lastProposalId = proposalId;
-        window.lastPrice = price;
-
-        // NÃO FAZ BUY AQUI
-    }
-
-    // 👇 BUY RESPONSE
-    if (data.msg_type === 'buy') {
-        alert("🔥 BUY RESPONSE: " + JSON.stringify(data));
-    }
-
-    // 👇 BALANCE
-    if (data.msg_type === 'balance' && data.balance) {
-
-        const saldo = data.balance.balance;
-        const moeda = data.balance.currency;
-
-        const elem = document.getElementById('saldo-real');
-
-        if (elem) {
-            elem.innerText = `${Number(saldo).toFixed(2)} ${moeda}`;
-        }
-    }
-
-    console.log("MSG:", data);
-};
-
-
-if (data.tick) {
-
-
-
-const ultimoDigito = String(data.tick.quote) .slice(-1);
-
-
-const visor =
-
-document.getElementById(
-
-'ultimo-digito-real'
-
-);
-
-
-if (visor) {
-
-visor.innerText =
-
-ultimoDigito;
-
-}
-
-
-ultimosDigitos.push(
-
-
-Number(ultimoDigito)
-
-
-);
-
-
-if (ultimosDigitos.length > 15) {
-
-ultimosDigitos.shift();
-
-
-}
-
-atualizarGraficoReal();
-
-if (typeof roboLigado !== 'undefined' && roboLigado) {
-    executarMotorEstrategias(Number(ultimoDigito));
-}
-
-} // FECHA if(data.tick)
-
-
-}; // FECHA ws.onmessage
-
-
-ws.onerror = function(err) {
-
-console.log("WS ERROR:", err);
-
-};
-
-
-ws.onclose = function(event) {
-
-console.log(
-
-"WS FECHOU | code=" +
-
-event.code +
-
-" | reason=" +
-
-event.reason
-
-);
-
-
-console.log("CLOSE:", event);
-
-};
-
-
-} // FECHA if (wsUrl)
-
-
+}// FECHA if (wsUrl)
 
 // Delay de 1 segundo para o HTML assentar antes de pintar as barras
-
 setTimeout(() => {
-
-atualizarCoresBarras();
-
+    atualizarCoresBarras();
 }, 1000);
 
 }
@@ -1460,6 +1313,20 @@ alert("RESULTADO RECEBIDO");
     operacaoAtual = null;
 }            
 
+function executarCompra() {
+
+    alert(
+        "BUY\nID=" + window.lastProposalId +
+        "\nPRICE=" + window.lastPrice
+    );
+
+    if (!window.derivWS || window.derivWS.readyState !== 1) return;
+
+    window.derivWS.send(JSON.stringify({
+        buy: window.lastProposalId,
+        price: window.lastPrice
+    }));
+}
 
 function atualizarEtapas(etapa) {
 
