@@ -1461,6 +1461,17 @@ alert("RESULTADO RECEBIDO");
 }            
 
 
+function executarCompra() {
+
+    if (!window.derivWS || window.derivWS.readyState !== 1) return;
+
+    window.derivWS.send(JSON.stringify({
+        buy: window.lastProposalId,
+        price: window.lastPrice
+    }));
+}
+
+
 function atualizarEtapas(etapa) {
 
     const etapa1 =
