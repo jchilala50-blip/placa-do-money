@@ -1242,8 +1242,8 @@ if (data.error) {
 
 
         // 🎫 2.5. TRATAR PROPOSTA RECEBIDA E EXECUTAR COMPRA
-        
-if (data.msg_type === 'proposal') {
+
+  if (data.msg_type === 'proposal') {
 
     const proposalId =
         data.proposal.contract_details.id;
@@ -1259,8 +1259,7 @@ if (data.msg_type === 'proposal') {
     window.lastProposalId = proposalId;
     window.lastPrice = price;
 
-executarCompra();
-
+    executarCompra();
 }
 
 // 🔥 PASSO NOVO: capturar compra realizada
