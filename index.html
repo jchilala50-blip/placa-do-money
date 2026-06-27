@@ -724,15 +724,14 @@ console.log("WS STATE: " + window.derivWS.readyState);
 }
 
 // === MOTOR DE PROCESSAMENTO DAS 5 ESTRATÉGIAS ===
-function executarMotorEstrategias(ultimoDigito) {
-console.log("MOTOR: " + ultimoDigito);
-    if (aguardandoResultado) return; // Se já tiver uma operação aberta, espera terminar
+function executarMotorEstrategias(ultimoDigito, tickId) {
 
-    const estrategia = document.getElementById('estrategia-robo').value;
-    if (estrategia === 'nenhuma') return;
+    if (tickId === ultimoTickProcessado) return;
 
+    ultimoTickProcessado = tickId;
+
+    if (aguardandoResultado) return;
     console.log(`Robô analisando dígito [${ultimoDigito}] na estratégia: ${estrategia}`);
-
 
     // 1. ESTRATÉGIA ÍMPAR
     if (estrategia === 'impar' && ultimoDigito % 2 !== 0) {
