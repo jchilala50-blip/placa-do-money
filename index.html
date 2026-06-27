@@ -213,8 +213,8 @@
             background-color: #101f35;
             border-radius: 6px;
             padding: 8px;
-            max-height: 160px; /* Aumentado ligeiramente para aproveitar a base livre da tela */
-            overflow-y: auto;
+            height: 260px; /* ou 300px se quiseres mais espaço */
+            overflow-y: auto; 
             font-size: 12px;
         }
 
@@ -466,8 +466,8 @@ ss="mini-placar">
     <span id="ultimo-digito-real">-</span>
 </div>
                     
-<select id="volatilidade-select">
-onchange="trocarVolatilidade()"
+<select id="volatilidade-select"
+onchange="trocarVolatilidade()">
     <option value="1HZ10V">V10 (1s)</option>
     <option value="1HZ25V">V25 (1s)</option>
     <option value="1HZ50V">V50 (1s)</option>
