@@ -1276,7 +1276,13 @@ if (data.msg_type === 'buy' && data.buy) {
 
 if (data.msg_type === 'proposal_open_contract') {
 
-    alert(JSON.stringify(data));
+    alert(
+        "is_sold=" + data.proposal_open_contract.is_sold +
+        "\nstatus=" + data.proposal_open_contract.status +
+        "\nprofit=" + data.proposal_open_contract.profit +
+        "\nsell_price=" + data.proposal_open_contract.sell_price +
+        "\npayout=" + data.proposal_open_contract.payout
+    );
 
 }
 
