@@ -1287,13 +1287,26 @@ console.log("RESULTADO RECEBIDO");
     const winsElem = document.getElementById('cont-wins');
     const lossesElem = document.getElementById('cont-losses');
 
-    if (resultado) {
-        if (winsElem) winsElem.innerText = Number(winsElem.innerText) + 1;
-        atualizarEtapas(2);
-    } else {
-        if (lossesElem) lossesElem.innerText = Number(lossesElem.innerText) + 1;
-        atualizarEtapas(3);
+    if (resultado === 'won') {
+
+    lucroVirtual += Number(lucro);
+
+    if (winsElem) {
+        winsElem.innerText = Number(winsElem.innerText) + 1;
     }
+
+    atualizarEtapas(2);
+
+} else {
+
+    perdaVirtual += Math.abs(Number(lucro));
+
+    if (lossesElem) {
+        lossesElem.innerText = Number(lossesElem.innerText) + 1;
+    }
+
+    atualizarEtapas(3);
+}
 
 historicoOperacoes.unshift({
     tipo: operacaoAtual ? operacaoAtual.tipo : "-",
