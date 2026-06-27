@@ -724,6 +724,10 @@ console.log("WS STATE: " + window.derivWS.readyState);
 // === MOTOR DE PROCESSAMENTO DAS 5 ESTRATÉGIAS ===
 function executarMotorEstrategias(ultimoDigito) {
 console.log("MOTOR: " + ultimoDigito);
+
+operacaoAtual.status = "PROCESSANDO";
+renderizarHistorico();
+
     if (aguardandoResultado) return; // Se já tiver uma operação aberta, espera terminar
 
     const estrategia = document.getElementById('estrategia-robo').value;
@@ -1058,13 +1062,19 @@ function renderizarHistorico() {
     if (!historico) return;
 
     if (historicoOperacoes.length === 0) {
-        historico.innerHTML = `
-            <div style="color:#607d8b;text-align:center;padding:15px;">
-                Aguardando execução do mercado...
-            </div>
-        `;
-        return;
-    }
+
+    historico.innerHTML = `
+        <div style="
+            color:#607d8b;
+            text-align:center;
+            padding:10px;
+        ">
+            Histórico vazio
+        </div>
+    `;
+
+    return;
+}
 
     historico.innerHTML = '';
 
