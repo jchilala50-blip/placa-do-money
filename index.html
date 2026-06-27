@@ -1313,6 +1313,19 @@ alert("RESULTADO RECEBIDO");
         atualizarEtapas(3);
     }
 
+
+historicoOperacoes.unshift({
+    tipo: operacaoAtual ? operacaoAtual.tipo : "-",
+    ultimo: operacaoAtual ? operacaoAtual.ultimo : "-",
+    preco: operacaoAtual ? operacaoAtual.preco : 0,
+    resultado: resultado ? "WIN" : "LOSS",
+    lucro: lucro
+});
+
+if (historicoOperacoes.length > 20) {
+    historicoOperacoes.pop();
+}
+
     if (typeof renderizarHistorico === 'function') {
         renderizarHistorico();
     }
