@@ -733,14 +733,6 @@ console.log("MOTOR: " + ultimoDigito);
 
     console.log(`Robô analisando dígito [${ultimoDigito}] na estratégia: ${estrategia}`);
 
-operacaoAtual = {
-    tipo: estrategiaSelecionada,
-    ultimo: ultimoDigito,
-    preco: stakeAtual,
-    status: "PROCESSANDO"
-};
-
-renderizarHistorico();
 
     // 1. ESTRATÉGIA ÍMPAR
     if (estrategia === 'impar' && ultimoDigito % 2 !== 0) {
