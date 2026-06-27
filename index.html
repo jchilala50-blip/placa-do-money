@@ -1276,14 +1276,14 @@ if (data.msg_type === 'buy' && data.buy) {
 
 if (data.msg_type === 'proposal_open_contract') {
 
-    alert(
-        "is_sold=" + data.proposal_open_contract.is_sold +
-        "\nstatus=" + data.proposal_open_contract.status +
-        "\nprofit=" + data.proposal_open_contract.profit +
-        "\nsell_price=" + data.proposal_open_contract.sell_price +
-        "\npayout=" + data.proposal_open_contract.payout
-    );
+    const contrato = data.proposal_open_contract;
 
+    if (!contrato.is_sold) return;
+
+    processarResultadoOperacao(
+        contrato.status === "won",
+        Number(contrato.profit)
+    );
 }
 
         // 🎯 3. TRATAR RESULTADO DA COMPRA
