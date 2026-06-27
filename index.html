@@ -27,6 +27,8 @@
             max-width: 420px;
             box-sizing: border-box;
             margin-top: 4px; /* Ajuste fino para não colar totalmente na barra do navegador */
+            max-height: 70vh;
+            overflow-y: auto;
         }
         
         /* Topo com Logo e Botão Info Alinhados */
@@ -1087,11 +1089,12 @@ function renderizarHistorico() {
             <div style="
                 background:#111;
                 border-left:5px solid ${cor};
-                margin:8px 0;
-                padding:10px;
+                margin:6px 0;
+                padding:8px;
                 border-radius:8px;
                 color:#fff;
                 font-family:Arial;
+                font-size:13px;
             ">
                 <div style="display:flex;justify-content:space-between;">
                     <strong>${op.tipo}</strong>
