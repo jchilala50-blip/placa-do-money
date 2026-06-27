@@ -733,6 +733,15 @@ console.log("MOTOR: " + ultimoDigito);
 
     console.log(`Robô analisando dígito [${ultimoDigito}] na estratégia: ${estrategia}`);
 
+operacaoAtual = {
+    tipo: estrategiaSelecionada,
+    ultimo: ultimoDigito,
+    preco: stakeAtual,
+    status: "PROCESSANDO"
+};
+
+renderizarHistorico();
+
     // 1. ESTRATÉGIA ÍMPAR
     if (estrategia === 'impar' && ultimoDigito % 2 !== 0) {
         atualizarEtapas(1);
@@ -1292,40 +1301,45 @@ if (data.msg_type === 'proposal_open_contract') {
 
 // === PROCESSAR PLACAR E LIBERTAR O ROBÔ ===
 function processarResultadoOperacao(resultado, lucro) {
-console.log("RESULTADO RECEBIDO");
+
     const winsElem = document.getElementById('cont-wins');
-    const lossesElem = document.getElementById('cont-losses');
+    const lossesElem = document.getElementById('cont-loss');
 
-    if (resultado === 'won') {
+    const isWin = resultado === true || resultado === 'won';
 
-    lucroVirtual += Number(lucro);
+    if (isWin) {
 
-    if (winsElem) {
-        winsElem.innerText = Number(winsElem.innerText) + 1;
+        lucroVirtual += Number(lucro);
+
+        if (winsElem) {
+            winsElem.innerText = Number(winsElem.innerText) + 1;
+        }
+
+        atualizarEtapas(2);
+
+    } else {
+
+        perdaVirtual += Math.abs(Number(lucro));
+
+        if (lossesElem) {
+            lossesElem.innerText = Number(lossesElem.innerText) + 1;
+        }
+
+        atualizarEtapas(3);
     }
 
-    atualizarEtapas(2);
+    historicoOperacoes.unshift({
+        tipo: operacaoAtual ? operacaoAtual.tipo : "-",
+        ultimo: operacaoAtual ? operacaoAtual.ultimo : "-",
+        preco: operacaoAtual ? operacaoAtual.preco : 0,
+        resultado: isWin ? "WIN" : "LOSS",
+        lucro: lucro,
+        hora: new Date().toLocaleTimeString()
+    });
 
-} else {
-
-    perdaVirtual += Math.abs(Number(lucro));
-
-    if (lossesElem) {
-        lossesElem.innerText = Number(lossesElem.innerText) + 1;
+    if (historicoOperacoes.length > 20) {
+        historicoOperacoes.pop();
     }
-
-    atualizarEtapas(3);
-}
-
-historicoOperacoes.unshift({
-    tipo: operacaoAtual ? operacaoAtual.tipo : "-",
-    ultimo: operacaoAtual ? operacaoAtual.ultimo : "-",
-    preco: operacaoAtual ? operacaoAtual.preco : 0,
-    resultado: resultado ? "WIN" : "LOSS",
-    lucro: lucro,
-    hora: new Date().toLocaleTimeString('pt-PT')
-});
-
 
     if (typeof renderizarHistorico === 'function') {
         renderizarHistorico();
@@ -1333,8 +1347,7 @@ historicoOperacoes.unshift({
 
     aguardandoResultado = false;
     operacaoAtual = null;
-}            
-
+}
 
 function executarCompra() {
 
