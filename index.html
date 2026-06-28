@@ -1285,27 +1285,14 @@ if (data.msg_type === 'proposal_open_contract') {
 
     const contrato = data.proposal_open_contract;
 
-    if (!contrato.is_sold) return;
-
-    // Garante que 'contrato' e 'audit_details' existem antes de buscar os ticks
-const ticks = contrato.audit_details?.all_ticks || []; 
-const ultimoTick = ticks[ticks.length - 1];
-
-const ultimoDigitoReal = ultimoTick
-    ? Number(String(ultimoTick.tick).slice(-1))
-    : null;
-
-processarResultadoOperacao(isWin, Number(contrato.profit));
-
 ws.onerror = function(err) {
     console.log("WS ERROR:", err);
 };
 
 ws.onclose = function(event) {
     console.log("WS FECHOU | code=" + event.code);
-    };
-   } 
- }
+};
+
 
 // === PROCESSAR PLACAR E LIBERTAR O ROBÔ ===
 function processarResultadoOperacao(resultado, lucro, ultimoDigitoReal) {
