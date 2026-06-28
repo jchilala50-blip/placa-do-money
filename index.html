@@ -1314,11 +1314,10 @@ ws.onerror = function(err) {
 
 ws.onclose = function(event) {
     console.log("WS FECHOU | code=" + event.code);
-};
+    };
+   } 
+ }
 
-// Atenção: Certifique-se se estas chaves abaixo pertencem à abertura de alguma função sua:
-// } 
-// }
 // === PROCESSAR PLACAR E LIBERTAR O ROBÔ ===
 function processarResultadoOperacao(resultado, lucro, ultimoDigitoReal) {
 
