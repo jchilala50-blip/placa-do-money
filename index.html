@@ -1295,17 +1295,6 @@ const ultimoDigitoReal = ultimoTick
     ? Number(String(ultimoTick.tick).slice(-1))
     : null;
 
-const isWin =
-    operacaoAtual?.tipo === "PAR"
-        ? ultimoDigitoReal % 2 === 0
-        : operacaoAtual?.tipo === "ÍMPAR"
-        ? ultimoDigitoReal % 2 !== 0
-        : operacaoAtual?.tipo === "OVER 5"
-        ? ultimoDigitoReal > 5
-        : operacaoAtual?.tipo === "UNDER 5"
-        ? ultimoDigitoReal < 5
-        : false;
-
 processarResultadoOperacao(isWin, Number(contrato.profit));
 
 ws.onerror = function(err) {
