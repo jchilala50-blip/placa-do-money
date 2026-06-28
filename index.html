@@ -1286,6 +1286,7 @@ if (data.msg_type === 'proposal_open_contract') {
     const contrato = data.proposal_open_contract;
 
     if (!contrato.is_sold) return;
+alert("CONTRATO FECHADO:", contrato);
 
     processarResultadoOperacao(
         contrato.status === "won",
