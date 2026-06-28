@@ -1320,10 +1320,13 @@ if (data.msg_type === 'proposal_open_contract') {
 
 }
 
-ws.onerror = function(err) { console.log("WS ERROR:", err); };
 
-ws.onclose = function(event) { console.log("WS FECHOU | code=" + event.code); };
+ws.onerror = function(err) {
+    console.log("WS ERROR:", err);
+};
 
+ws.onclose = function(event) {
+    console.log("WS FECHOU | code=" + event.code);};
 }
 
 // === PROCESSAR PLACAR E LIBERTAR O ROBÔ ===
