@@ -1293,19 +1293,6 @@ if (data.msg_type === 'proposal_open_contract') {
     );
 }
 
-        // 🎯 3. TRATAR RESULTADO DA COMPRA
-        if (data.msg_type === 'proposal_open_contract' && data.proposal_open_contract) {
-            const contrato = data.proposal_open_contract;
-            if (contrato.is_valid_to_sell && contrato.status !== 'open') {
-                processarResultadoOperacao(contrato.status, Number(contrato.profit).toFixed(2));
-            }
-        }
-    };
-
-    ws.onerror = function(err) { console.log("WS ERROR:", err); };
-    ws.onclose = function(event) { console.log("WS FECHOU | code=" + event.code); };
-}
-
 // === PROCESSAR PLACAR E LIBERTAR O ROBÔ ===
 function processarResultadoOperacao(resultado, lucro) {
 
