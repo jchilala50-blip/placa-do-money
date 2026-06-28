@@ -1286,7 +1286,13 @@ if (data.msg_type === 'proposal_open_contract') {
     const contrato = data.proposal_open_contract;
 
     if (!contrato.is_sold) return;
-alert(JSON.stringify(contrato, null, 2));
+alert(
+JSON.stringify(
+contrato.audit_details.all_ticks,
+null,
+2
+)
+);
 
     processarResultadoOperacao(
         contrato.status === "won",
