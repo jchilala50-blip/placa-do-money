@@ -1286,38 +1286,31 @@ if (data.msg_type === 'proposal_open_contract') {
     const contrato = data.proposal_open_contract;
 
     if (!contrato.is_sold) return;
-alert(
-JSON.stringify(
-contrato.audit_details.all_ticks,
-null,
-2
-)
-);
 
-const ticks = contrato.audit_details?.all_ticks || [];
+    const ticks = contrato.audit_details?.all_ticks || [];
+    const ultimoTick = ticks[ticks.length - 1];
 
-const ultimoTick = ticks[ticks.length - 1];
+    const ultimoDigitoReal = ultimoTick
+        ? Number(String(ultimoTick.tick).slice(-1))
+        : null;
 
-const ultimoDigitoReal = ultimoTick
-    ? Number(String(ultimoTick.tick).slice(-1))
-    : null;
+    const isWin =
+        operacaoAtual?.tipo === "PAR"
+            ? ultimoDigitoReal % 2 === 0
+            : operacaoAtual?.tipo === "ÍMPAR"
+            ? ultimoDigitoReal % 2 !== 0
+            : operacaoAtual?.tipo === "OVER 5"
+            ? ultimoDigitoReal > 5
+            : operacaoAtual?.tipo === "UNDER 5"
+            ? ultimoDigitoReal < 5
+            : false;
 
-const isWin =
-    operacaoAtual?.tipo === "PAR"
-        ? ultimoDigitoReal % 2 === 0
-        : operacaoAtual?.tipo === "ÍMPAR"
-        ? ultimoDigitoReal % 2 !== 0
-        : operacaoAtual?.tipo === "OVER 5"
-        ? ultimoDigitoReal > 5
-        : operacaoAtual?.tipo === "UNDER 5"
-        ? ultimoDigitoReal < 5
-        : false;
-
-processarResultadoOperacao(
-    isWin,
-    Number(contrato.profit));    
-
+    processarResultadoOperacao(
+        isWin,
+        Number(contrato.profit)
+    );
 }
+
     ws.onerror = function(err) {
         console.log("WS ERROR:", err);
     };
