@@ -1294,10 +1294,18 @@ null,
 )
 );
 
+const ticks = contrato.audit_details?.all_ticks || [];
+
+const ultimoTick = ticks[ticks.length - 1];
+
+const ultimoDigitoReal = ultimoTick
+    ? Number(String(ultimoTick.tick).slice(-1))
+    : null;
+
     processarResultadoOperacao(
-        contrato.status === "won",
-        Number(contrato.profit)
-    );
+    contrato.status === "won",
+    Number(contrato.profit),
+    ultimoDigitoReal);
 }
 
 };
@@ -1315,7 +1323,7 @@ null,
 }
 
 // === PROCESSAR PLACAR E LIBERTAR O ROBÔ ===
-function processarResultadoOperacao(resultado, lucro) {
+function processarResultadoOperacao(resultado, lucro, ultimoDigitoReal) {
 
     const winsElem = document.getElementById('cont-wins');
     const lossesElem = document.getElementById('cont-loss');
@@ -1345,7 +1353,7 @@ function processarResultadoOperacao(resultado, lucro) {
 
     historicoOperacoes.unshift({
         tipo: operacaoAtual ? operacaoAtual.tipo : "-",
-        ultimo: operacaoAtual ? operacaoAtual.ultimo : "-",
+        ultimo: ultimoDigitoReal ?? "-",
         preco: operacaoAtual ? operacaoAtual.preco : 0,
         resultado: isWin ? "WIN" : "LOSS",
         lucro: lucro,
