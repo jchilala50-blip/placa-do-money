@@ -1287,7 +1287,8 @@ if (data.msg_type === 'proposal_open_contract') {
 
     if (!contrato.is_sold) return;
 
-    const ticks = contrato.audit_details?.all_ticks || [];
+    // Garante que 'contrato' e 'audit_details' existem antes de buscar os ticks
+const ticks = contrato.audit_details?.all_ticks || []; 
 const ultimoTick = ticks[ticks.length - 1];
 
 const ultimoDigitoReal = ultimoTick
@@ -1305,22 +1306,19 @@ const isWin =
         ? ultimoDigitoReal < 5
         : false;
 
-processarResultadoOperacao(
-    isWin,
-    Number(contrato.profit));
+processarResultadoOperacao(isWin, Number(contrato.profit));
 
-    ws.onerror = function(err) {
-        console.log("WS ERROR:", err);
-    };
+ws.onerror = function(err) {
+    console.log("WS ERROR:", err);
+};
 
-    ws.onclose = function(event) {
-        console.log(
-            "WS FECHOU | code=" + event.code
-        );
-    };
+ws.onclose = function(event) {
+    console.log("WS FECHOU | code=" + event.code);
+};
 
-}
-
+// Atenção: Certifique-se se estas chaves abaixo pertencem à abertura de alguma função sua:
+// } 
+// }
 // === PROCESSAR PLACAR E LIBERTAR O ROBÔ ===
 function processarResultadoOperacao(resultado, lucro, ultimoDigitoReal) {
 
