@@ -1314,7 +1314,7 @@ if (data.msg_type === 'proposal_open_contract') {
         : contrato.status === "won";
 
     processarResultadoOperacao(
-        isWin,
+        contrato.status,
         Number(contrato.profit)
     );
 
