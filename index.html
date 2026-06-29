@@ -733,7 +733,7 @@ function executarMotorEstrategias(ultimoDigito, tickId) {
 
 console.log("MOTOR: " + ultimoDigito);
 
-    if (aguardandoResultado) return;
+    if (operacaoAtual.ativa) return;
 
 const estrategia = document.getElementById('estrategia-robo').value;
 
@@ -745,10 +745,17 @@ console.log(`Robô analisando dígito [${ultimoDigito}] na estratégia: ${estrat
 
     // 1. ESTRATÉGIA ÍMPAR
     if (estrategia === 'impar' && ultimoDigito % 2 !== 0) {
-        atualizarEtapas(1);
-        operacaoAtual = { tipo: "ÍMPAR", ultimo: ultimoDigito, preco: 0.35, resultado: "PENDENTE" };
-        aguardandoResultado = true;
-        comprarContratoDeriv('DIGITODD', 1);
+        operacaoAtual = {
+    ativa: true,
+    tipo: "ÍMPAR",
+    preco: 0.35,
+    tickEntrada: ultimoDigito,
+    proposalId: null,
+    contractId: null,
+    aguardandoResultado: true
+};
+
+comprarContratoDeriv('DIGITODD', 1);
     }
     
     // 2. ESTRATÉGIA PAR
@@ -1195,7 +1202,15 @@ let perdaVirtual = 0;
 
 let aguardandoResultado = false;
 
-let operacaoAtual = null;
+let operacaoAtual = {
+    ativa: false,
+    tipo: "",
+    preco: 0,
+    tickEntrada: null,
+    proposalId: null,
+    contractId: null,
+    aguardandoResultado: false
+};
 
 
 // === FUNÇÃO CENTRALIZADORA DO WEBSOCKET (ATUALIZADA) ===
@@ -1260,16 +1275,18 @@ if (data.msg_type === 'proposal') {
         "\nPRICE: " + price
     );
 
-    window.lastProposalId = proposalId;
-    window.lastPrice = price;
+    operacaoAtual.proposalId = proposalId;
+operacaoAtual.preco = price;
 
-    executarCompra();
+executarCompra();
 } 
 
 // 🔥 PASSO NOVO: capturar compra realizada
 if (data.msg_type === 'buy' && data.buy) {
 
     const contract_id = data.buy.contract_id;
+
+    operacaoAtual.contractId = contract_id;
 
     console.log("Contrato comprado:", contract_id);
 
@@ -1281,25 +1298,6 @@ if (data.msg_type === 'buy' && data.buy) {
     }));
 }
 
-if (data.msg_type === 'proposal_open_contract') {
-
-
-const contrato = data.proposal_open_contract;
-
-
-if (!contrato.is_sold) return;
-
-
-processarResultadoOperacao(
-
-contrato.status === "won",
-
-Number(contrato.profit)
-
-);
-
-}
-
          // 🎫 3. TRATAR RESULTADO DA COMPRA VIA PROPOSAL_OPEN_CONTRACT
         if (data.msg_type === 'proposal_open_contract' && data.proposal_open_contract) {
             const contrato = data.proposal_open_contract;
@@ -1308,7 +1306,7 @@ Number(contrato.profit)
             if (!contrato.is_sold) return;
 
             // Captura o dígito real onde o contrato encerrou (enviado pela Deriv)
-            const ultimoDigitoReal = contrato.barrier ? Number(contrato.barrier) : "-";
+            const operacaoAtual.ultimo = contrato.barrier ? Number(contrato.barrier) : "-";
 
             processarResultadoOperacao(
                 contrato.status === "won",
@@ -1379,8 +1377,17 @@ function processarResultadoOperacao(resultado, lucro, ultimoDigitoReal) {
         renderizarHistorico();
     }
 
-    aguardandoResultado = false;
-    operacaoAtual = null;
+    operacaoAtual = {
+    ativa: false,
+    tipo: "",
+    preco: 0,
+    tickEntrada: null,
+    proposalId: null,
+    contractId: null,
+    aguardandoResultado: false
+};
+
+aguardandoResultado = false;
 }
 
 
