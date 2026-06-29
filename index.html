@@ -1304,20 +1304,22 @@ Number(contrato.profit)
 
 // 🎯 3. TRATAR RESULTADO DA COMPRA
 
-if (data.msg_type === 'proposal_open_contract' && data.proposal_open_contract) {
+        // 🎫 3. TRATAR RESULTADO DA COMPRA VIA PROPOSAL_OPEN_CONTRACT
+        if (data.msg_type === 'proposal_open_contract' && data.proposal_open_contract) {
+            const contrato = data.proposal_open_contract;
 
-const contrato = data.proposal_open_contract;
+            // Se o contrato ainda não foi fechado/vendido, não processa
+            if (!contrato.is_sold) return;
 
-if (contrato.is_valid_to_sell && contrato.status !== 'open') {
+            // Captura o dígito real onde o contrato encerrou (enviado pela Deriv)
+            const ultimoDigitoReal = contrato.barrier ? Number(contrato.barrier) : "-";
 
-processarResultadoOperacao(contrato.status, Number(contrato.profit).toFixed(2));
-
-}
-
-}
-
-};
-
+            processarResultadoOperacao(
+                contrato.status === "won",
+                Number(contrato.profit),
+                ultimoDigitoReal
+            );
+        }
 
 ws.onerror = function(err) { console.log("WS ERROR:", err); };
 
