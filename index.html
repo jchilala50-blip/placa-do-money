@@ -1281,28 +1281,44 @@ if (data.msg_type === 'buy' && data.buy) {
     }));
 }
 
+
 if (data.msg_type === 'proposal_open_contract') {
 
-    const contrato = data.proposal_open_contract;
 
-    if (!contrato || !contrato.is_sold) return;
+const contrato = data.proposal_open_contract;
 
-    const ticks = contrato.audit_details?.all_ticks || [];
-    const ultimoTick = ticks[ticks.length - 1];
 
-    const ultimoDigitoReal = ultimoTick
-        ? Number(String(ultimoTick.tick).slice(-1))
-        : null;
+if (!contrato.is_sold) return;
 
-    const isWin = contrato.status === "won";
 
-    processarResultadoOperacao(
-        isWin,
-        Number(contrato.profit),
-        ultimoDigitoReal
-    );
+processarResultadoOperacao(
+
+contrato.status === "won",
+
+Number(contrato.profit)
+
+);
+
 }
-  
+
+
+// 🎯 3. TRATAR RESULTADO DA COMPRA
+
+if (data.msg_type === 'proposal_open_contract' && data.proposal_open_contract) {
+
+const contrato = data.proposal_open_contract;
+
+if (contrato.is_valid_to_sell && contrato.status !== 'open') {
+
+processarResultadoOperacao(contrato.status, Number(contrato.profit).toFixed(2));
+
+}
+
+}
+
+};
+
+
 ws.onerror = function(err) { console.log("WS ERROR:", err); };
 
 ws.onclose = function(event) { console.log("WS FECHOU | code=" + event.code); };
