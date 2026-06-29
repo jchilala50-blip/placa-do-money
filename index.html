@@ -1283,6 +1283,8 @@ if (data.msg_type === 'buy' && data.buy) {
 
 if (data.msg_type === 'proposal_open_contract') {
 
+    alert("ENTREI NO proposal_open_contract");
+
     const contrato = data.proposal_open_contract;
 
     if (!contrato.is_sold) return;
