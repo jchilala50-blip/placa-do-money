@@ -1356,7 +1356,7 @@ function processarResultadoOperacao(resultado, lucro, ultimoDigitoReal) {
 
     historicoOperacoes.unshift({
         tipo: operacaoAtual ? operacaoAtual.tipo : "-",
-        ultimo: ultimoDigitoReal ?? "-",
+        ultimo: operacaoAtual ? operacaoAtual.ultimo : "-",
         preco: operacaoAtual ? operacaoAtual.preco : 0,
         resultado: isWin ? "WIN" : "LOSS",
         lucro: lucro,
