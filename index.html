@@ -1329,7 +1329,7 @@ ws.onclose = function(event) { console.log("WS FECHOU | code=" + event.code); };
 function processarResultadoOperacao(resultado, lucro, ultimoDigitoReal) {
 
     const winsElem = document.getElementById('cont-wins');
-    const lossesElem = document.getElementById('cont-loss');
+    const lossesElem = document.getElementById('cont-losses');
 
     const isWin = resultado === true || resultado === 'won';
 
