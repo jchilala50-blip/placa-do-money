@@ -1219,6 +1219,7 @@ let operacaoAtual = {
 function configurarEventosDoWS(ws) {
     ws.onmessage = function (msg) {
         const data = JSON.parse(msg.data);
+alert(JSON.stringify(data));
 
 if (data.error) {
 
