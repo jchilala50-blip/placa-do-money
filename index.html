@@ -761,13 +761,21 @@ console.log(`Robô analisando dígito [${ultimoDigito}] na estratégia: ${estrat
 comprarContratoDeriv('DIGITODD', 5);
     }
     
-    // 2. ESTRATÉGIA PAR
-    else if (estrategia === 'par' && ultimoDigito % 2 === 0) {
-        atualizarEtapas(1);
-        operacaoAtual = { tipo: "PAR", ultimo: ultimoDigito, preco: 0.35, resultado: "PENDENTE" };
-        aguardandoResultado = true;
-        comprarContratoDeriv('DIGITEVEN', 1);
-    }
+   // 2. ESTRATÉGIA PAR
+else if (estrategia === 'par' && ultimoDigito % 2 === 0) {
+
+    operacaoAtual = {
+        ativa: true,
+        tipo: "PAR",
+        preco: 0.35,
+        tickEntrada: ultimoDigito,
+        proposalId: null,
+        contractId: null,
+        aguardandoResultado: true
+    };
+
+    comprarContratoDeriv('DIGITEVEN', 5);
+}
 
     // 3. ESTRATÉGIA OVER (Acima de 5)
     else if (estrategia === 'over' && ultimoDigito > 5) {
