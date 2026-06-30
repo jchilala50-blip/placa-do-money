@@ -1383,6 +1383,19 @@ alert("VOU CHAMAR processarResultadoOperacao");
 
 } // <--- ISSO FECHA O configurarEventosDoWS CORRETAMENTE
 
+function validarStake() {
+    const input = document.getElementById('config-stake');
+
+    if (!input) return;
+
+    let valor = Number(input.value);
+
+    if (isNaN(valor) || valor < 0.35) {
+        input.value = 0.35;
+    }
+}
+
+document.getElementById('config-stake').addEventListener('blur', validarStake);
 
 // === PROCESSAR PLACAR E LIBERTAR O ROBÔ ===
 function processarResultadoOperacao(resultado, lucro, ultimoDigitoReal) {
