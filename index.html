@@ -1417,7 +1417,7 @@ function executarCompra() {
         return;
     }
 
-    compra = {
+  const compra = {
     buy: window.lastProposalId,
     price: window.lastPrice,
     req_id: 1002
@@ -1429,6 +1429,7 @@ alert(JSON.stringify(compra));
 
 window.derivWS.send(JSON.stringify(compra));
 
+}
 
 function atualizarEtapas(etapa) {
 
