@@ -1220,6 +1220,7 @@ let operacaoAtual = {
 function configurarEventosDoWS(ws) {
     ws.onmessage = function (msg) {
         const data = JSON.parse(msg.data);
+alert("MSG_TYPE: " + data.msg_type);
 if (data.msg_type !== "tick") {
     alert("MSG_TYPE: " + data.msg_type);
 }
