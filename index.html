@@ -1173,21 +1173,6 @@ function renderizarHistorico() {
 }
 
 
-function validarStake() {
-    const input = document.getElementById('config-stake');
-
-    if (!input) return;
-
-    let valor = Number(input.value);
-
-    if (isNaN(valor) || valor < 0.35) {
-        input.value = 0.35;
-    }
-}
-
-document.getElementById('config-stake').addEventListener('blur', validarStake);
-
-
 function trocarVolatilidade() {
 
     const seletor =
