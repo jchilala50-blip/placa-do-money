@@ -793,13 +793,21 @@ else if (estrategia === 'over' && ultimoDigito > 5) {
     comprarContratoDeriv('DIGITOVER', 5, 5);
 }
 
-    // 4. ESTRATÉGIA UNDER (Abaixo de 5)
-    else if (estrategia === 'under' && ultimoDigito < 5) {
-        atualizarEtapas(1);
-        operacaoAtual = { tipo: "UNDER 5", ultimo: ultimoDigito, preco: 0.35, resultado: "PENDENTE" };
-        aguardandoResultado = true;
-        comprarContratoDeriv('DIGITUNDER', 1, 5); // Passa a barreira 5
-    }
+    // 4. ESTRATÉGIA UNDER
+else if (estrategia === 'under' && ultimoDigito < 5) {
+
+    operacaoAtual = {
+        ativa: true,
+        tipo: "UNDER 5",
+        preco: 0.35,
+        tickEntrada: ultimoDigito,
+        proposalId: null,
+        contractId: null,
+        aguardandoResultado: true
+    };
+
+    comprarContratoDeriv('DIGITUNDER', 5, 5);
+}
 
     // 5. ESTRATÉGIA REPETIÇÃO
     else if (estrategia === 'repeticao') {
