@@ -1417,12 +1417,20 @@ function executarCompra() {
         return;
     }
 
-    window.derivWS.send(JSON.stringify({
-        buy: window.lastProposalId,
-        price: window.lastPrice,
-req_id: 1002
-    }));
-}
+
+
+    const compra = {
+    buy: window.lastProposalId,
+    price: window.lastPrice,
+    req_id: 1002
+};
+
+window.ultimaMensagem = compra;
+
+alert(JSON.stringify(compra));
+
+window.derivWS.send(JSON.stringify(compra));
+
 
 function atualizarEtapas(etapa) {
 
