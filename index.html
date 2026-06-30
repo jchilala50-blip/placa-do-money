@@ -742,11 +742,9 @@ function validarStake() {
     if (isNaN(valor) || valor < 0.35) {
         input.value = 0.35;
         return;
-    }
-
 document.getElementById('config-stake').addEventListener('blur', validarStake);
+};
 }
-
 // === MOTOR DE PROCESSAMENTO DAS 5 ESTRATÉGIAS ===
 
 function executarMotorEstrategias(ultimoDigito, tickId) {
