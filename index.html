@@ -1220,7 +1220,6 @@ let operacaoAtual = {
 function configurarEventosDoWS(ws) {
     ws.onmessage = function (msg) {
         const data = JSON.parse(msg.data);
-alert("MSG_TYPE: " + data.msg_type);
 if (data.msg_type !== "tick") {
     alert("MSG_TYPE: " + data.msg_type);
 }
@@ -1320,6 +1319,7 @@ alert("VOU ACOMPANHAR O CONTRATO: " + contract_id);
 
          // 🎫 3. TRATAR RESULTADO DA COMPRA VIA PROPOSAL_OPEN_CONTRACT
         if (data.msg_type === 'proposal_open_contract' && data.proposal_open_contract) {
+alert(JSON.stringify(data));
             const contrato = data.proposal_open_contract;
 
             // Se o contrato ainda não foi fechado/vendido, não processa
