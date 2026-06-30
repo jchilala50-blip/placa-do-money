@@ -708,6 +708,7 @@ console.log("WS STATE: " + window.derivWS.readyState);
     // Formato oficial da API Deriv para solicitar um contrato (Proposal)
     const requisicaoProposal = {
         "proposal": 1,
+        "req_id": 1001,
         "amount": stake,
         "basis": "stake",
         "contract_type": tipoContrato,
@@ -1225,8 +1226,10 @@ if (data.error) {
 
     alert(
         "ERRO DERIV\n\n" +
+        "REQ_ID: " + (data.req_id || "SEM REQ_ID") +
+        "\n\n" +
         JSON.stringify(data.error) +
-        "\n\nÚLTIMA MENSAGEM ENVIADA:\n" +
+        "\n\nÚLTIMA MENSAGEM:\n" +
         JSON.stringify(window.ultimaMensagem)
     );
 
@@ -1418,6 +1421,7 @@ function executarCompra() {
     window.derivWS.send(JSON.stringify({
         buy: window.lastProposalId,
         price: window.lastPrice
+       req_id: 1002
     }));
 }
 
