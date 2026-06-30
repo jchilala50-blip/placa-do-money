@@ -777,13 +777,21 @@ else if (estrategia === 'par' && ultimoDigito % 2 === 0) {
     comprarContratoDeriv('DIGITEVEN', 5);
 }
 
-    // 3. ESTRATÉGIA OVER (Acima de 5)
-    else if (estrategia === 'over' && ultimoDigito > 5) {
-        atualizarEtapas(1);
-        operacaoAtual = { tipo: "OVER 5", ultimo: ultimoDigito, preco: 0.35, resultado: "PENDENTE" };
-        aguardandoResultado = true;
-        comprarContratoDeriv('DIGITOVER', 1, 5); // Passa a barreira 5
-    }
+    // 3. ESTRATÉGIA OVER
+else if (estrategia === 'over' && ultimoDigito > 5) {
+
+    operacaoAtual = {
+        ativa: true,
+        tipo: "OVER 5",
+        preco: 0.35,
+        tickEntrada: ultimoDigito,
+        proposalId: null,
+        contractId: null,
+        aguardandoResultado: true
+    };
+
+    comprarContratoDeriv('DIGITOVER', 5, 5);
+}
 
     // 4. ESTRATÉGIA UNDER (Abaixo de 5)
     else if (estrategia === 'under' && ultimoDigito < 5) {
