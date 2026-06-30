@@ -1420,7 +1420,8 @@ function executarCompra() {
 
     window.derivWS.send(JSON.stringify({
         buy: window.lastProposalId,
-        price: window.lastPrice
+        price: window.lastPrice,
+req_id: 1002
     }));
 }
 
