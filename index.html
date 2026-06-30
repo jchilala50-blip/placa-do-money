@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Placa do Money - Dashboard</title>
+    <titlnaPLACA DO MONEY - Dashboard</title>
     <style>
         body {
             background-color: #060d1a;
@@ -298,7 +298,7 @@ let ultimosDigitos = [];
         const btnMudar = document.getElementById('btn-mudar');
 
         if (modoCadastro) {
-            titulo.innerText = "Criar Conta na Plataforma";
+            titulo.innerText = "CRIAR CONTA";
             grupoNome.style.display = "block";
             btnPrincipal.innerText = "Cadastrar Conta";
             btnMudar.innerText = "Já tem conta? Fazer Login";
@@ -348,9 +348,10 @@ let ultimosDigitos = [];
     function carregarTelaDeriv() {
     const container = document.getElementById('box-auth');
     container.innerHTML = `
-        <h2>Placa do Money - Conexão</h2>
+        <h2>PLACA DO MONEY</h2>
         <p style="color: #8a99ad; font-size: 14px; margin-bottom: 20px;">
-            Sua conta local está ativa. Selecione uma opção para prosseguir:
+            🟢 Conta local está ativa.
+         Selecione uma opção para prosseguir:
         </p>
         <button onclick="conectarViaOAuth()" style="background-color: #1e88e5; margin-bottom: 12px; width: 100%; padding: 12px; border: none; border-radius: 4px; color: white; font-weight: bold; cursor: pointer;">
             Conectar à Deriv (OAuth)
@@ -410,7 +411,8 @@ container.classList.remove('tela-robo');
             <div class="topo-plataforma">
                 <a href="https://youtube.com/@derivtutorialnegociacao?si=QN2oZ2GlnTZa6Unn" target="_blank" class="btn-info-youtube">ℹ</a>
                 <div class="texto-logo">
-                    <h3>PLACA DO MONEY 🇧🇫🇲🇿🇺🇸🇧🇷🇦🇴</h3>
+                    <h3>PLACA DO MONEY
+                         🇧🇫🇲🇿🇺🇸🇧🇷🇦🇴</h3>
                     <div style="font-size:9px; color:#00e676; font-weight:bold;">OPERAÇÕES AUTOMATIZADAS</div>
                 </div>
             </div>
@@ -435,7 +437,7 @@ ss="mini-placar">
                 <div>
                     <label class="label-card">Tipo de Conta</label>
                     <select id="tipo-conta" onchange="alternarAmbienteConta()">
-                        <option value="VRTC">Conta Demo (Virtual)</option>
+                        <option value="VRTC">Conta Demo</option>
                         <option value="REAL">Conta Real</option>
                     </select>
                 </div>
@@ -733,18 +735,14 @@ operacaoAtual.preco = stake;
     window.derivWS.send(JSON.stringify(requisicaoProposal));
 }
 
-function validarStake() {
-    const input = document.getElementById('config-stake');
-    if (!input) return;
 
-    let valor = parseFloat(input.value);
+let stake = Number(document.getElementById('config-stake')?.value || 0.35);
 
-    if (isNaN(valor) || valor < 0.35) {
-        input.value = 0.35;
-        return;
-document.getElementById('config-stake').addEventListener('blur', validarStake);
-};
+if (isNaN(stake) || stake < 0.35) {
+    stake = 0.35;
 }
+
+
 // === MOTOR DE PROCESSAMENTO DAS 5 ESTRATÉGIAS ===
 
 function executarMotorEstrategias(ultimoDigito, tickId) {
@@ -1269,12 +1267,12 @@ function configurarEventosDoWS(ws) {
     ws.onmessage = function (msg) {
         const data = JSON.parse(msg.data);
 if (data.msg_type !== "tick") {
-    alert("MSG_TYPE: " + data.msg_type);
+    console.log("MSG_TYPE: " + data.msg_type);
 }
 
 if (data.error) {
 
-    alert(
+ console.log(
         "ERRO DERIV\n\n" +
         "REQ_ID: " + (data.req_id || "SEM REQ_ID") +
         "\n\n" +
@@ -1329,7 +1327,7 @@ executarMotorEstrategias(
 
   // 🎫 2.5. TRATAR PROPOSTA RECEBIDA E EXECUTAR COMPRA
 if (data.msg_type === 'proposal') {
-alert(JSON.stringify(data));
+console.log(JSON.stringify(data));
 
     const proposalId = data.proposal.id;
     const price = data.proposal.ask_price;
@@ -1348,14 +1346,14 @@ executarCompra();
 
 // 🔥 PASSO NOVO: capturar compra realizada
 if (data.msg_type === 'buy' && data.buy) {
-alert(JSON.stringify(data));
+console.log(JSON.stringify(data));
 
     const contract_id = data.buy.contract_id;
 
     console.log("Contrato comprado:", contract_id);
 
     // 🔥 AGORA SIM: ativar tracking do contrato
-alert("VOU ACOMPANHAR O CONTRATO: " + contract_id);
+console.log("VOU ACOMPANHAR O CONTRATO: " + contract_id);
     ws.send(JSON.stringify({
         proposal_open_contract: 1,
         contract_id: contract_id,
@@ -1365,7 +1363,7 @@ alert("VOU ACOMPANHAR O CONTRATO: " + contract_id);
 
          // 🎫 3. TRATAR RESULTADO DA COMPRA VIA PROPOSAL_OPEN_CONTRACT
         if (data.msg_type === 'proposal_open_contract' && data.proposal_open_contract) {
-alert(JSON.stringify(data));
+console.log(JSON.stringify(data));
             const contrato = data.proposal_open_contract;
 
             // Se o contrato ainda não foi fechado/vendido, não processa
@@ -1374,7 +1372,7 @@ alert(JSON.stringify(data));
             // Captura o dígito real onde o contrato encerrou (enviado pela Deriv)
             const ultimoDigitoReal =
     Number(String(contrato.exit_spot).slice(-1));
-alert("VOU CHAMAR processarResultadoOperacao");
+console.log("VOU CHAMAR processarResultadoOperacao");
             processarResultadoOperacao(
                 contrato.status === "won",
                 Number(contrato.profit),
@@ -1396,7 +1394,7 @@ alert("VOU CHAMAR processarResultadoOperacao");
 
 // === PROCESSAR PLACAR E LIBERTAR O ROBÔ ===
 function processarResultadoOperacao(resultado, lucro, ultimoDigitoReal) {
-alert("ENTREI EM processarResultadoOperacao");
+console.log("ENTREI EM processarResultadoOperacao");
 
     // CORRIGIDO: ID exato conforme o HTML do Bloco 1
     const winsElem = document.getElementById('cont-wins');
@@ -1477,7 +1475,7 @@ function executarCompra() {
 
 window.ultimaMensagem = compra;
 
-alert(JSON.stringify(compra));
+console.log(JSON.stringify(compra));
 
 window.derivWS.send(JSON.stringify(compra));
 
@@ -1581,7 +1579,7 @@ function limparHistorico() {
     if (est === 'nenhuma') {
 
         alert(
-            "Por favor, selecione uma estratégia antes de iniciar o robô!"
+          " ❌ Por favor, selecione uma estratégia antes de iniciar o robô!"
         );
 
         return;
