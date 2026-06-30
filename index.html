@@ -748,6 +748,8 @@ function validarStake() {
     input.value = valor.toFixed(2);
 }
 
+document.getElementById('config-stake').addEventListener('blur', validarStake);
+
 // === MOTOR DE PROCESSAMENTO DAS 5 ESTRATÉGIAS ===
 
 function executarMotorEstrategias(ultimoDigito, tickId) {
