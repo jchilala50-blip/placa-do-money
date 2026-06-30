@@ -1306,9 +1306,10 @@ alert(JSON.stringify(data));
 
     operacaoAtual.contractId = contract_id;
 
-    console.log("Contrato comprado:", contract_id);
+    alert("Contrato comprado:", contract_id);
 
     // 🔥 AGORA SIM: ativar tracking do contrato
+alert("VOU ACOMPANHAR O CONTRATO: " + contract_id);
     ws.send(JSON.stringify({
         proposal_open_contract: 1,
         contract_id: contract_id,
