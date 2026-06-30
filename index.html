@@ -1326,7 +1326,8 @@ alert(JSON.stringify(data));
             if (!contrato.is_sold) return;
 
             // Captura o dígito real onde o contrato encerrou (enviado pela Deriv)
-            operacaoAtual.ultimo = contrato.barrier ? Number(contrato.barrier) : "-";
+            const ultimoDigitoReal =
+    Number(String(contrato.exit_spot).slice(-1));
 alert("VOU CHAMAR processarResultadoOperacao");
             processarResultadoOperacao(
                 contrato.status === "won",
