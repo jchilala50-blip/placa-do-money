@@ -817,13 +817,19 @@ else if (estrategia === 'under' && ultimoDigito < 5) {
             
             if (ultimoDigito === penultimoDigito) {
                 console.log(`Dígito repetido detetado! [${ultimoDigito} = ${penultimoDigito}]`);
-                atualizarEtapas(1);
-                operacaoAtual = { tipo: "REPETIÇÃO", ultimo: ultimoDigito, preco: 0.35, resultado: "PENDENTE" };
-                aguardandoResultado = true;
-                
-                // Compra Ímpar se o repetido for ímpar, ou Par se for par
-                const tipoContrato = ultimoDigito % 2 !== 0 ? 'DIGITODD' : 'DIGITEVEN';
-                comprarContratoDeriv(tipoContrato, 1);
+                operacaoAtual = {
+    ativa: true,
+    tipo: "REPETIÇÃO",
+    preco: 0.35,
+    tickEntrada: ultimoDigito,
+    proposalId: null,
+    contractId: null,
+    aguardandoResultado: true
+};
+
+const tipoContrato = ultimoDigito % 2 !== 0 ? 'DIGITODD' : 'DIGITEVEN';
+
+comprarContratoDeriv(tipoContrato, 5);
             }
         }
     }
