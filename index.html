@@ -705,6 +705,8 @@ console.log("WS STATE: " + window.derivWS.readyState);
 
     const stake = document.getElementById('config-stake') ? Number(document.getElementById('config-stake').value) : 0.35;
 
+operacaoAtual.preco = stake;
+
     // Formato oficial da API Deriv para solicitar um contrato (Proposal)
     const requisicaoProposal = {
         "proposal": 1,
