@@ -733,6 +733,21 @@ operacaoAtual.preco = stake;
     window.derivWS.send(JSON.stringify(requisicaoProposal));
 }
 
+function validarStake() {
+    const input = document.getElementById('config-stake');
+    if (!input) return;
+
+    let valor = parseFloat(input.value);
+
+    if (isNaN(valor) || valor < 0.35) {
+        input.value = 0.35;
+        return;
+    }
+
+    // opcional: arredondar sempre para 2 casas
+    input.value = valor.toFixed(2);
+}
+
 // === MOTOR DE PROCESSAMENTO DAS 5 ESTRATÉGIAS ===
 
 function executarMotorEstrategias(ultimoDigito, tickId) {
@@ -1340,9 +1355,7 @@ alert(JSON.stringify(data));
 
     const contract_id = data.buy.contract_id;
 
-    operacaoAtual.contractId = contract_id;
-
-    alert("Contrato comprado:", contract_id);
+    console.log("Contrato comprado:", contract_id);
 
     // 🔥 AGORA SIM: ativar tracking do contrato
 alert("VOU ACOMPANHAR O CONTRATO: " + contract_id);
