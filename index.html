@@ -4,8 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <titlnaPLACA DO MONEY - Dashboard</title>
-    <style>
+     <title>Placa do Money - Dashboard</title>
+  <style>
+
         body {
             background-color: #060d1a;
             color: #ffffff;
@@ -254,38 +255,54 @@
 <body>
 
 <div class="container tela-robo" id="box-auth">
-    <h2 id="titulo-tela">Entrar na Placa do Money</h2>
-    
-    <div class="input-group" id="grupo-nome" style="display: none;">
-        <label>Nome Completo</label>
-        <input type="text" id="campo-nome" placeholder="Seu nome">
-    </div>
 
-    <div class="input-group">
-        <label>E-mail</label>
-        <input type="email" id="campo-email" placeholder="seuemail@exemplo.com">
-    </div>
+  <h2 id="titulo-tela">Entrar na Placa do Money</h2>
 
-    <div class="input-group">
-        <label>Senha</label>
-        <input type="password" id="campo-senha" placeholder="Sua senha">
-    </div>
+  <div class="input-group" id="grupo-nome" style="display: none;">
 
-    <button id="btn-principal" onclick="processarAcao()">Entrar</button>
-    
-    <button class="btn-alternar" id="btn-mudar" onclick="alternarTela()">Não tem conta? Criar Conta</button>
+    <label>Nome Completo</label>
+
+    <input type="text" id="campo-nome" placeholder="Seu nome">
+
+  </div>
+
+  <div class="input-group">
+
+    <label>E-mail</label>
+
+    <input type="email" id="campo-email" placeholder="seuemail@exemplo.com">
+
+  </div>
+
+  <div class="input-group">
+
+    <label>Senha</label>
+
+    <input type="password" id="campo-senha" placeholder="Sua senha">
+
+  </div>
+
+  <button id="btn-principal" onclick="processarAcao()">Entrar</button>
+
+
+  <button class="btn-alternar" id="btn-mudar" onclick="alternarTela()">Não tem conta? Criar Conta</button>
+
 </div>
 
 <script>
-    
-alert("SCRIPT CARREGADO");  
-    window.onerror = function(msg, url, line) {
-        console.log("Erro no código:\n" + msg + "\nLinha: " + line);
-        return true;
-    };
 
-    let modoCadastro = false;
-    const API_URL = '';
+alert("SCRIPT CARREGADO");
+
+  window.onerror = function(msg, url, line) {
+
+    console.log("Erro no código:\n" + msg + "\nLinha: " + line);
+
+    return true;
+  };
+
+  let modoCadastro = false;
+
+  const API_URL = '';
 
 let ultimosDigitos = [];
 
@@ -346,18 +363,32 @@ let ultimosDigitos = [];
     }
 
     function carregarTelaDeriv() {
-    const container = document.getElementById('box-auth');
-    container.innerHTML = `
-        <h2>PLACA DO MONEY</h2>
-        <p style="color: #8a99ad; font-size: 14px; margin-bottom: 20px;"> 🟢 Conta local está ativa. Selecione uma opção para prosseguir:
-        </p>
-        <button onclick="conectarViaOAuth()" style="background-color: #1e88e5; margin-bottom: 12px; width: 100%; padding: 12px; border: none; border-radius: 4px; color: white; font-weight: bold; cursor: pointer;">
-            Conectar à Deriv (OAuth)
-        </button>
-        <button onclick="abrirLinkAfiliado()" style="background-color: #d32f2f; width: 100%; padding: 12px; border: none; border-radius: 4px; color: white; font-weight: bold; cursor: pointer;">
-            Criar conta na Deriv
-        </button>
-    `;
+
+  const container = document.getElementById('box-auth');
+
+  container.innerHTML = `
+
+    <h2>Placa do Money - Conexão</h2>
+
+    <p style="color: #8a99ad; font-size: 14px; margin-bottom: 20px;">
+
+      Sua conta local está ativa. Selecione uma opção para prosseguir:
+
+    </p>      
+            <button onclick="conectarViaOAuth()" style="background-color: #1e88e5; margin-bottom: 12px; width: 100%; padding: 12px; border: none; border-radius: 4px; color: white; font-weight: bold; cursor: pointer;">
+
+      Conectar à Deriv (OAuth)
+
+    </button>
+
+    <button onclick="abrirLinkAfiliado()" style="background-color: #d32f2f; width: 100%; padding: 12px; border: none; border-radius: 4px; color: white; font-weight: bold; cursor: pointer;">
+
+      Criar conta na Deriv
+
+    </button>
+
+  `;
+
 }
 
 // Função do Botão Azul: Busca a URL de Login da Deriv no seu servidor e redireciona
