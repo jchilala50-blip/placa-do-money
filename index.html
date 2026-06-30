@@ -1329,6 +1329,7 @@ alert(JSON.stringify(data));
             operacaoAtual.ultimo = contrato.barrier ? Number(contrato.barrier) : "-";
 
             processarResultadoOperacao(
+alert("VOU CHAMAR processarResultadoOperacao");
                 contrato.status === "won",
                 Number(contrato.profit),
                 ultimoDigitoReal
