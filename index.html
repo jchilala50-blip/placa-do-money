@@ -1296,12 +1296,6 @@ let stakeInicial = 0.35;
 
 let stakeAtual = 0;
 
-if (isWin) {
-    stakeAtual = stakeInicial;
-} else {
-    stakeAtual = stakeAtual * 2;
-
-
 let operacaoAtual = {
     ativa: false,
     tipo: "",
@@ -1312,7 +1306,6 @@ let operacaoAtual = {
     aguardandoResultado: false
 };
 
-}
 // === FUNÇÃO CENTRALIZADORA DO WEBSOCKET (ATUALIZADA) ===
 function configurarEventosDoWS(ws) {
     ws.onmessage = function (msg) {
@@ -1452,6 +1445,8 @@ console.log("VOU CHAMAR processarResultadoOperacao");
 function processarResultadoOperacao(resultado, lucro, ultimoDigitoReal) {
 console.log("ENTREI EM processarResultadoOperacao");
 
+
+
     // CORRIGIDO: ID exato conforme o HTML do Bloco 1
     const winsElem = document.getElementById('cont-wins');
     const lossesElem = document.getElementById('cont-losses'); 
@@ -1497,6 +1492,13 @@ console.log("ENTREI EM processarResultadoOperacao");
     if (typeof renderizarHistorico === 'function') {
         renderizarHistorico();
     }
+
+
+if (isWin) {
+    stakeAtual = stakeInicial;
+} else {
+    stakeAtual = stakeAtual * 2;
+}
 
     operacaoAtual = {
     ativa: false,
