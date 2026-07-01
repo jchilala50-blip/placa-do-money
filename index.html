@@ -1296,6 +1296,12 @@ let stakeInicial = 0.35;
 
 let stakeAtual = 0;
 
+if (isWin) {
+    stakeAtual = stakeInicial;
+} else {
+    stakeAtual = stakeAtual * 2;
+}
+
 let operacaoAtual = {
     ativa: false,
     tipo: "",
