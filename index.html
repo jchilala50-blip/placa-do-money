@@ -1049,15 +1049,7 @@ texto.innerText = percentual + "%";
 }
 
 
-function abrirConfiguracoes() {
-
-    if (roboLigado) {
-        alert("Desligue o robô antes de alterar as configurações.");
-        return;
-    }
-
-    document.getElementById('meu-modal').style.display = 'flex';
-}
+function abrirConfiguracoes() { document.getElementById('meu-modal').style.display = 'flex'; }
 
 
 function fecharConfiguracoes() { document.getElementById('meu-modal').style.display = 'none'; }
@@ -1682,16 +1674,16 @@ if (roboLigado) {
     stakeAtual = stakeInicial;
 }
 
-alert("Stake inicial: " + stakeInicial);
-alert("Stake atual: " + stakeAtual);
+console.log("Stake inicial: " + stakeInicial);
+console.log("Stake atual: " + stakeAtual);
 
 const stopWin = Number(document.getElementById("config-win").value);
 
-alert("Stop Win: " + stopWin);
+console.log("Stop Win: " + stopWin);
 
 const stopLoss = Number(document.getElementById("config-loss").value);
 
-alert("Stop Loss: " + stopLoss);
+console.log("Stop Loss: " + stopLoss);
 
 
     const etapa1 =
@@ -1712,6 +1704,7 @@ alert("Stop Loss: " + stopLoss);
     if (roboLigado) {
 
         btn.innerText = "🟩";
+document.getElementById("tipo-conta").disabled = true;
 
         if (etapa1)
             etapa1.style.color =
@@ -1728,6 +1721,7 @@ alert("Stop Loss: " + stopLoss);
     } else {
 
         btn.innerText = "🟥";
+document.getElementById("tipo-conta").disabled = false;
 
         if (etapa1)
             etapa1.style.color =
