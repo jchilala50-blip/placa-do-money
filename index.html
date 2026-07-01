@@ -1513,6 +1513,17 @@ alert("Próxima stake: " + stakeAtual);
 
 }
 
+const stopWin = Number(document.getElementById("config-win").value);
+const stopLoss = Number(document.getElementById("config-loss").value);
+
+if (lucroVirtual >= stopWin) {
+    alert("STOP WIN ATINGIDO!");
+}
+
+if (perdaVirtual >= stopLoss) {
+    alert("STOP LOSS ATINGIDO!");
+}
+
 function executarCompra() {
 
     console.log(
