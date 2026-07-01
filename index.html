@@ -738,7 +738,11 @@ console.log("WS STATE: " + window.derivWS.readyState);
         return;
     }
 
-    const stake = document.getElementById('config-stake') ? Number(document.getElementById('config-stake').value) : 0.35;
+    if (stakeAtual <= 0) {
+    stakeAtual = Number(document.getElementById('config-stake').value) || 0.35;
+}
+
+const stake = stakeAtual;
 
 operacaoAtual.preco = stake;
 
@@ -1275,8 +1279,11 @@ function ativarEtapa(numero) {
 }
 
 let roboLigado = false;
+
 let simboloAtual = "1HZ100V";
+
 let subscriptionTickId = null;
+
 let historicoOperacoes = [];
 
 let ultimoTickProcessado = null;
@@ -1284,6 +1291,10 @@ let ultimoTickProcessado = null;
 let lucroVirtual = 0;
 
 let perdaVirtual = 0;
+
+let stakeInicial = 0.35;
+
+let stakeAtual = 0.35;
 
 let operacaoAtual = {
     ativa: false,
