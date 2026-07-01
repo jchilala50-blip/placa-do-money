@@ -1326,6 +1326,8 @@ if (data.error) {
 
         // 📊 2. TRATAR TICKS (ÚLTIMOS DÍGITOS E GRÁFICO)
         if (data.tick) {
+console.log(data);
+alert(JSON.stringify(data));
             const ultimoDigito = String(data.tick.quote).slice(-1);
             const visor = document.getElementById('ultimo-digito-real');
             
