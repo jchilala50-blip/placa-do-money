@@ -1233,6 +1233,8 @@ function trocarVolatilidade() {
         window.derivWS.readyState === 1
     ) {
 
+alert("VOU SUBSCREVER: " + simboloAtual);
+
         window.derivWS.send(
             JSON.stringify({
                 ticks: simboloAtual
