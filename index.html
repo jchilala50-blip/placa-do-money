@@ -1049,8 +1049,16 @@ texto.innerText = percentual + "%";
 }
 
 
+function abrirConfiguracoes() {
 
-function abrirConfiguracoes() { document.getElementById('meu-modal').style.display = 'flex'; }
+    if (roboLigado) {
+        alert("Desligue o robô antes de alterar as configurações.");
+        return;
+    }
+
+    document.getElementById('meu-modal').style.display = 'flex';
+}
+
 
 function fecharConfiguracoes() { document.getElementById('meu-modal').style.display = 'none'; }
 
