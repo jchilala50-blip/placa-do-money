@@ -1645,6 +1645,13 @@ function limparHistorico() {
 
     roboLigado = !roboLigado;
 
+if (roboLigado) {
+    stakeInicial = Number(document.getElementById("config-stake").value) || 0.35;
+    stakeAtual = stakeInicial;
+}
+
+alert("Stake inicial: " + stakeInicial);
+
     const etapa1 =
         document.getElementById(
             'etapa-1'
