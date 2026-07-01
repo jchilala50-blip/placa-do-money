@@ -1300,7 +1300,7 @@ if (isWin) {
     stakeAtual = stakeInicial;
 } else {
     stakeAtual = stakeAtual * 2;
-}
+
 
 let operacaoAtual = {
     ativa: false,
@@ -1312,7 +1312,7 @@ let operacaoAtual = {
     aguardandoResultado: false
 };
 
-
+}
 // === FUNÇÃO CENTRALIZADORA DO WEBSOCKET (ATUALIZADA) ===
 function configurarEventosDoWS(ws) {
     ws.onmessage = function (msg) {
