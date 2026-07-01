@@ -1504,7 +1504,7 @@ if (isWin) {
 } else {
     stakeAtual = stakeAtual * 2;
 }
-alert("Próxima stake: " + stakeAtual);
+console.log("Próxima stake: " + stakeAtual);
 
 const stopWin = Number(document.getElementById("config-win").value);
 const stopLoss = Number(document.getElementById("config-loss").value);
@@ -1706,6 +1706,8 @@ console.log("Stop Loss: " + stopLoss);
         btn.innerText = "🟩";
 document.getElementById("tipo-conta").disabled = true;
 
+document.getElementById("estrategia-robo").disabled = true;
+
         if (etapa1)
             etapa1.style.color =
                 "#00e5ff";
@@ -1723,6 +1725,7 @@ document.getElementById("tipo-conta").disabled = true;
         btn.innerText = "🟥";
 document.getElementById("tipo-conta").disabled = false;
 
+document.getElementById("estrategia-robo").disabled = false;
         if (etapa1)
             etapa1.style.color =
                 "#607d8b";
