@@ -1228,20 +1228,23 @@ function trocarVolatilidade() {
         simboloAtual
     );
 
-    if (
-        window.derivWS &&
-        window.derivWS.readyState === 1
-    ) {
+ if (
+    window.derivWS &&
+    window.derivWS.readyState === 1
+) {
 
-alert("VOU SUBSCREVER: " + simboloAtual);
-
-        window.derivWS.send(
-            JSON.stringify({
-                ticks: simboloAtual
-            })
-        );
+    // Cancela a subscrição anterior
+    if (subscriptionTickId) {
+        window.derivWS.send(JSON.stringify({
+            forget: subscriptionTickId
+        }));
     }
 
+    // Subscreve a nova volatilidade
+    window.derivWS.send(JSON.stringify({
+        ticks: simboloAtual
+    }));
+}
 }
 
 
@@ -1273,6 +1276,7 @@ function ativarEtapa(numero) {
 
 let roboLigado = false;
 let simboloAtual = "1HZ100V";
+let subscriptionTickId = null;
 let historicoOperacoes = [];
 
 let ultimoTickProcessado = null;
@@ -1326,8 +1330,11 @@ if (data.error) {
 
         // 📊 2. TRATAR TICKS (ÚLTIMOS DÍGITOS E GRÁFICO)
         if (data.tick) {
-console.log(data);
-alert(JSON.stringify(data));
+
+      if (data.subscription && data.subscription.id) {
+        subscriptionTickId = data.subscription.id;
+        }
+
             const ultimoDigito = String(data.tick.quote).slice(-1);
             const visor = document.getElementById('ultimo-digito-real');
             
