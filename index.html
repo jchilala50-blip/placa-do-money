@@ -1514,12 +1514,18 @@ if (lucroVirtual >= stopWin) {
 roboLigado = false;
 document.getElementById("btn-comecar-robo").innerText = "🟥";
 
+document.getElementById("tipo-conta").disabled = false;
+document.getElementById("estrategia-robo").disabled = false;
+
 }
 
 if (perdaVirtual >= stopLoss) {
     alert("STOP LOSS ATINGIDO!");
 roboLigado = false;
 document.getElementById("btn-comecar-robo").innerText = "🟥";
+
+document.getElementById("tipo-conta").disabled = false;
+document.getElementById("estrategia-robo").disabled = false;
 
 }
 
