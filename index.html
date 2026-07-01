@@ -1507,11 +1507,15 @@ const stopLoss = Number(document.getElementById("config-loss").value);
 if (lucroVirtual >= stopWin) {
     alert("STOP WIN ATINGIDO!");
 roboLigado = false;
+document.getElementById("btn-comecar-robo").innerText = "🟥";
+
 }
 
 if (perdaVirtual >= stopLoss) {
     alert("STOP LOSS ATINGIDO!");
 roboLigado = false;
+document.getElementById("btn-comecar-robo").innerText = "🟥";
+
 }
 
     operacaoAtual = {
