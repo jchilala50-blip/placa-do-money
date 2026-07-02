@@ -472,7 +472,17 @@ ss="mini-placar">
                 <div>
                     <label class="label-card">Estratégia</label>
 
-<select id="estrategia-robo">
+<select id="estrategia-robo" onchange="atualizarImagemRobo()">
+<div style="text-align:center; margin-top:10px;">
+    <img
+    id="imagem-robo"
+    src="titan.png"
+        style="
+            width:90px;
+            height:90px;
+            object-fit:contain;
+        ">
+</div>
 
     <option value="nenhuma">Selecionar Robô</option>
 
@@ -1651,6 +1661,43 @@ function limparHistorico() {
     );
 }
 
+
+function atualizarImagemRobo() {
+
+    const estrategia =
+        document.getElementById("estrategia-robo").value;
+
+    const imagem =
+        document.getElementById("imagem-robo");
+
+    if (!imagem) return;
+
+    switch (estrategia) {
+
+        case "impar":
+            imagem.src = "orion.png";
+            break;
+
+        case "par":
+            imagem.src = "vortex.png";
+            break;
+
+        case "over":
+            imagem.src = "titan.png";
+            break;
+
+        case "under":
+            imagem.src = "super-epic.png";
+            break;
+
+        case "repeticao":
+            imagem.src = "money-phantom.png";
+            break;
+
+        default:
+            imagem.src = "orion.png";
+    }
+}
 
    function alternarRobo() {
 
