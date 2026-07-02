@@ -1683,6 +1683,40 @@ function limparHistorico() {
     );
 }
 
+// ========================================================
+
+function selecionarRobo(valor, nome, imagem) {
+
+    // 1. Atualiza o select escondido (lógica do robô)
+    const select = document.getElementById("estrategia-robo");
+    if (select) {
+        select.value = valor;
+    }
+
+    // 2. Atualiza botão visual
+    const botao = document.getElementById("botao-robo");
+    if (botao) {
+        botao.innerText = nome + " ▼";
+    }
+
+    // 3. Atualiza imagem principal
+    const img = document.getElementById("imagem-robo");
+    if (img) {
+        img.src = imagem;
+    }
+
+    // 4. Fecha modal
+    const modal = document.getElementById("lista-robos");
+    if (modal) {
+        modal.style.display = "none";
+    }
+
+    // 5. Garante sincronização da lógica antiga
+    if (typeof atualizarImagemRobo === "function") {
+        atualizarImagemRobo();
+    }
+}
+
 
 function atualizarImagemRobo() {
 
@@ -1720,6 +1754,8 @@ function atualizarImagemRobo() {
             imagem.src = "orion.png";
     }
 }
+
+// ========================================================
 
    function alternarRobo() {
 
