@@ -1077,7 +1077,14 @@ texto.innerText = percentual + "%";
 
 }
 
+
+
 function abrirListaRobos() {
+
+if (roboLigado) {
+    alert("Desliga o robô antes de trocar de estratégia.");
+    return;
+}
 
     document.getElementById("lista-robos").style.display = "flex";
 
