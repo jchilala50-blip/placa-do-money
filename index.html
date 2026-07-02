@@ -549,8 +549,9 @@ onchange="trocarVolatilidade()">
 
             <div class="linha-controle">
 
-    <div class="btn-icon"
-         onclick="abrirConfiguracoes()">
+    <div id="btn-config"
+     class="btn-icon"
+     onclick="abrirConfiguracoes()">
          ⚙️
     </div>
 
@@ -633,11 +634,11 @@ onchange="trocarVolatilidade()">
                     </div>
                     <div style="margin-bottom:10px;">
                         <label class="label-card">Meta de Ganhos (Stop Win):</label>
-                        <input type="number" id="config-win" value="5.00">
+                        <input type="number" id="config-win" value="999">
                     </div>
                     <div style="margin-bottom:16px;">
                         <label class="label-card">Limite de Perdas (Stop Loss):</label>
-                        <input type="number" id="config-loss" value="10.00">
+                        <input type="number" id="config-loss" value="999">
                     </div>
                     
                     <button style="background-color:#1e88e5; color:white; padding:10px; border-radius:6px; border:none; width:100%; font-weight:bold; font-size:12px;" onclick="fecharConfiguracoes()">SALVAR CONFIGURAÇÕES</button>
@@ -1792,6 +1793,12 @@ if (botaoRobo) {
     botaoRobo.style.pointerEvents = roboLigado ? "none" : "auto";
 }
 
+const btnConfig = document.getElementById("btn-config");
+
+if (btnConfig) {
+    btnConfig.style.opacity = roboLigado ? "0.5" : "1";
+    btnConfig.style.pointerEvents = roboLigado ? "none" : "auto";
+}
 
 if (roboLigado) {
     stakeInicial = Number(document.getElementById("config-stake").value) || 0.35;
