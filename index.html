@@ -470,13 +470,29 @@ ss="mini-placar">
                     </select>
                 </div>
                 <div>
-                    <label class="label-card">Estratégia</label>
+                    <label class="label-card">Selecionar Robô</label>
+
+<div id="botao-robo"
+     onclick="abrirListaRobos()"
+     style="
+        background:#101f35;
+        border:1px solid #1a3152;
+        border-radius:6px;
+        padding:10px;
+        color:white;
+        cursor:pointer;
+        text-align:center;
+        font-weight:bold;
+">
+ORION ▼
+</div>
 
 <select id="estrategia-robo" onchange="atualizarImagemRobo()">
+
 <div style="text-align:center; margin-top:10px;">
     <img
-    id="imagem-robo"
-    src="titan.png"
+        id="imagem-robo"
+        src="titan.png"
         style="
             width:90px;
             height:90px;
