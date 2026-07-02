@@ -1081,11 +1081,6 @@ texto.innerText = percentual + "%";
 
 function abrirListaRobos() {
 
-if (roboLigado) {
-    alert("Desliga o robô antes de trocar de estratégia.");
-    return;
-}
-
     document.getElementById("lista-robos").style.display = "flex";
 
 }
@@ -1789,6 +1784,14 @@ function atualizarImagemRobo() {
     }
 
     roboLigado = !roboLigado;
+
+const botaoRobo = document.getElementById("botao-robo");
+
+if (botaoRobo) {
+    botaoRobo.style.opacity = roboLigado ? "0.5" : "1";
+    botaoRobo.style.pointerEvents = roboLigado ? "none" : "auto";
+}
+
 
 if (roboLigado) {
     stakeInicial = Number(document.getElementById("config-stake").value) || 0.35;
