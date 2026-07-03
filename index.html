@@ -1441,6 +1441,23 @@ if (data.msg_type === 'buy' && data.buy) {
 console.log(JSON.stringify(data));
 
     const contract_id = data.buy.contract_id;
+    operacaoAtual.contractId = contract_id;
+
+historicoOperacoes.unshift({
+    contractId: contract_id,
+    tipo: operacaoAtual ? operacaoAtual.tipo : "-",
+    ultimo: "-",
+    preco: operacaoAtual ? operacaoAtual.preco : 0,
+    resultado: "PROCESSANDO",
+    lucro: "--",
+    hora: new Date().toLocaleTimeString()
+});
+
+if (historicoOperacoes.length > 20) {
+    historicoOperacoes.pop();
+}
+
+renderizarHistorico();
 
     console.log("Contrato comprado:", contract_id);
 
