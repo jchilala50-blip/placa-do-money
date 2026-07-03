@@ -1220,8 +1220,18 @@ function renderizarHistorico() {
 
     historicoOperacoes.forEach(op => {
 
-        const cor = op.resultado === "WIN" ? "#00e676" : "#ff1744";
-        const icone = op.resultado === "WIN" ? "✔" : "✖";
+        let cor = "#ff1744";
+let icone = "✖";
+
+if (op.resultado === "WIN") {
+    cor = "#00e676";
+    icone = "✔";
+}
+
+if (op.resultado === "PROCESSANDO") {
+    cor = "#ffd600";
+    icone = "⏳";
+}
 
         const card = `
             <div style="
@@ -1442,22 +1452,6 @@ console.log(JSON.stringify(data));
 
     const contract_id = data.buy.contract_id;
     operacaoAtual.contractId = contract_id;
-
-historicoOperacoes.unshift({
-    contractId: contract_id,
-    tipo: operacaoAtual ? operacaoAtual.tipo : "-",
-    ultimo: "-",
-    preco: operacaoAtual ? operacaoAtual.preco : 0,
-    resultado: "PROCESSANDO",
-    lucro: "--",
-    hora: new Date().toLocaleTimeString()
-});
-
-if (historicoOperacoes.length > 20) {
-    historicoOperacoes.pop();
-}
-
-renderizarHistorico();
 
     console.log("Contrato comprado:", contract_id);
 
