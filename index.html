@@ -1457,8 +1457,14 @@ console.log(JSON.stringify(data));
 
     const contract_id = data.buy.contract_id;
     operacaoAtual.contractId = contract_id;
-
     console.log("Contrato comprado:", contract_id);
+
+const estado = document.getElementById("estado-operacao");
+
+if (estado) {
+    estado.innerText = "🟡 ⏳ PROCESSANDO...";
+    estado.style.color = "#ffd600";
+}
 
     // 🔥 AGORA SIM: ativar tracking do contrato
 console.log("VOU ACOMPANHAR O CONTRATO: " + contract_id);
