@@ -25,10 +25,10 @@
             border-radius: 12px;
             border: 1px solid #16263f;
             width: 100%;
-            max-width: 420px;
+            max-width: 423px;
             box-sizing: border-box;
             margin-top: 4px; /* Ajuste fino para não colar totalmente na barra do navegador */
-            max-height: 90vh;
+            max-height: 92vh;
             overflow-y: auto;
         }
         
@@ -606,13 +606,13 @@ onchange="trocarVolatilidade()">
 
     <div class="linha-historico cabecalho">
 
-        <span>TIPO</span>
+        <span>__📈__</span>
 
-        <span>ÚLTIMO</span>
+        <span>__📉__</span>
 
-        <span>PREÇO</span>
+        <span>__📈__</span>
 
-        <span>RESULTADO</span>
+        <span>__📉__</span>
 
     </div>
 
@@ -1807,6 +1807,15 @@ function atualizarImagemRobo() {
     }
 
     roboLigado = !roboLigado;
+
+if (!roboLigado) {
+    const estado = document.getElementById("estado-operacao");
+
+    if (estado) {
+        estado.innerText = "⚪ Aguardando sinal...";
+        estado.style.color = "#b0bec5";
+    }
+}
 
 const botaoRobo = document.getElementById("botao-robo");
 
