@@ -341,6 +341,7 @@ let ultimosDigitos = [];
     }
 
     async function processarAcao() {
+mostrarProcessando("A autenticar...");
         const nome = document.getElementById('campo-nome').value;
         const email = document.getElementById('campo-email').value;
         const senha = document.getElementById('campo-senha').value;
@@ -358,11 +359,15 @@ let ultimosDigitos = [];
             const resultado = await resposta.json();
 
             if (!resposta.ok) {
-                alert(resultado.erro || "Ocorreu um erro no servidor.");
+                
+mostrarProcessando(resultado.erro || "Erro no servidor...");
+setTimeout(esconderProcessando, 2000);
+
                 return;
             }
 
-            alert(resultado.mensagem);
+            mostrarProcessando(resultado.mensagem);
+setTimeout(esconderProcessando, 1000);
 
             if (!modoCadastro) {
                 carregarTelaDeriv();
