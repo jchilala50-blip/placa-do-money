@@ -95,7 +95,7 @@ app.get('/api/deriv-auth-url', (req, res) => {
 
 
 app.get('/api/link-afiliado', (req, res) => {
-    const link = process.env.LINK_AFILIADO || 'https://deriv.com/?region=pt';
+    const link = process.env.LINK_AFILIADO;
     res.json({ url: link });
 });
 
