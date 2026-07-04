@@ -1106,6 +1106,7 @@ if (roboLigado) {
 }
 
 const tipo = document.getElementById('tipo-conta').value;
+sessionStorage.setItem("tipoConta", tipo);
 
 
 try {
@@ -1176,9 +1177,6 @@ req_id: 1
 
 }));
 
-setTimeout(() => {
-    location.reload();
-}, 500);
 
 ws.send(JSON.stringify({
 
@@ -1922,6 +1920,25 @@ window.history.replaceState(
     '/index.html'
 );
 
+
+const tipoGuardado = sessionStorage.getItem("tipoConta");
+
+if (tipoGuardado) {
+    setTimeout(() => {
+        const seletor = document.getElementById("tipo-conta");
+
+        if (seletor) {
+            seletor.value = tipoGuardado;
+
+            if (tipoGuardado === "REAL") {
+                alternarAmbienteConta();
+            }
+        }
+    }, 300);
+}
+
+
+
         if (typeof irParaDashboardReal === 'function') {
             irParaDashboardReal();
         }
@@ -1931,6 +1948,26 @@ window.history.replaceState(
         const wsSalvo = sessionStorage.getItem('deriv_ws_url');
 
         if (wsSalvo) {
+
+
+
+const tipoGuardado = sessionStorage.getItem("tipoConta");
+
+if (tipoGuardado) {
+    setTimeout(() => {
+        const seletor = document.getElementById("tipo-conta");
+
+        if (seletor) {
+            seletor.value = tipoGuardado;
+
+            if (tipoGuardado === "REAL") {
+                alternarAmbienteConta();
+            }
+        }
+    }, 300);
+}
+
+
 
             if (typeof irParaDashboardReal === 'function') {
                 irParaDashboardReal();
