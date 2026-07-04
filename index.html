@@ -1907,72 +1907,61 @@ document.getElementById("estrategia-robo").disabled = false;
 }
 
     // Captura automática do WebSocket OTP da Deriv
+
 window.addEventListener('DOMContentLoaded', () => {
 
-    const urlParams = new URLSearchParams(window.location.search);
 
-    const wsUrl = urlParams.get('ws_url');
-    const authStatus = urlParams.get('auth');
+const urlParams = new URLSearchParams(window.location.search);
 
-    if (authStatus === 'success' && wsUrl) {
 
-        sessionStorage.setItem('deriv_ws_url', wsUrl);
+const wsUrl = urlParams.get('ws_url');
+
+const authStatus = urlParams.get('auth');
+
+
+if (authStatus === 'success' && wsUrl) {
+
+
+sessionStorage.setItem('deriv_ws_url', wsUrl);
+
 
 window.history.replaceState(
-    {},
-    document.title,
-    '/index.html'
+
+{},
+
+document.title,
+
+'/index.html'
+
 );
 
 
-const tipoGuardado = sessionStorage.getItem("tipoConta");
+if (typeof irParaDashboardReal === 'function') { irParaDashboardReal();
 
-if (tipoGuardado) {
-    setTimeout(() => {
-        const seletor = document.getElementById("tipo-conta");
-
-        if (seletor) {
-            seletor.value = tipoGuardado;
-        }
-    }, 300);
 }
 
-        if (typeof irParaDashboardReal === 'function') {
-            irParaDashboardReal();
-        }
-
-    } else {
-
-        const wsSalvo = sessionStorage.getItem('deriv_ws_url');
-
-        if (wsSalvo) {
+} else {
 
 
+const wsSalvo = sessionStorage.getItem('deriv_ws_url');
 
-const tipoGuardado = sessionStorage.getItem("tipoConta");
+if (wsSalvo) {
 
-if (tipoGuardado) {
-    setTimeout(() => {
-        const seletor = document.getElementById("tipo-conta");
+if (typeof irParaDashboardReal === 'function') {
 
-        if (seletor) {
-            seletor.value = tipoGuardado;
+irParaDashboardReal();
 
-        }
-    }, 300);
 }
-            if (typeof irParaDashboardReal === 'function') {
-                irParaDashboardReal();
 
-            }
 
-        }
-    }
+}
+
+}
+
 });
 
+
 </script>
-
-
 
 <div id="lista-robos" style="
 display:none;
