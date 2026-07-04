@@ -706,8 +706,8 @@ if (dados.success && dados.ws_url) {
 
 wsUrl = dados.ws_url;
 
-alert(wsUrl);
-
+console.log(
+wsUrl);
 
 sessionStorage.setItem(
 
@@ -1738,6 +1738,12 @@ if (lucroReal) {
 
     if (wins) wins.innerText = "0";
     if (losses) losses.innerText = "0";
+
+alert(
+"Lucro=" + lucroVirtual +
+"\nPerda=" + perdaVirtual +
+"\nTexto=" + document.getElementById("lucro-real").innerText
+);
 
     console.log(
         "Histórico apagado."
