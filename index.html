@@ -1887,6 +1887,28 @@ function esconderProcessando() {
     }
 }
 
+function sucessoProcessando(texto = "Concluído") {
+
+    const loader = document.getElementById("pm-loader");
+    const msg = document.getElementById("texto-loader");
+
+    if (loader) {
+        loader.innerHTML = "✔";
+        loader.style.border = "none";
+        loader.style.animation = "none";
+        loader.style.color = "#00e676";
+        loader.style.fontSize = "32px";
+    }
+
+    if (msg) {
+        msg.innerText = texto;
+    }
+
+    setTimeout(() => {
+        esconderProcessando();
+    }, 800);
+}
+
 // ========================================================
 
    function alternarRobo() {
