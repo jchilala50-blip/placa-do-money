@@ -95,7 +95,15 @@ app.get('/api/deriv-auth-url', (req, res) => {
 
 
 app.get('/api/link-afiliado', (req, res) => {
+
     const link = process.env.LINK_AFILIADO;
+
+    if (!link) {
+        return res.status(500).json({
+            error: "LINK_AFILIADO não configurado"
+        });
+    }
+
     res.json({ url: link });
 });
 
