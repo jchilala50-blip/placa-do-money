@@ -1739,11 +1739,9 @@ if (lucroReal) {
     if (wins) wins.innerText = "0";
     if (losses) losses.innerText = "0";
 
-alert(
-"Lucro=" + lucroVirtual +
-"\nPerda=" + perdaVirtual +
-"\nTexto=" + document.getElementById("lucro-real").innerText
-);
+console.log("Lucro:", lucroVirtual);
+console.log("Perda:", perdaVirtual);
+console.log("Texto:", document.getElementById("lucro-real")?.innerText);
 
     console.log(
         "Histórico apagado."
