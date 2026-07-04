@@ -1107,7 +1107,7 @@ if (roboLigado) {
 
 const tipo = document.getElementById('tipo-conta').value;
 sessionStorage.setItem("tipoConta", tipo);
-
+sessionStorage.setItem("precisaReload", "1");
 
 try {
 
@@ -1928,15 +1928,9 @@ if (tipoGuardado) {
 
         if (seletor) {
             seletor.value = tipoGuardado;
-
-            if (tipoGuardado === "REAL") {
-                alternarAmbienteConta();
-            }
         }
     }, 300);
 }
-
-
 
         if (typeof irParaDashboardReal === 'function') {
             irParaDashboardReal();
