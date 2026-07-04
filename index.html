@@ -694,7 +694,7 @@ const dados = await resposta.json();
 if (dados.success && dados.ws_url) {
 
 
-console.log(wsUrl);
+alert(wsUrl);
 
 
 sessionStorage.setItem(
@@ -1804,11 +1804,14 @@ function atualizarImagemRobo() {
     if (est === 'nenhuma') {
 
         alert(
-          " ❌ ESCOLHA A ESTRATÉGIA ANTES DE INICIAR!"
-        );
 
-        return;
-    }
+" ❌ Por favor, selecione uma estratégia antes de iniciar o robô!"
+
+);
+
+return;
+
+}
 
     roboLigado = !roboLigado;
 
