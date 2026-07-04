@@ -606,9 +606,9 @@ onchange="trocarVolatilidade()">
 
     <div class="linha-historico cabecalho">
 
-        <span>=========</span>
+        <span>==========</span>
 
-        <span>=========</span>
+        <span>==========</span>
 
         <span>=========</span>
 
@@ -1948,17 +1948,19 @@ if (tipoGuardado) {
         if (seletor) {
             seletor.value = tipoGuardado;
 
-            if (tipoGuardado === "REAL") {
-                alternarAmbienteConta();
-            }
         }
     }, 300);
 }
-
-
-
             if (typeof irParaDashboardReal === 'function') {
                 irParaDashboardReal();
+
+
+  } else {
+
+        const wsSalvo = sessionStorage.getItem('deriv_ws_url');
+
+        if (wsSalvo) {
+
             }
 
         }
