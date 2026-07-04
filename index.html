@@ -411,17 +411,22 @@ setTimeout(esconderProcessando, 1000);
 
 // Função do Botão Azul: Busca a URL de Login da Deriv no seu servidor e redireciona
 async function conectarViaOAuth() {
+mostrarProcessando("A ligar à Deriv...");
     try {
         const resposta = await fetch('/api/deriv-auth-url');
         const dados = await resposta.json();
         if (dados.url) {
+
+mostrarProcessando("A redirecionar para Deriv...");
+
             window.location.href = dados.url; // Redireciona para a Deriv
         } else {
             Console.log("Erro ao obter URL de autenticação.");
         }
     } catch (erro) {
         console.error(erro);
-        alert("Erro ao conectar com o servidor local.");
+        mostrarProcessando("Erro ao conectar...");
+setTimeout(esconderProcessando, 2000);
     }
 }
 
