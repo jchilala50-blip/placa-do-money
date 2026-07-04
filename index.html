@@ -1936,6 +1936,23 @@ document.title,
 );
 
 
+
+const tipoGuardado = sessionStorage.getItem("tipoConta");
+
+if (tipoGuardado) {
+    setTimeout(() => {
+        const seletor = document.getElementById("tipo-conta");
+
+        if (seletor) {
+            seletor.value = tipoGuardado;
+
+            if (tipoGuardado === "REAL") {
+                alternarAmbienteConta();
+            }
+        }
+    }, 300);
+}
+
 if (typeof irParaDashboardReal === 'function') { irParaDashboardReal();
 
 }
@@ -1946,6 +1963,22 @@ if (typeof irParaDashboardReal === 'function') { irParaDashboardReal();
 const wsSalvo = sessionStorage.getItem('deriv_ws_url');
 
 if (wsSalvo) {
+
+const tipoGuardado = sessionStorage.getItem("tipoConta");
+
+if (tipoGuardado) {
+    setTimeout(() => {
+        const seletor = document.getElementById("tipo-conta");
+
+        if (seletor) {
+            seletor.value = tipoGuardado;
+
+            if (tipoGuardado === "REAL") {
+                alternarAmbienteConta();
+            }
+        }
+    }, 300);
+}
 
 if (typeof irParaDashboardReal === 'function') {
 
