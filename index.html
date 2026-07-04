@@ -606,13 +606,13 @@ onchange="trocarVolatilidade()">
 
     <div class="linha-historico cabecalho">
 
-        <span>__📈__</span>
+        <span>=========</span>
 
-        <span>__📉__</span>
+        <span>=========</span>
 
-        <span>__📈__</span>
+        <span>=========</span>
 
-        <span>__📉__</span>
+        <span>=========</span>
 
     </div>
 
@@ -694,8 +694,7 @@ const dados = await resposta.json();
 if (dados.success && dados.ws_url) {
 
 
-wsUrl = dados.ws_url;
-alert(wsUrl);
+console.log(wsUrl);
 
 
 sessionStorage.setItem(
@@ -1100,10 +1099,6 @@ function fecharConfiguracoes() { document.getElementById('meu-modal').style.disp
 
 async function alternarAmbienteConta() {
 
-if (roboLigado) {
-    alert("Desligue o robô antes de trocar de conta.");
-    return;
-}
 
 const tipo = document.getElementById('tipo-conta').value;
 sessionStorage.setItem("tipoConta", tipo);
@@ -1802,7 +1797,7 @@ function atualizarImagemRobo() {
     if (est === 'nenhuma') {
 
         alert(
-          " ❌ Por favor, selecione uma estratégia antes de iniciar o robô!"
+          " ❌ ESCOLHA A ESTRATÉGIA ANTES DE INICIAR!"
         );
 
         return;
