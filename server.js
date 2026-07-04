@@ -96,16 +96,12 @@ app.get('/api/deriv-auth-url', (req, res) => {
 
 app.get('/api/link-afiliado', (req, res) => {
 
-    const link = process.env.LINK_AFILIADO;
+const link = process.env.LINK_AFILIADO || 'https://partner-tracking.deriv.com/click?a=14293&o=1&c=3&link_id=1';
 
-    if (!link) {
-        return res.status(500).json({
-            error: "LINK_AFILIADO não configurado"
-        });
-    }
+res.json({ url: link });
 
-    res.json({ url: link });
 });
+
 
 // --- FLUXO DE AUTENTICAÇÃO DA DERIV ---
 app.get('/callback', async (req, res) => {
