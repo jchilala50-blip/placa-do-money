@@ -1188,19 +1188,6 @@ ticks: simboloAtual
 
 };
 
-// RELOAD INICIO AQUI========================
-
-if (!sessionStorage.getItem("reloadConta")) {
-
-    sessionStorage.setItem("reloadConta", "1");
-
-    setTimeout(() => {
-        location.reload();
-    }, 500);
-
-}
-
-// RELOAD FINDA AQUI=========================
 
 } catch (erro) {
 
@@ -1916,8 +1903,6 @@ document.getElementById("estrategia-robo").disabled = false;
 
     // Captura automática do WebSocket OTP da Deriv
 window.addEventListener('DOMContentLoaded', () => {
-
-sessionStorage.removeItem("reloadConta");
 
     const urlParams = new URLSearchParams(window.location.search);
 
