@@ -250,6 +250,19 @@
             max-width: 300px;
             text-align: left;
         }
+
+@keyframes girarPM {
+
+0% {
+transform:rotate(0deg);
+}
+
+100% {
+transform:rotate(360deg);
+}
+
+}
+
     </style>
 </head>
 <body>
@@ -1820,6 +1833,33 @@ function atualizarImagemRobo() {
     }
 }
 
+function mostrarProcessando(texto = "A processar...") {
+
+    const painel = document.getElementById("painel-processando");
+    const msg = document.getElementById("texto-loader");
+
+    if (msg) {
+        msg.innerText = texto;
+    }
+
+    if (painel) {
+        painel.style.display = "flex";
+    }
+setTimeout(() => {
+    esconderProcessando();
+}, 3000);
+
+}
+
+function esconderProcessando() {
+
+    const painel = document.getElementById("painel-processando");
+
+    if (painel) {
+        painel.style.display = "none";
+    }
+}
+
 // ========================================================
 
    function alternarRobo() {
@@ -2019,6 +2059,7 @@ irParaDashboardReal();
 
 });
 
+mostrarProcessando("Teste...");
 
 </script>
 
@@ -2152,6 +2193,61 @@ Selecionar Robô
 </div>
 
 </div>
+
+<div id="painel-processando" style="
+display:none;
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,.55);
+z-index:99999;
+justify-content:center;
+align-items:center;
+">
+
+<div style="
+width:220px;
+background:#101826;
+border:1px solid #1d3d68;
+border-radius:16px;
+padding:25px;
+text-align:center;
+box-shadow:0 0 25px rgba(0,170,255,.35);
+">
+
+<div id="pm-loader" style="
+width:70px;
+height:70px;
+margin:auto;
+border:4px solid #1d3d68;
+border-top:4px solid #29b6f6;
+border-radius:50%;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:24px;
+font-weight:bold;
+color:#29b6f6;
+animation:girarPM 1s linear infinite;
+">
+PM
+</div>
+
+<div id="texto-loader"
+style="
+margin-top:18px;
+color:white;
+font-size:16px;
+">
+A processar...
+</div>
+
+</div>
+
+</div>
+
 
 </body>
 </html>
