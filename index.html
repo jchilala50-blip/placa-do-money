@@ -376,7 +376,11 @@ setTimeout(esconderProcessando, 1000);
             }
 
         } catch (erro) {
-            alert("Erro físico ao tentar alcançar o servidor.");
+
+
+            mostrarProcessando(resultado.mensagem);
+setTimeout(esconderProcessando, 1000);
+
         }
     }
 
@@ -432,13 +436,26 @@ setTimeout(esconderProcessando, 2000);
 
 // Função do Botão Vermelho: Abre seu link de afiliado em uma nova aba
 async function abrirLinkAfiliado() {
+
+mostrarProcessando("Criar conta Deriv...");
+
     try {
         const resposta = await fetch('/api/link-afiliado');
         const dados = await resposta.json();
         if (dados.url) {
-            window.open(dados.url, '_blank');
+
+            mostrarProcessando("A redirecionar...");
+setTimeout(() => {
+    window.open(dados.url, '_blank');
+    esconderProcessando();
+}, 800);
+
         } else {
-            alert("Link de afiliado não configurado no .env");
+
+            mostrarProcessando("Link não configurado...");
+setTimeout(esconderProcessando, 2000);
+return;
+
         }
     } catch (erro) {
         console.error(erro);
