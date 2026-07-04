@@ -1000,7 +1000,6 @@ return html;
 
 }
 
-
 function atualizarCoresBarras(contagem) {
 
 
@@ -1043,14 +1042,11 @@ barra.style.backgroundColor =
 
 } else if(percentual >= 8) {
 
-
 barra.style.backgroundColor =
 
 "#ffffff";
 
-
 } else {
-
 
 barra.style.backgroundColor =
 
@@ -1062,11 +1058,9 @@ barra.style.backgroundColor =
 
 }
 
-
 function atualizarGraficoReal() {
 
 const contagem = Array(10).fill(0);
-
 
 ultimosDigitos.forEach(digito => {
 
@@ -1077,7 +1071,6 @@ contagem[digito]++;
 }
 
 });
-
 
 atualizarCoresBarras(contagem);
 
@@ -1108,7 +1101,6 @@ altura = 80;
 
 }
 
-
 barra.style.height =
 
 Math.max(altura, 10) + "px";
@@ -1126,20 +1118,15 @@ texto.innerText = percentual + "%";
 
 }
 
-
-
 function abrirListaRobos() {
 
     document.getElementById("lista-robos").style.display = "flex";
 
 }
 
-
 function abrirConfiguracoes() { document.getElementById('meu-modal').style.display = 'flex'; }
 
-
 function fecharConfiguracoes() { document.getElementById('meu-modal').style.display = 'none'; }
-
 
 async function alternarAmbienteConta() {
 
@@ -1152,23 +1139,17 @@ return;
 
 }
 
-
 const tipo = document.getElementById('tipo-conta').value;
-
-
 
 try {
 
-
 console.log("A trocar conta para:", tipo);
-
 
 // 1. pedir novo OTP
 
 const resposta = await fetch(`/api/novo-otp?tipo=${tipo}`);
 
 const dados = await resposta.json();
-
 
 if (!dados.ws_url) {
 
@@ -1177,7 +1158,6 @@ alert("Erro ao obter ligação da conta");
 return;
 
 }
-
 
 // 2. guardar URL
 
@@ -1195,7 +1175,6 @@ window.derivWS.close();
 } catch (e) {}
 
 }
-
 
 // 4. criar novo WS
 
@@ -1247,7 +1226,6 @@ alert("Falha ao trocar de conta");
 }
 
 }
-
 
 function renderizarHistorico() {
 
@@ -1356,7 +1334,6 @@ function trocarVolatilidade() {
     }));
 }
 }
-
 
 function apagarEtapas() {
 
@@ -1649,7 +1626,6 @@ document.getElementById("estrategia-robo").disabled = false;
 
 }
 
-
 function executarCompra() {
 
     console.log(
@@ -1713,7 +1689,6 @@ function atualizarEtapas(etapa) {
             : cinza;
 }
  
-
 function limparHistorico() {
 
     if (!confirm("Deseja limpar todo o histórico?")) {
@@ -1721,6 +1696,16 @@ function limparHistorico() {
     }
 
     historicoOperacoes = [];
+
+lucroVirtual = 0;
+perdaVirtual = 0;
+
+const lucroReal = document.getElementById("lucro-real");
+
+if (lucroReal) {
+    lucroReal.innerText = "$ 0.00";
+    lucroReal.style.color = "#00e676";
+}
 
     const historico =
         document.getElementById(
