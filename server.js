@@ -143,6 +143,11 @@ app.post('/login', async (req, res) => {
             });
         }
 
+        req.session.usuario = {
+    id: usuario.id,
+    nome: usuario.nome,
+    email: usuario.email
+};
         res.json({
             mensagem: "Login efetuado com sucesso!",
             usuario: {
@@ -159,6 +164,35 @@ app.post('/login', async (req, res) => {
         });
 
     }
+
+});
+
+// ---NOVA ROTA PARA MANTER SESSÃO PERSITENTE---
+
+app.get('/sessao', (req, res) => {
+
+    if (req.session.usuario) {
+        return res.json({
+            autenticado: true,
+            usuario: req.session.usuario
+        });
+    }
+
+    res.json({
+        autenticado: false
+    });
+
+});
+
+// ---ROTA GARANTE QUE A SESSAO SEJA BEM TERMINADA 
+
+app.post('/logout', (req, res) => {
+
+    req.session.destroy(() => {
+        res.json({
+            mensagem: "Sessão terminada."
+        });
+    });
 
 });
 

@@ -2108,8 +2108,37 @@ irParaDashboardReal();
 
 });
 
-window.addEventListener("load", function () {
+// ==========================================================
+async function verificarSessao() {
+
+    try {
+
+        const resposta = await fetch('/sessao');
+
+        const dados = await resposta.json();
+
+        if (dados.autenticado) {
+
+            carregarTelaDeriv();
+
+        }
+
+    } catch (erro) {
+
+        console.error("Erro ao verificar sessão:", erro);
+
+    }
+
+}
+
+// ====================================================
+
+window.addEventListener("load", async function () {
+
+    await verificarSessao();
+
     mostrarProcessando("Aguarde...");
+
 });
 
 </script>
