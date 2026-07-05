@@ -48,13 +48,44 @@ const REDIRECT_URI = 'https://placa-do-money.onrender.com/callback';
 app.use(express.static(path.join(__dirname)));
 
 // --- ROTAS DO USUÁRIO LOCAL ---
-app.post('/registrar', (req, res) => {
+
+app.post('/registrar', async (req, res) => {
     const { nome, email, senha } = req.body;
+
     if (!nome || !email || !senha) {
         return res.status(400).json({ erro: 'Preencha todos os campos!' });
     }
-    usuarios.push({ nome, email, senha });
-    res.status(201).json({ mensagem: 'Usuário registrado com sucesso!' });
+
+    try {
+
+        const existe = await db.query(
+            "SELECT id FROM usuarios WHERE email = $1",
+            [email]
+        );
+
+        if (existe.rows.length > 0) {
+            return res.status(400).json({
+                erro: "Este e-mail já está registado."
+            });
+        }
+
+        await db.query(
+            "INSERT INTO usuarios (nome, email, senha) VALUES ($1, $2, $3)",
+            [nome, email, senha]
+        );
+
+        res.status(201).json({
+            mensagem: "Usuário registrado com sucesso!"
+        });
+
+    } catch (erro) {
+
+        console.error(erro);
+
+        res.status(500).json({
+            erro: "Erro ao guardar utilizador."
+        });
+    }
 });
 
 app.post('/login', (req, res) => {
