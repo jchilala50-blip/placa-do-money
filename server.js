@@ -6,7 +6,7 @@ const path = require('path');
 const cookieParser = require('cookie-parser'); // CORREÇÃO AMY: Importar cookies
 const session = require('express-session');
 const { Pool } = require('pg');
-
+const bcrypt = require('bcryptjs');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -90,10 +90,12 @@ if (nome.trim().length < 3) {
             });
         }
 
+        const senhaHash = await bcrypt.hash(senha, 10);
+
         await db.query(
-            "INSERT INTO usuarios (nome, email, senha) VALUES ($1, $2, $3)",
-            [nome, email, senha]
-        );
+    "INSERT INTO usuarios (nome, email, senha) VALUES ($1, $2, $3)",
+    [nome, email, senhaHash]
+    );
 
         res.status(201).json({
             mensagem: "Usuário registrado com sucesso!"
@@ -109,6 +111,8 @@ if (nome.trim().length < 3) {
     }
 });
 
+// -- ROTA DE LOGIN---
+
 app.post('/login', async (req, res) => {
 
     const { email, senha } = req.body;
@@ -116,8 +120,8 @@ app.post('/login', async (req, res) => {
     try {
 
         const resultado = await db.query(
-            "SELECT * FROM usuarios WHERE email = $1 AND senha = $2",
-            [email, senha]
+            "SELECT * FROM usuarios WHERE email = $1",
+            [email]
         );
 
         if (resultado.rows.length === 0) {
@@ -127,6 +131,17 @@ app.post('/login', async (req, res) => {
         }
 
         const usuario = resultado.rows[0];
+
+        const senhaCorreta = await bcrypt.compare(
+            senha,
+            usuario.senha
+        );
+
+        if (!senhaCorreta) {
+            return res.status(400).json({
+                erro: "E-mail ou senha incorretos."
+            });
+        }
 
         res.json({
             mensagem: "Login efetuado com sucesso!",
@@ -142,6 +157,7 @@ app.post('/login', async (req, res) => {
         res.status(500).json({
             erro: "Erro ao efetuar login."
         });
+
     }
 
 });
