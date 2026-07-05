@@ -17,6 +17,7 @@
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "express-session": "^1.19.0",
+    "pg": "^8.22.0",
     "pkce-challenge": "^6.0.0",
     "ws": "^8.21.0"
   }

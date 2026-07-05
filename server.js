@@ -5,6 +5,7 @@ const axios = require('axios');
 const path = require('path');
 const cookieParser = require('cookie-parser'); // CORREÇÃO AMY: Importar cookies
 const session = require('express-session');
+const { Pool } = require('pg');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -23,8 +24,20 @@ app.use(session({
 }));
 
 
-// Armazenamento local (mantido apenas para o formulário se necessário)
-let usuarios = [];
+const db = new Pool({
+    connectionString: process.env.DATABASE_URL,
+    ssl: {
+        rejectUnauthorized: false
+    }
+});
+
+db.connect()
+.then(() => {
+    console.log("✅ Ligado à base de dados Supabase.");
+})
+.catch(err => {
+    console.error("❌ Erro ao ligar à base de dados:", err);
+});
 
 // criar variável global para guartoken acess  token
 // let derivToken = null;
