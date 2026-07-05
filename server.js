@@ -88,13 +88,41 @@ app.post('/registrar', async (req, res) => {
     }
 });
 
-app.post('/login', (req, res) => {
+app.post('/login', async (req, res) => {
+
     const { email, senha } = req.body;
-    const usuario = usuarios.find(u => u.email === email && u.senha === senha);
-    if (!usuario) {
-        return res.status(400).json({ erro: 'E-mail ou senha incorretos.' });
+
+    try {
+
+        const resultado = await db.query(
+            "SELECT * FROM usuarios WHERE email = $1 AND senha = $2",
+            [email, senha]
+        );
+
+        if (resultado.rows.length === 0) {
+            return res.status(400).json({
+                erro: "E-mail ou senha incorretos."
+            });
+        }
+
+        const usuario = resultado.rows[0];
+
+        res.json({
+            mensagem: "Login efetuado com sucesso!",
+            usuario: {
+                nome: usuario.nome
+            }
+        });
+
+    } catch (erro) {
+
+        console.error(erro);
+
+        res.status(500).json({
+            erro: "Erro ao efetuar login."
+        });
     }
-    res.json({ mensagem: 'Login efetuado com sucesso!', usuario: { nome: usuario.nome } });
+
 });
 
 // --- ROTAS DA API QUE O SEU HTML PROCURA ---
