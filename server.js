@@ -50,7 +50,28 @@ app.use(express.static(path.join(__dirname)));
 // --- ROTAS DO USUÁRIO LOCAL ---
 
 app.post('/registrar', async (req, res) => {
-    const { nome, email, senha } = req.body;
+    
+const { nome, email, senha } = req.body;
+
+const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+if (!regexEmail.test(email)) {
+    return res.status(400).json({
+        erro: "Digite um e-mail válido."
+    });
+}
+
+if (senha.length < 6) {
+    return res.status(400).json({
+        erro: "A senha deve ter pelo menos 6 caracteres."
+    });
+}
+
+if (nome.trim().length < 3) {
+    return res.status(400).json({
+        erro: "O nome deve ter pelo menos 3 letras."
+    });
+}
 
     if (!nome || !email || !senha) {
         return res.status(400).json({ erro: 'Preencha todos os campos!' });
