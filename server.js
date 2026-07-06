@@ -291,6 +291,21 @@ console.log(JSON.stringify(response.data, null, 2));
         // Captura os dados que a Deriv nos enviou de volta
         const token = response.data.access_token;
 req.session.derivToken = token;
+
+if (req.session.usuario) {
+
+    await db.query(
+        "UPDATE usuarios SET deriv_token = $1 WHERE id = $2",
+        [
+            token,
+            req.session.usuario.id
+        ]
+    );
+
+    console.log("TOKEN DERIV GUARDADO NA SUPABASE");
+
+}
+
 console.log("TOKEN DERIV GUARDADO");
 
 try {
@@ -402,11 +417,24 @@ contas.data.data.forEach(conta => {
 
 app.get('/api/novo-otp', async (req, res) => {
 
-    if (!req.session.derivToken) {
-        return res.status(401).json({
-            erro: 'Nenhum token Deriv disponível.'
-        });
-    }
+    if (!req.session.usuario) {
+    return res.status(401).json({
+        erro: 'Utilizador não autenticado.'
+    });
+}
+
+const resultado = await db.query(
+    "SELECT deriv_token FROM usuarios WHERE id = $1",
+    [req.session.usuario.id]
+);
+
+if (resultado.rows.length === 0 || !resultado.rows[0].deriv_token) {
+    return res.status(401).json({
+        erro: 'Nenhum token Deriv disponível.'
+    });
+}
+
+const derivToken = resultado.rows[0].deriv_token;
 
    try {
 const tipoConta =
@@ -416,7 +444,7 @@ const tipoConta =
         'https://api.derivws.com/trading/v1/options/accounts',
         {
             headers: {
-                'Authorization': `Bearer ${req.session.derivToken}`,
+                'Authorization': `Bearer ${derivToken}`,
                 'Deriv-App-ID': CLIENT_ID
             },
             timeout: 15000
@@ -444,7 +472,7 @@ const accountId =
         {},
         {
             headers: {
-                'Authorization': `Bearer ${req.session.derivToken}`,
+                'Authorization': `Bearer ${derivToken}`,
                 'Deriv-App-ID': CLIENT_ID,
                 'Content-Type': 'application/json'
             },
