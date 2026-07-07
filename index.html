@@ -1344,8 +1344,6 @@ if (op.resultado === "PROCESSANDO") {
 
 function trocarVolatilidade() {
 
-mostrarProcessando("A trocar volatilidade...");
-
     const seletor =
         document.getElementById(
             'volatilidade-select'
@@ -1356,14 +1354,14 @@ mostrarProcessando("A trocar volatilidade...");
     simboloAtual =
         seletor.value;
 
-esconderProcessando();
+   mostrarProcessando("A trocar volatilidade...");
 
     console.log(
         "Nova volatilidade:",
         simboloAtual
     );
 
-
+esconderProcessando();
  if (
     window.derivWS &&
     window.derivWS.readyState === 1
@@ -1383,31 +1381,10 @@ esconderProcessando();
 }
 }
 
-function apagarEtapas() {
+// <-- function apagarEtapas() {
 
-    document.getElementById("etapa-1").style.color =
-        "#607d8b";
 
-    document.getElementById("etapa-2").style.color =
-        "#607d8b";
-
-    document.getElementById("etapa-3").style.color =
-        "#607d8b";
-}
-
-function ativarEtapa(numero) {
-
-    const cor = "#00e5ff";
-
-    if (numero >= 1)
-        document.getElementById("etapa-1").style.color = cor;
-
-    if (numero >= 2)
-        document.getElementById("etapa-2").style.color = cor;
-
-    if (numero >= 3)
-        document.getElementById("etapa-3").style.color = cor;
-}
+// <-- funcion ativar etapas
 
 let roboLigado = false;
 
