@@ -1354,14 +1354,11 @@ function trocarVolatilidade() {
     simboloAtual =
         seletor.value;
 
-   mostrarProcessando("A trocar volatilidade...");
-
     console.log(
         "Nova volatilidade:",
         simboloAtual
     );
 
-esconderProcessando();
  if (
     window.derivWS &&
     window.derivWS.readyState === 1
