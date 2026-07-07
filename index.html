@@ -1928,6 +1928,8 @@ if (!roboLigado) {
     }
 }
 
+// <-- INICIO DESTA COLUNA EXIGE STAKE ACIMA DE 
+
 const botaoRobo = document.getElementById("botao-robo");
 
 if (botaoRobo) {
@@ -1941,6 +1943,22 @@ if (btnConfig) {
     btnConfig.style.opacity = roboLigado ? "0.5" : "1";
     btnConfig.style.pointerEvents = roboLigado ? "none" : "auto";
 }
+
+const stakeDigitada =
+    Number(document.getElementById("config-stake").value);
+
+if (stakeDigitada < 0.35) {
+
+    alert("A stake mínima permitida é de 0.35 USD.");
+
+    document.getElementById("config-stake").value = "0.35";
+
+    return;
+
+}
+
+// <-- FIM DESTA COLUNA
+
 
 if (roboLigado) {
     stakeInicial = Number(document.getElementById("config-stake").value) || 0.35;
