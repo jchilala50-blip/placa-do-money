@@ -1441,6 +1441,8 @@ let roboLigado = false;
 
 let simboloAtual = "1HZ100V";
 
+let ultimoContratoFinalizado = null;
+
 let subscriptionTickId = null;
 
 let historicoOperacoes = [];
@@ -1581,40 +1583,36 @@ console.log("VOU ACOMPANHAR O CONTRATO: " + contract_id);
 }
 
          // 🎫 3. TRATAR RESULTADO DA COMPRA VIA PROPOSAL_OPEN_CONTRACT
-        if (data.msg_type === 'proposal_open_contract' && data.proposal_open_contract) {
-           
+if (data.msg_type === 'proposal_open_contract' && data.proposal_open_contract) {
 
-if (data.proposal_open_contract.is_sold) {
+    console.log(JSON.stringify(data));
 
-    alert(
-        "CONTRATO FECHADO\n\n" +
-        JSON.stringify(data.proposal_open_contract)
+    const contrato = data.proposal_open_contract;
+
+    // Se o contrato ainda não foi fechado, aguarda
+    if (!contrato.is_sold) return;
+
+    // Evita processar o mesmo contrato duas vezes
+    if (ultimoContratoFinalizado === contrato.contract_id) {
+        return;
+    }
+
+    // Marca este contrato como já processado
+    ultimoContratoFinalizado = contrato.contract_id;
+
+    // Captura o dígito real onde o contrato encerrou
+    const ultimoDigitoReal =
+        Number(String(contrato.exit_spot).slice(-1));
+
+    console.log("VOU CHAMAR processarResultadoOperacao");
+
+    processarResultadoOperacao(
+        contrato.status === "won",
+        Number(contrato.profit),
+        ultimoDigitoReal
     );
 
 }
-
-            const contrato = data.proposal_open_contract;
-
-            // Se o contrato ainda não foi fechado/vendido, não processa
-            if (!contrato.is_sold) return;
-
-            // Captura o dígito real onde o contrato encerrou (enviado pela Deriv)
-            const ultimoDigitoReal =
-    Number(String(contrato.exit_spot).slice(-1));
-console.log("VOU CHAMAR processarResultadoOperacao");
-
-alert(
-"ID: " + contrato.contract_id +
-"\nSOLD: " + contrato.is_sold +
-"\nSTATUS: " + contrato.status
-);
-
-            processarResultadoOperacao(
-                contrato.status === "won",
-                Number(contrato.profit),
-                ultimoDigitoReal
-            );
-        }
 
     }; // <--- ISSO FECHA O ws.onmessage CORRETAMENTE
 
