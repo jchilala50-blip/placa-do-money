@@ -1535,7 +1535,7 @@ executarMotorEstrategias(
 
   // 🎫 2.5. TRATAR PROPOSTA RECEBIDA E EXECUTAR COMPRA
 if (data.msg_type === 'proposal') {
-console.log(JSON.stringify(data));
+alert(JSON.stringify(data));
 
     const proposalId = data.proposal.id;
     const price = data.proposal.ask_price;
