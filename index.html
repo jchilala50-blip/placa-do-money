@@ -1395,10 +1395,47 @@ function trocarVolatilidade() {
 }
 }
 
-// <-- function apagarEtapas() {
+function apagarEtapas() {
 
 
-// <-- funcion ativar etapas
+document.getElementById("etapa-1").style.color =
+
+"#607d8b";
+
+
+document.getElementById("etapa-2").style.color =
+
+"#607d8b";
+
+
+document.getElementById("etapa-3").style.color =
+
+"#607d8b";
+
+}
+
+
+function ativarEtapa(numero) {
+
+
+const cor = "#00e5ff";
+
+
+if (numero >= 1)
+
+document.getElementById("etapa-1").style.color = cor;
+
+
+if (numero >= 2)
+
+document.getElementById("etapa-2").style.color = cor;
+
+
+if (numero >= 3)
+
+document.getElementById("etapa-3").style.color = cor;
+
+}
 
 let roboLigado = false;
 
