@@ -1582,7 +1582,10 @@ console.log("VOU ACOMPANHAR O CONTRATO: " + contract_id);
 
          // 🎫 3. TRATAR RESULTADO DA COMPRA VIA PROPOSAL_OPEN_CONTRACT
         if (data.msg_type === 'proposal_open_contract' && data.proposal_open_contract) {
-console.log(JSON.stringify(data));
+           alert(
+"CONTRATO:\n" +
+JSON.stringify(data.proposal_open_contract)
+);
 
             const contrato = data.proposal_open_contract;
 
