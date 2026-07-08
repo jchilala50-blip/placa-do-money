@@ -1554,7 +1554,7 @@ executarCompra();
 
 // 🔥 PASSO NOVO: capturar compra realizada
 if (data.msg_type === 'buy' && data.buy) {
-console.log(JSON.stringify(data));
+alert(JSON.stringify(data));
 
     const contract_id = data.buy.contract_id;
     operacaoAtual.contractId = contract_id;
