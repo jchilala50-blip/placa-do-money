@@ -1165,7 +1165,24 @@ function abrirListaRobos() {
 
 function abrirConfiguracoes() { document.getElementById('meu-modal').style.display = 'flex'; }
 
-function fecharConfiguracoes() { document.getElementById('meu-modal').style.display = 'none'; }
+function fecharConfiguracoes() {
+
+    const stake =
+        Number(document.getElementById("config-stake").value);
+
+    if (stake < 0.35) {
+
+        alert("⚠️ A stake mínima permitida é de 0.35 USD.");
+
+        document.getElementById("config-stake").focus();
+
+        return;
+
+    }
+
+    document.getElementById('meu-modal').style.display = 'none';
+
+}
 
 
 async function alternarAmbienteConta() {
@@ -1927,37 +1944,6 @@ if (!roboLigado) {
         estado.style.color = "#b0bec5";
     }
 }
-
-// <-- INICIO DESTA COLUNA EXIGE STAKE ACIMA DE 
-
-const botaoRobo = document.getElementById("botao-robo");
-
-if (botaoRobo) {
-    botaoRobo.style.opacity = roboLigado ? "0.5" : "1";
-    botaoRobo.style.pointerEvents = roboLigado ? "none" : "auto";
-}
-
-const btnConfig = document.getElementById("btn-config");
-
-if (btnConfig) {
-    btnConfig.style.opacity = roboLigado ? "0.5" : "1";
-    btnConfig.style.pointerEvents = roboLigado ? "none" : "auto";
-}
-
-const stakeDigitada =
-    Number(document.getElementById("config-stake").value);
-
-if (stakeDigitada < 0.35) {
-
-    alert("A stake mínima permitida é de 0.35 USD.");
-
-    document.getElementById("config-stake").value = "0.35";
-
-    return;
-
-}
-
-// <-- FIM DESTA COLUNA
 
 
 if (roboLigado) {
