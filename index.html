@@ -1404,6 +1404,8 @@ let roboLigado = false;
 
 let simboloAtual = "1HZ100V";
 
+let ultimoContratoProcessado = null;
+
 let subscriptionTickId = null;
 
 let historicoOperacoes = [];
@@ -1544,6 +1546,12 @@ console.log("VOU ACOMPANHAR O CONTRATO: " + contract_id);
 console.log(JSON.stringify(data));
             const contrato = data.proposal_open_contract;
 
+if (ultimoContratoProcessado === contrato.contract_id) {
+    return;
+}
+
+ultimoContratoProcessado = contrato.contract_id;
+
             // Se o contrato ainda não foi fechado/vendido, não processa
             if (!contrato.is_sold) return;
 
@@ -1573,8 +1581,6 @@ console.log("VOU CHAMAR processarResultadoOperacao");
 // === PROCESSAR PLACAR E LIBERTAR O ROBÔ ===
 function processarResultadoOperacao(resultado, lucro, ultimoDigitoReal) {
 console.log("ENTREI EM processarResultadoOperacao");
-
-
 
     // CORRIGIDO: ID exato conforme o HTML do Bloco 1
     const winsElem = document.getElementById('cont-wins');
@@ -1621,7 +1627,6 @@ console.log("ENTREI EM processarResultadoOperacao");
     if (typeof renderizarHistorico === 'function') {
         renderizarHistorico();
     }
-
 
 if (isWin) {
     stakeAtual = stakeInicial;
