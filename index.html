@@ -1989,6 +1989,23 @@ return;
 
     roboLigado = !roboLigado;
 
+// === OFUSCA O BOTÃO DA ENGRENAGEM E O BOTÃO DE SELEÇÃO DE ROBÔ ===
+
+const btnConfig = document.getElementById("btn-config");
+const btnRobo = document.getElementById("botao-robo");
+
+if (btnConfig) {
+    btnConfig.style.opacity = roboLigado ? "0.5" : "1";
+    btnConfig.style.pointerEvents = roboLigado ? "none" : "auto";
+}
+
+if (btnRobo) {
+    btnRobo.style.opacity = roboLigado ? "0.5" : "1";
+    btnRobo.style.pointerEvents = roboLigado ? "none" : "auto";
+}
+
+// == FIM DESTE CÓDIGO ACIMA ==
+
 if (!roboLigado) {
     const estado = document.getElementById("estado-operacao");
 
