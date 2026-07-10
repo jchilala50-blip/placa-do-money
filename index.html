@@ -1383,6 +1383,48 @@ function trocarVolatilidade() {
 }
 
 
+function apagarEtapas() {
+
+
+document.getElementById("etapa-1").style.color =
+
+"#607d8b";
+
+
+document.getElementById("etapa-2").style.color =
+
+"#607d8b";
+
+
+document.getElementById("etapa-3").style.color =
+
+"#607d8b";
+
+}
+
+
+function ativarEtapa(numero) {
+
+
+const cor = "#00e5ff";
+
+
+if (numero >= 1)
+
+document.getElementById("etapa-1").style.color = cor;
+
+
+if (numero >= 2)
+
+document.getElementById("etapa-2").style.color = cor;
+
+
+if (numero >= 3)
+
+document.getElementById("etapa-3").style.color = cor;
+
+}
+
 let roboLigado = false;
 
 let simboloAtual = "1HZ100V";
@@ -1690,7 +1732,45 @@ console.log(JSON.stringify(compra));
 window.derivWS.send(JSON.stringify(compra));
 
 }
- 
+
+}
+
+function atualizarEtapas(etapa) {
+
+    const etapa1 =
+        document.getElementById('etapa-1');
+
+    const etapa2 =
+        document.getElementById('etapa-2');
+
+    const etapa3 =
+        document.getElementById('etapa-3');
+
+    const azul =
+        "#00e5ff";
+
+    const cinza =
+        "#607d8b";
+
+    if (etapa1)
+        etapa1.style.color =
+            etapa >= 1
+            ? azul
+            : cinza;
+
+    if (etapa2)
+        etapa2.style.color =
+            etapa >= 2
+            ? azul
+            : cinza;
+
+    if (etapa3)
+        etapa3.style.color =
+            etapa >= 3
+            ? azul
+            : cinza;
+}
+
 function limparHistorico() {
 
     if (!confirm("Deseja limpar todo o histórico?")) {
@@ -1942,6 +2022,20 @@ const stopLoss = Number(document.getElementById("config-loss").value);
 
 console.log("Stop Loss: " + stopLoss);
 
+    const etapa1 =
+        document.getElementById(
+            'etapa-1'
+        );
+
+    const etapa2 =
+        document.getElementById(
+            'etapa-2'
+        );
+
+    const etapa3 =
+        document.getElementById(
+            'etapa-3'
+        );
 
     if (roboLigado) {
 
