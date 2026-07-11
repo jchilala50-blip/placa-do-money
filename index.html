@@ -1437,6 +1437,8 @@ let subscriptionTickId = null;
 
 let historicoOperacoes = [];
 
+let temporizadorReconexao = null;
+
 let ultimoTickProcessado = null;
 
 let lucroVirtual = 0;
@@ -1499,6 +1501,18 @@ if (data.error) {
             const ultimoDigito = String(data.tick.quote).slice(-1);
             const visor = document.getElementById('ultimo-digito-real');
             
+            // Recebeu um tick, a ligação está OK
+              esconderProcessando();
+
+          // Reinicia o temporizador de monitorização
+            clearTimeout(temporizadorReconexao);
+
+            temporizadorReconexao = setTimeout(() => {
+
+             mostrarProcessando("🔄 A reconectar...");
+
+             }, 5000);
+          
             if (visor) {
                 visor.innerText = ultimoDigito;
             }
