@@ -2091,12 +2091,15 @@ if (!roboLigado) {
     const estado = document.getElementById("estado-operacao");
 
     if (estado) {
-        atualizarStatusMercado(
-    "⚪ Robô parado",
-    "#b0bec5"
+
+estado.innerText = "⚪ Aguardando sinal...";
+estado.style.color = "#b0bec5";
+}
+   atualizarStatusMercado(
+   "⚪ Sem análise",
+   "#b0bec5"
 );
 
- }
 }
 
 if (roboLigado) {
