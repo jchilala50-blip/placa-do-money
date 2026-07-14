@@ -1458,6 +1458,9 @@ let subscriptionTickId = null;
 
 let historicoOperacoes = [];
 
+// Memória para análise do mercado
+let memoriaMercado = [];
+
 let temporizadorReconexao = null;
 
 let ultimoTickProcessado = null;
@@ -1544,6 +1547,13 @@ if (data.error) {
                     ultimosDigitos.shift();
                 }
             }
+
+            // Guarda os últimos dígitos para análise do mercado
+              memoriaMercado.push(Number(ultimoDigito));
+
+               if (memoriaMercado.length > 10) {
+                  memoriaMercado.shift();
+                 }
 
             if (typeof atualizarGraficoReal === 'function') {
                 atualizarGraficoReal();
@@ -2035,16 +2045,23 @@ if (!roboLigado) {
     const estado = document.getElementById("estado-operacao");
 
     if (estado) {
-        estado.innerText = "⚪ Aguardando sinal...";
-        estado.style.color = "#b0bec5";
-    }
-}
+        atualizarStatusMercado(
+    "⚪ Robô parado",
+    "#b0bec5"
+);
 
+ }
+}
 
 if (roboLigado) {
     stakeInicial = Number(document.getElementById("config-stake").value) || 0.35;
     stakeAtual = stakeInicial;
 }
+
+atualizarStatusMercado(
+    "🔵 Analisando mercado...",
+    "#42a5f5"
+);
 
 console.log("Stake inicial: " + stakeInicial);
 console.log("Stake atual: " + stakeAtual);
