@@ -1578,7 +1578,14 @@ if (data.error) {
                   memoriaMercado.shift();
                  }
 
-if (!roboLigado) {
+const estrategia =
+document.getElementById("estrategia-robo").value;
+
+if (
+    !roboLigado ||
+    (estrategia !== "par" &&
+     estrategia !== "impar")
+) {
 
     atualizarStatusMercado(
         "⚪ Sem análise",
