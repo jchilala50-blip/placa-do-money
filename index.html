@@ -1283,7 +1283,7 @@ alert("Falha ao trocar de conta");
 
 }
 
-// <== NOVA FUNÇÃO PARA ANALISAR O  MERCADO ANTES DE COMPRA OU VENDA ==
+// <== NOVA FUNÇÃO PARA ATUALIZAR ESTADO DO MERCADO ANTES DE COMPRA OU VENDA ==
 
 
 function atualizarStatusMercado(texto, cor="#42a5f5") {
@@ -1296,6 +1296,29 @@ function atualizarStatusMercado(texto, cor="#42a5f5") {
     status.style.color = cor;
 
 }
+
+function analisarSequenciaMercado() {
+
+    if (memoriaMercado.length < 3) {
+        return null;
+    }
+
+    const ultimos3 = memoriaMercado.slice(-3);
+
+    // 3 Ímpares consecutivos
+    if (ultimos3.every(n => n % 2 !== 0)) {
+        return "IMPAR";
+    }
+
+    // 3 Pares consecutivos
+    if (ultimos3.every(n => n % 2 === 0)) {
+        return "PAR";
+    }
+
+    return null;
+}
+
+// ==================================================================
 
 function renderizarHistorico() {
 
@@ -1555,6 +1578,31 @@ if (data.error) {
                   memoriaMercado.shift();
                  }
 
+const tendencia = analisarSequenciaMercado();
+
+if (tendencia === "IMPAR") {
+
+    atualizarStatusMercado(
+        "🟢 Tendência: 3 Ímpares",
+        "#00e676"
+    );
+
+} else if (tendencia === "PAR") {
+
+    atualizarStatusMercado(
+        "🟢 Tendência: 3 Pares",
+        "#00e676"
+    );
+
+} else {
+
+    atualizarStatusMercado(
+        "🔵 Analisando mercado...",
+        "#42a5f5"
+    );
+
+}
+
             if (typeof atualizarGraficoReal === 'function') {
                 atualizarGraficoReal();
             }
@@ -1562,13 +1610,11 @@ if (data.error) {
             //🔥 GATILHO DO ROBÔ: Se o robô estiver ligado, envia o dígito para o motor
             if (typeof roboLigado !== 'undefined' && roboLigado) {
                 
-executarMotorEstrategias(
-    Number(ultimoDigito),
-    data.tick.epoch);
-
-    }
-
-  }
+            executarMotorEstrategias(
+              Number(ultimoDigito),
+                  data.tick.epoch);
+                   }
+                }
 
   // 🎫 2.5. TRATAR PROPOSTA RECEBIDA E EXECUTAR COMPRA
 if (data.msg_type === 'proposal') {
