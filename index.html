@@ -1578,28 +1578,39 @@ if (data.error) {
                   memoriaMercado.shift();
                  }
 
-const tendencia = analisarSequenciaMercado();
-
-if (tendencia === "IMPAR") {
+if (!roboLigado) {
 
     atualizarStatusMercado(
-        "🟢 Tendência: 3 Ímpares",
-        "#00e676"
-    );
-
-} else if (tendencia === "PAR") {
-
-    atualizarStatusMercado(
-        "🟢 Tendência: 3 Pares",
-        "#00e676"
+        "⚪ Sem análise",
+        "#b0bec5"
     );
 
 } else {
 
-    atualizarStatusMercado(
-        "🔵 Analisando mercado...",
-        "#42a5f5"
-    );
+    const tendencia = analisarSequenciaMercado();
+
+    if (tendencia === "IMPAR") {
+
+        atualizarStatusMercado(
+            "🟢 Tendência: 3 Ímpares",
+            "#00e676"
+        );
+
+    } else if (tendencia === "PAR") {
+
+        atualizarStatusMercado(
+            "🟢 Tendência: 3 Pares",
+            "#00e676"
+        );
+
+    } else {
+
+        atualizarStatusMercado(
+            "🔵 Analisando mercado...",
+            "#42a5f5"
+        );
+
+    }
 
 }
 
