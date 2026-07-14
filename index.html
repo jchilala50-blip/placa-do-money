@@ -2121,14 +2121,32 @@ estado.style.color = "#b0bec5";
 }
 
 if (roboLigado) {
+
     stakeInicial = Number(document.getElementById("config-stake").value) || 0.35;
     stakeAtual = stakeInicial;
-}
 
-atualizarStatusMercado(
-    "🔵 Analisando mercado...",
-    "#42a5f5"
-);
+    const estrategia =
+        document.getElementById("estrategia-robo").value;
+
+    if (
+        estrategia === "par" ||
+        estrategia === "impar"
+    ) {
+
+        atualizarStatusMercado(
+            "🔵 Analisando mercado...",
+            "#42a5f5"
+        );
+
+    } else {
+
+        atualizarStatusMercado(
+            "⚪ Sem análise",
+            "#b0bec5"
+        );
+
+    }
+}
 
 console.log("Stake inicial: " + stakeInicial);
 console.log("Stake atual: " + stakeAtual);
