@@ -302,7 +302,7 @@ transform:rotate(360deg);
 
 <script>
 
-console.log("SCRIPT CARREGADO");
+alert("SCRIPT CARREGADO");
 
   window.onerror = function(msg, url, line) {
 
@@ -639,23 +639,20 @@ onchange="trocarVolatilidade()">
 
 </div>
 
-
-<div id="historico-operacoes">
-
-    <div class="linha-historico cabecalho">
-
-        <span>=========</span>
-
-        <span>=========📨</span>
-
-        <span>========</span>
-
-        <span>=========</span>
-
-    </div>
-
+<div id="status-mercado"
+     style="
+        text-align:center;
+        padding:6px;
+        margin-top:4px;
+        margin-bottom:4px;
+        font-size:12px;
+        font-weight:bold;
+        color:#42a5f5;
+">
+    🔵 Analisando mercado...
 </div>
 
+</div>
       
             <div class="label-card" style="margin-bottom:6px;">Histórico de Transações:</div>
             <div class="historico-lista" id="lista-historico">
@@ -1283,6 +1280,20 @@ console.error(erro);
 alert("Falha ao trocar de conta");
 
 }
+
+}
+
+// <== NOVA FUNÇÃO PARA ANALISAR O  MERCADO ANTES DE COMPRA OU VENDA ==
+
+
+function atualizarStatusMercado(texto, cor="#42a5f5") {
+
+    const status = document.getElementById("status-mercado");
+
+    if (!status) return;
+
+    status.innerText = texto;
+    status.style.color = cor;
 
 }
 
