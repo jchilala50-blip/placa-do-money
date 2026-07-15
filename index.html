@@ -639,18 +639,33 @@ onchange="trocarVolatilidade()">
 
 </div>
 
-<div id="status-mercado"
-     style="
+id="status-mercado"
+    style="
         text-align:center;
-        padding:6px;
-        margin-top:4px;
-        margin-bottom:4px;
-        font-size:12px;
-        font-weight:bold;
-        color:#42a5f5;
-">
-    🔵 Analisando mercado...
-</div>
+        padding:8px 0;
+        margin-top:8px;
+        margin-bottom:6px;
+    "
+>
+
+    <div style="
+        font-size:11px;
+        color:#8fa3bf;
+        margin-bottom:3px;
+    ">
+        ESTADO DO MERCADO
+    </div>
+
+    <div
+        id="texto-status-mercado"
+        style="
+            font-size:14px;
+            font-weight:bold;
+            color:#42a5f5;
+        "
+    >
+        🔵 Analisando mercado...
+    </div>
 
 </div>
       
@@ -1298,7 +1313,7 @@ alert("Falha ao trocar de conta");
 
 function atualizarStatusMercado(texto, cor="#42a5f5") {
 
-    const status = document.getElementById("status-mercado");
+  const status = document.getElementById("texto-status-mercado");
 
     if (!status) return;
 
