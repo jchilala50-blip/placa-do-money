@@ -851,25 +851,6 @@ console.log("WS STATE: " + window.derivWS.readyState);
         return;
     }
 
-// === BLOQUEIA COMPRA OU VENDA PARA ORION E VORTEX QUANDO NÃO HÁ TENDÊNCIA ===
-
-const estrategia =
-    document.getElementById("estrategia-robo").value;
-
-if (
-    (estrategia === "par" ||
-     estrategia === "impar") &&
-    !autorizacaoCompra
-) {
-
-    console.log("⛔ Compra bloqueada: mercado ainda sem autorização.");
-
-    return;
-
-}
-
-// ===================================================
-
     if (stakeAtual <= 0) {
     stakeAtual = Number(document.getElementById('config-stake').value) || 0.35;
 }
@@ -929,6 +910,11 @@ console.log(`Robô analisando dígito [${ultimoDigito}] na estratégia: ${estrat
 
     // 1. ESTRATÉGIA ÍMPAR
     if (estrategia === 'impar' && ultimoDigito % 2 !== 0) {
+
+if (!autorizacaoCompra) {
+    console.log("⛔ ORION: aguardando autorização da análise.");
+    return;
+}
         operacaoAtual = {
     ativa: true,
     tipo: "ÍMPAR",
@@ -944,6 +930,11 @@ comprarContratoDeriv('DIGITODD', 5);
     
    // 2. ESTRATÉGIA PAR
 else if (estrategia === 'par' && ultimoDigito % 2 === 0) {
+
+if (!autorizacaoCompra) {
+    console.log("⛔ ORION: aguardando autorização da análise.");
+    return;
+}
 
     operacaoAtual = {
         ativa: true,
