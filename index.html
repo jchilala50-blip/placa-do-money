@@ -851,6 +851,25 @@ console.log("WS STATE: " + window.derivWS.readyState);
         return;
     }
 
+// === BLOQUEIA COMPRA OU VENDA PARA ORION E VORTEX QUANDO NÃO HÁ TENDÊNCIA ===
+
+const estrategia =
+    document.getElementById("estrategia-robo").value;
+
+if (
+    (estrategia === "par" ||
+     estrategia === "impar") &&
+    !autorizacaoCompra
+) {
+
+    console.log("⛔ Compra bloqueada: mercado ainda sem autorização.");
+
+    return;
+
+}
+
+// ===================================================
+
     if (stakeAtual <= 0) {
     stakeAtual = Number(document.getElementById('config-stake').value) || 0.35;
 }
@@ -1484,6 +1503,9 @@ let historicoOperacoes = [];
 // Memória para análise do mercado
 let memoriaMercado = [];
 
+// Autoriza a compra apenas quando existir uma tendência válida
+let autorizacaoCompra = false;
+
 let temporizadorReconexao = null;
 
 let ultimoTickProcessado = null;
@@ -1598,19 +1620,25 @@ if (
 
     if (tendencia === "IMPAR") {
 
+     autorizacaoCompra = true;
+
         atualizarStatusMercado(
             "🟢 Tendência: 3 Ímpares",
             "#00e676"
         );
 
-    } else if (tendencia === "PAR") {
+      } else if (tendencia === "PAR") {
+
+       autorizacaoCompra = true;
 
         atualizarStatusMercado(
             "🟢 Tendência: 3 Pares",
             "#00e676"
         );
 
-    } else {
+        } else {
+
+        autorizacaoCompra = false;
 
         atualizarStatusMercado(
             "🔵 Analisando mercado...",
