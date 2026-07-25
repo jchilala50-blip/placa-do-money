@@ -167,29 +167,28 @@
         }
 
 
-/* Carrossel de Visores com Scroll Nativo */
+/* Contentor principal do carrossel */
 .carrossel-graficos {
     width: 100%;
-    overflow-x: auto; /* Permite rolar horizontalmente de forma nativa */
-    scroll-snap-type: x mandatory; /* Força o ecrã a encaixar perfeitamente no painel ao soltar o dedo */
-    display: flex;
-    scrollbar-width: none; /* Esconde a barra de scroll no Firefox */
+    overflow: hidden; /* Corta o que está fora para não aparecer ao lado */
+    position: relative;
 }
 
-.carrossel-graficos::-webkit-scrollbar {
-    display: none; /* Esconde a barra de scroll no Chrome/Safari */
-}
-
+/* O trilho que se move */
 .trilho-graficos {
     display: flex;
-    width: 200%;
+    width: 200%; /* O dobro do tamanho para meter os dois painéis a 100% cada um */
+    transition: transform 0.35s ease;
+    transform: translateX(0%);
 }
 
+/* Cada painel individual do gráfico */
 .painel-grafico {
-    width: 50%;
+    width: 50%; /* Cada um passa a ter 100% da largura visível do ecrã */
     flex-shrink: 0;
-    scroll-snap-align: start; /* Define que cada painel é um ponto de paragem obrigatório */
+    box-sizing: border-box;
 }
+
 
         .coluna-barra {
             display: flex;
@@ -2765,6 +2764,38 @@ A processar...
 >
     💬
 </a>
+
+<script>
+(function() {
+    const trilho = document.getElementById('trilho-graficos');
+    let xInicial = 0;
+    let xFinal = 0;
+
+    if (trilho) {
+        trilho.addEventListener('touchstart', (e) => {
+            xInicial = e.changedTouches[0].screenX;
+        }, { passive: true });
+
+        trilho.addEventListener('touchend', (e) => {
+            xFinal = e.changedTouches[0].screenX;
+            const diferenca = xInicial - xFinal;
+            const limiteSensibilidade = 50; // Píxeis necessários para acionar o deslize
+
+            // Deslizar para a Esquerda -> Esconde Barras, Mostra o Gráfico de Linha
+            if (diferenca > limiteSensibilidade) {
+                trilho.style.transform = 'translateX(-50%)';
+            }
+            
+            // Deslizar para a Direita -> Volta para o Gráfico de Barras original
+            if (diferenca < -limiteSensibilidade) {
+                trilho.style.transform = 'translateX(0%)';
+            }
+        }, { passive: true });
+    }
+})();
+</script>
+
+
 
 </body>
 </html>
