@@ -165,6 +165,27 @@
             padding-bottom: 3px;
             border-bottom: 1px solid #1a3152;
         }
+
+
+/* Carrossel dos visores gráficos */
+.carrossel-graficos {
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+    touch-action: pan-y;
+}
+
+.trilho-graficos {
+    display: flex;
+    width: 200%;
+    transition: transform 0.35s ease;
+}
+
+        .painel-grafico {
+          width: 50%;
+           flex-shrink: 0;
+           }
+
         .coluna-barra {
             display: flex;
             flex-direction: column;
@@ -260,7 +281,7 @@ transform:rotate(360deg);
     <h2 style="color: #ff3333; margin-bottom: 15px;">⚠️ Plataforma em Atualização</h2>
     <p style="font-size: 18px; line-height: 1.6; max-width: 400px;">
         Estamos a implementar melhorias na <strong>Placa do Money</strong>. <br>
-        Por favor, volte dentro de <strong>3 horas</strong>.
+        Por favor, volte dentro de <strong>1 hora</strong>.
     </p>
 </div>
 
@@ -341,7 +362,7 @@ transform:rotate(360deg);
 
 <script>
 
-console.log("ESTAMOS EM MANUTENCAO VOLTE EM 25 MINUTOS");
+alert("ESTAMOS EM MANUTENCAO VOLTE EM 25 MINUTOS");
 
   window.onerror = function(msg, url, line) {
 
@@ -617,10 +638,38 @@ onchange="trocarVolatilidade()">
 </select>
 
                 </div>
-                <div class="area-barras" id="render-grafico">
-                    ${renderizarBarrasIniciais()}
-                </div>
+                <div class="carrossel-graficos" id="carrossel-graficos">
+
+    <div class="trilho-graficos" id="trilho-graficos">
+
+        <!-- VISOR 1: GRÁFICO DE BARRAS -->
+        <div class="painel-grafico">
+
+            <div class="area-barras" id="render-grafico">
+                ${renderizarBarrasIniciais()}
             </div>
+
+        </div>
+
+        <!-- VISOR 2: GRÁFICO DE LINHAS -->
+        <div class="painel-grafico">
+
+            <div
+                id="render-linhas"
+                style="
+                    height:100px;
+                    border-bottom:1px solid #1a3152;
+                    position:relative;
+                "
+            >
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+</div>
 
             <div class="linha-controle">
 
@@ -1084,6 +1133,120 @@ return html;
 
 }
 
+// == FUNÇÃO PARA ATUALIZAR GRÁFICO DE LINHA ==
+
+
+function atualizarGraficoLinhas() {
+
+    const container = document.getElementById("render-linhas");
+
+    if (!container) return;
+
+    const dados = ultimosDigitos.slice();
+
+    if (dados.length === 0) {
+        container.innerHTML = "";
+        return;
+    }
+
+    const largura = container.clientWidth || 300;
+    const altura = 100;
+
+    const margemX = 8;
+    const margemY = 8;
+
+    const larguraUtil = largura - (margemX * 2);
+    const alturaUtil = altura - (margemY * 2);
+
+    const passoX = dados.length > 1
+        ? larguraUtil / (dados.length - 1)
+        : 0;
+
+    let pontos = "";
+
+    dados.forEach((digito, indice) => {
+
+        const x = margemX + (indice * passoX);
+
+        const y =
+            margemY +
+            alturaUtil -
+            ((digito / 9) * alturaUtil);
+
+        pontos += `${x},${y} `;
+
+    });
+
+    let pontosSVG = "";
+
+    dados.forEach((digito, indice) => {
+
+        const x = margemX + (indice * passoX);
+
+        const y =
+            margemY +
+            alturaUtil -
+            ((digito / 9) * alturaUtil);
+
+        pontosSVG += `
+            <circle
+                cx="${x}"
+                cy="${y}"
+                r="2.5"
+                fill="#42a5f5"
+            >
+        `;
+
+        pontosSVG += `
+            <text
+                x="${x}"
+                y="${y - 5}"
+                text-anchor="middle"
+                font-size="7"
+                fill="#90a4ae"
+            >
+                ${digito}
+            </text>
+        `;
+
+    });
+
+    container.innerHTML = `
+
+        <svg
+            width="100%"
+            height="${altura}"
+            viewBox="0 0 ${largura} ${altura}"
+            preserveAspectRatio="none"
+        >
+
+            <line
+                x1="0"
+                y1="${altura / 2}"
+                x2="${largura}"
+                y2="${altura / 2}"
+                stroke="#1a3152"
+                stroke-width="1"
+                opacity="0.6"
+            />
+
+            <polyline
+                points="${pontos}"
+                fill="none"
+                stroke="#42a5f5"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+            />
+
+            ${pontosSVG}
+
+        </svg>
+
+    `;
+
+}
+
 function atualizarCoresBarras(contagem) {
 
 
@@ -1152,7 +1315,7 @@ contagem[digito]++;
 });
 
 atualizarCoresBarras(contagem);
-
+atualizarGraficoLinhas();
 
 for (let i = 0; i <= 9; i++) {
 
