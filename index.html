@@ -2762,6 +2762,10 @@ A processar...
     💬
 </a>
 
+<!-- Garante que fechas bem a tag anterior antes de meter o script -->
+</div> 
+
+<script>
 const trilho = document.getElementById('trilho-graficos');
 let xInicial = 0;
 let xFinal = 0;
@@ -2777,18 +2781,18 @@ if (trilho) {
 
     trilho.addEventListener('touchend', (e) => {
         xFinal = e.changedTouches[0].screenX;
-        const limite = 40; // sensibilidade do arrastamento
+        const limite = 40;
 
-        // Deslizar para a Esquerda -> Mostra Gráfico de Linha
         if (xInicial - xFinal > limite) {
             trilho.style.transform = 'translateX(-50%)';
         }
-        // Deslizar para a Direita -> Volta para Gráfico de Barras
         if (xFinal - xInicial > limite) {
             trilho.style.transform = 'translateX(0%)';
         }
     }, { passive: true });
 }
+</script>
+
 
 
 </body>
