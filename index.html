@@ -195,7 +195,7 @@
         }
         .porcentagem-barra { font-size: 9px; color: #90a4ae; margin-bottom: 2px; }
         .corpo-barra {
-            width: 85%;
+            width: 95%;
             height: 50px;
             background-color: #ffffff;
             border-radius: 2px 2px 0 0;
@@ -1244,6 +1244,67 @@ function atualizarGraficoLinhas() {
         </svg>
 
     `;
+
+}
+
+// ================================
+// CARROSSEL DOS GRÁFICOS
+// ================================
+
+const carrosselGraficos =
+    document.getElementById("carrossel-graficos");
+
+const trilhoGraficos =
+    document.getElementById("trilho-graficos");
+
+let graficoAtual = 0;
+
+let inicioToqueX = 0;
+let fimToqueX = 0;
+
+if (carrosselGraficos && trilhoGraficos) {
+
+    carrosselGraficos.addEventListener(
+        "touchstart",
+        function(evento) {
+
+            inicioToqueX =
+                evento.touches[0].clientX;
+
+        },
+        { passive: true }
+    );
+
+    carrosselGraficos.addEventListener(
+        "touchend",
+        function(evento) {
+
+            fimToqueX =
+                evento.changedTouches[0].clientX;
+
+            const distancia =
+                fimToqueX - inicioToqueX;
+
+            // Deslizou da direita para a esquerda
+            if (distancia < -50) {
+
+                graficoAtual = 1;
+
+            }
+
+            // Deslizou da esquerda para a direita
+            else if (distancia > 50) {
+
+                graficoAtual = 0;
+
+            }
+
+            trilhoGraficos.style.transform =
+                `translateX(-${graficoAtual * 50}%)`;
+
+        },
+        { passive: true }
+    );
 
 }
 
