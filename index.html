@@ -167,25 +167,29 @@
         }
 
 
-/* Carrossel dos visores gráficos */
+/* Carrossel de Visores com Scroll Nativo */
 .carrossel-graficos {
     width: 100%;
-    overflow: hidden;
-    position: relative;
-    touch-action: none; /* Permite que o JavaScript controle totalmente o toque horizontal */
+    overflow-x: auto; /* Permite rolar horizontalmente de forma nativa */
+    scroll-snap-type: x mandatory; /* Força o ecrã a encaixar perfeitamente no painel ao soltar o dedo */
+    display: flex;
+    scrollbar-width: none; /* Esconde a barra de scroll no Firefox */
+}
+
+.carrossel-graficos::-webkit-scrollbar {
+    display: none; /* Esconde a barra de scroll no Chrome/Safari */
 }
 
 .trilho-graficos {
     display: flex;
     width: 200%;
-    transition: transform 0.35s ease;
 }
 
 .painel-grafico {
     width: 50%;
     flex-shrink: 0;
+    scroll-snap-align: start; /* Define que cada painel é um ponto de paragem obrigatório */
 }
-
 
         .coluna-barra {
             display: flex;
@@ -354,7 +358,7 @@ transform:rotate(360deg);
     color:#b0bec5;
     text-align:center;
 ">
-Versão: 2.1.0
+🆚️2️⃣.5️⃣.2️⃣
 </div>
 
 </div>
@@ -2761,39 +2765,6 @@ A processar...
 >
     💬
 </a>
-
-<!-- Garante que fechas bem a tag anterior antes de meter o script -->
-</div> 
-
-<script>
-const trilho = document.getElementById('trilho-graficos');
-let xInicial = 0;
-let xFinal = 0;
-
-if (trilho) {
-    trilho.addEventListener('touchstart', (e) => {
-        xInicial = e.changedTouches[0].screenX;
-    }, { passive: true });
-
-    trilho.addEventListener('touchmove', (e) => {
-        if (e.cancelable) e.preventDefault();
-    }, { passive: false });
-
-    trilho.addEventListener('touchend', (e) => {
-        xFinal = e.changedTouches[0].screenX;
-        const limite = 40;
-
-        if (xInicial - xFinal > limite) {
-            trilho.style.transform = 'translateX(-50%)';
-        }
-        if (xFinal - xInicial > limite) {
-            trilho.style.transform = 'translateX(0%)';
-        }
-    }, { passive: true });
-}
-</script>
-
-
 
 </body>
 </html>
