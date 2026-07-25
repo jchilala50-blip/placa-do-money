@@ -282,10 +282,10 @@ transform:rotate(360deg);
 
 <!-- TELA DE MANUTENÇÃO INTELIGENTE -->
 <div id="bloqueio-manutencao" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #000000; color: #ffffff; z-index: 999999; flex-direction: column; align-items: center; justify-content: center; text-align: center; font-family: sans-serif; padding: 20px;">
-    <h2 style="color: #ff3333; margin-bottom: 15px;">⚠️ Plataforma em Atualização</h2>
+    <h2 style="color: #ff3333; margin-bottom: 15px;">☢ Plataforma em Atualização</h2>
     <p style="font-size: 18px; line-height: 1.6; max-width: 400px;">
         Estamos a implementar melhorias na <strong>Placa do Money</strong>. <br>
-        Por favor, volte dentro de <strong>10 minutos</strong>.
+        Por favor, volte <strong>22h:30 minutos</strong>.
     </p>
 </div>
 
@@ -364,7 +364,7 @@ transform:rotate(360deg);
 
 <script>
 
-alert("ESTAMOS EM MANUTENCAO VOLTE EM 28 MINUTOS");
+alert("ESTAMOS EM MANUTENCAO VOLTE 22H:30");
 
   window.onerror = function(msg, url, line) {
 
@@ -638,6 +638,16 @@ onchange="trocarVolatilidade()">
 <option value="R_75">📈 Volatility 75 Index</option>
 <option value="R_100">📈 Volatility 100 Index</option>
 </select>
+
+
+<!-- BOTÃO DE ALTERNÂNCIA (FICA ACIMA DO CARROSSEL) -->
+<button id="btn-alternar-grafico" style="background: #1a3152; color: #ffffff; border: 1px solid #385d8f; border-radius: 5px; padding: 6px 12px; font-size: 14px; cursor: pointer; display: flex; align-items: center; gap: 5px; margin-bottom: 8px;">
+    🔄 Alterar Visor
+</button>
+
+<div class="carrossel-graficos" id="carrossel-graficos">
+    <div class="trilho-graficos" id="trilho-graficos">
+
 
                 </div>
                 <div class="carrossel-graficos" id="carrossel-graficos">
@@ -2764,38 +2774,6 @@ A processar...
 >
     💬
 </a>
-
-<script>
-(function() {
-    const trilho = document.getElementById('trilho-graficos');
-    let xInicial = 0;
-    let xFinal = 0;
-
-    if (trilho) {
-        trilho.addEventListener('touchstart', (e) => {
-            xInicial = e.changedTouches[0].screenX;
-        }, { passive: true });
-
-        trilho.addEventListener('touchend', (e) => {
-            xFinal = e.changedTouches[0].screenX;
-            const diferenca = xInicial - xFinal;
-            const limiteSensibilidade = 50; // Píxeis necessários para acionar o deslize
-
-            // Deslizar para a Esquerda -> Esconde Barras, Mostra o Gráfico de Linha
-            if (diferenca > limiteSensibilidade) {
-                trilho.style.transform = 'translateX(-50%)';
-            }
-            
-            // Deslizar para a Direita -> Volta para o Gráfico de Barras original
-            if (diferenca < -limiteSensibilidade) {
-                trilho.style.transform = 'translateX(0%)';
-            }
-        }, { passive: true });
-    }
-})();
-</script>
-
-
 
 </body>
 </html>
