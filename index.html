@@ -255,6 +255,35 @@ transform:rotate(360deg);
 </head>
 <body>
 
+<!-- TELA DE MANUTENÇÃO INTELIGENTE -->
+<div id="bloqueio-manutencao" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #000000; color: #ffffff; z-index: 999999; flex-direction: column; align-items: center; justify-content: center; text-align: center; font-family: sans-serif; padding: 20px;">
+    <h2 style="color: #ff3333; margin-bottom: 15px;">⚠️ Plataforma em Atualização</h2>
+    <p style="font-size: 18px; line-height: 1.6; max-width: 400px;">
+        Estamos a implementar melhorias na <strong>Placa do Money</strong>. <br>
+        Por favor, volte dentro de <strong>3 horas</strong>.
+    </p>
+</div>
+
+<script>
+    // Verifica se a URL contém o teu passe secreto: ?modo=admin
+    const urlParams = new URLSearchParams(window.location.search);
+    const ModoAdmin = urlParams.get('modo');
+
+    if (ModoAdmin === 'admin') {
+        // Guarda na sessão que és tu, para poderes navegar livremente
+        sessionStorage.setItem('acesso_desenvolvedor', 'autorizado');
+    }
+
+    // Se não fores tu (não tem o passe na URL e nem na sessão), bloqueia o ecrã!
+    if (sessionStorage.getItem('acesso_desenvolvedor') !== 'autorizado') {
+        const telaBloqueio = document.getElementById('bloqueio-manutencao');
+        telaBloqueio.style.display = 'flex';
+    }
+</script>
+
+
+
+
 <div class="container tela-robo" id="box-auth">
 
   <h2 id="titulo-tela">Entrar na Placa do Money</h2>
