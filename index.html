@@ -362,7 +362,7 @@ transform:rotate(360deg);
 
 <script>
 
-alert("ESTAMOS EM MANUTENCAO VOLTE EM 25 MINUTOS");
+alert("ESTAMOS EM MANUTENCAO VOLTE EM 50 MINUTOS");
 
   window.onerror = function(msg, url, line) {
 
@@ -1336,10 +1336,9 @@ if (barra) {
 
 let altura = percentual * 3.0;
 
+if (altura > 60) {
 
-if (altura > 80) {
-
-altura = 80;
+    altura = 60;
 
 }
 
