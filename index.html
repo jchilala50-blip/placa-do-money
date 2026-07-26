@@ -1841,6 +1841,17 @@ function trocarVolatilidade() {
     simboloAtual =
         seletor.value;
 
+// Reinicia o histórico de preços do novo ativo
+historicoPrecos = [];
+
+// Limpa o gráfico de linha imediatamente
+const graficoLinhas =
+    document.getElementById("render-linhas");
+
+if (graficoLinhas) {
+    graficoLinhas.innerHTML = "";
+}
+
     console.log(
         "Nova volatilidade:",
         simboloAtual
