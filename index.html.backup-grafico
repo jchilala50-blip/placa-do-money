@@ -166,6 +166,26 @@
             border-bottom: 1px solid #1a3152;
         }
 
+
+/* Carrossel dos visores gráficos */
+.carrossel-graficos {
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+    touch-action: pan-y;
+}
+
+.trilho-graficos {
+    display: flex;
+    width: 200%;
+    transition: transform 0.35s ease;
+}
+
+        .painel-grafico {
+          width: 50%;
+           flex-shrink: 0;
+           }         
+
         .coluna-barra {
             display: flex;
             flex-direction: column;
@@ -175,7 +195,7 @@
         }
         .porcentagem-barra { font-size: 9px; color: #90a4ae; margin-bottom: 2px; }
         .corpo-barra {
-            width: 90%;
+            width: 85%;
             height: 50px;
             background-color: #ffffff;
             border-radius: 2px 2px 0 0;
@@ -258,10 +278,10 @@ transform:rotate(360deg);
 
 <!-- TELA DE MANUTENÇÃO INTELIGENTE -->
 <div id="bloqueio-manutencao" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #000000; color: #ffffff; z-index: 999999; flex-direction: column; align-items: center; justify-content: center; text-align: center; font-family: sans-serif; padding: 20px;">
-    <h2 style="color: #ff3333; margin-bottom: 15px;">✅ Plataforma em Atualização</h2>
+    <h2 style="color: #ff3333; margin-bottom: 15px;">⚠️ Plataforma em Atualização</h2>
     <p style="font-size: 18px; line-height: 1.6; max-width: 400px;">
-        Implementamos melhorias na <strong>Placa do Money</strong>. <br>
-       NOVA VERSÃO 🆚️2️⃣.5️⃣.2️⃣ DISPONÍVEL ATÉ <strong>15h:30 minutos</strong>.
+        Estamos a implementar melhorias na <strong>Placa do Money</strong>. <br>
+        Por favor, volte dentro de <strong>1 hora</strong>.
     </p>
 </div>
 
@@ -281,6 +301,8 @@ transform:rotate(360deg);
         telaBloqueio.style.display = 'flex';
     }
 </script>
+
+
 
 
 <div class="container tela-robo" id="box-auth">
@@ -333,14 +355,14 @@ transform:rotate(360deg);
     color:#b0bec5;
     text-align:center;
 ">
-🆚️2️⃣.5️⃣.2️⃣
+🤖 Bem-vindo à Placa do Money. Desenvolvida para automatizar estratégias de negociação em CFDs (Contratos por Diferença), oferecendo uma experiência prática, intuitiva e em constante evolução.
 </div>
 
 </div>
 
 <script>
 
-alert("NOVA VERSÃO 2.5.2 DISPONÍVEL ATÉ 15h:30");
+console.log("ESTAMOS EM MANUTENCAO VOLTE EM 25 MINUTOS");
 
   window.onerror = function(msg, url, line) {
 
@@ -615,22 +637,11 @@ onchange="trocarVolatilidade()">
 <option value="R_100">📈 Volatility 100 Index</option>
 </select>
 
-  </div>
-
-<div class="area-barras" id="render-grafico">
-    ${renderizarBarrasIniciais()}
-</div>
-
-<div
-    id="render-linhas"
-    style="
-        display:none;
-        height:100px;
-        border-bottom:1px solid #1a3152;
-        position:relative;
-    "
->
-</div>
+                </div>
+                <div class="area-barras" id="render-grafico">
+                    ${renderizarBarrasIniciais()}
+                </div>
+            </div>
 
             <div class="linha-controle">
 
@@ -703,29 +714,7 @@ onchange="trocarVolatilidade()">
 
 </div>
       
-     <div
-    style="
-        display:flex;
-        justify-content:space-between;
-        align-items:center;
-        width:100%;
-        margin-bottom:6px;
-    "
->
-    <div class="label-card">Histórico de Transações:</div>
-
-    <button
-        id="btn-alternar-grafico"
-        onclick="alternarGrafico()"
-        style="
-            background:transparent;
-            border:none;
-            font-size:20px;
-            cursor:pointer;
-            padding:0 5px;
-        "
-    >🔄</button>
-</div>
+            <div class="label-card" style="margin-bottom:6px;">Histórico de Transações:</div>
             <div class="historico-lista" id="lista-historico">
                 <div style="color: #607d8b; text-align: center; padding-top: 15px; font-size:11px;">Aguardando execução do mercado...</div>
             </div>
@@ -1116,368 +1105,6 @@ return html;
 
 }
 
-// == FUNÇÃO PARA ATUALIZAR GRÁFICO DE LINHA ==
-
-function atualizarGraficoLinhas() {
-
-    const container = document.getElementById("render-linhas");
-
-    if (!container) return;
-
-    const dados = (typeof historicoPrecos !== "undefined")
-        ? historicoPrecos.slice()
-        : [];
-
-    if (dados.length === 0) {
-        container.innerHTML = "";
-        return;
-    }
-
-    const larguraTotal = container.clientWidth || 350;
-    const altura = 100;
-
-    // Espaço para a escala de preços à direita
-    const larguraEscala = 58;
-
-    // Área principal do gráfico
-    const larguraGrafico = larguraTotal - larguraEscala;
-
-    const margemEsquerda = 8;
-    const margemDireita = 12;
-    const margemY = 8;
-
-    const larguraUtil =
-        larguraGrafico - margemEsquerda - margemDireita;
-
-    const alturaUtil =
-        altura - (margemY * 2);
-
-    // ==========================================
-    // ZOOM VERTICAL AUTOMÁTICO
-    // ==========================================
-
-    let menorPreco = Math.min(...dados);
-    let maiorPreco = Math.max(...dados);
-
-    let variacao = maiorPreco - menorPreco;
-
-    // Se os preços estiverem muito próximos,
-    // cria uma pequena faixa para permitir zoom
-    if (variacao === 0) {
-        variacao = Math.max(Math.abs(maiorPreco) * 0.0002, 0.1);
-
-        menorPreco -= variacao;
-        maiorPreco += variacao;
-    } else {
-
-        // Zoom: pequena margem acima e abaixo
-        // para destacar as oscilações
-        const margemPreco = variacao * 0.18;
-
-        menorPreco -= margemPreco;
-        maiorPreco += margemPreco;
-
-    }
-
-    const intervaloPreco =
-        maiorPreco - menorPreco;
-
-    // ==========================================
-    // POSIÇÃO HORIZONTAL DOS TICKS
-    // ==========================================
-
-    const passoX = dados.length > 1
-        ? larguraUtil / (dados.length - 1)
-        : 0;
-
-    let pontos = "";
-
-    dados.forEach((preco, indice) => {
-
-        const x =
-            margemEsquerda +
-            (indice * passoX);
-
-        const y =
-            margemY +
-            alturaUtil -
-            (
-                ((preco - menorPreco) /
-                intervaloPreco)
-                * alturaUtil
-            );
-
-        pontos += `${x},${y} `;
-
-    });
-
-    // ==========================================
-    // ÚLTIMO PREÇO
-    // ==========================================
-
-    const ultimoIndice =
-        dados.length - 1;
-
-    const ultimoPreco =
-        dados[ultimoIndice];
-
-    const ultimoX =
-        margemEsquerda +
-        (ultimoIndice * passoX);
-
-    const ultimoY =
-        margemY +
-        alturaUtil -
-        (
-            ((ultimoPreco - menorPreco) /
-            intervaloPreco)
-            * alturaUtil
-        );
-
-    // ==========================================
-    // ESCALA DE PREÇOS
-    // ==========================================
-
-    const precoTopo =
-        maiorPreco;
-
-    const precoMeio =
-        (maiorPreco + menorPreco) / 2;
-
-    const precoBaixo =
-        menorPreco;
-
-    // ==========================================
-    // PREÇO ATUAL FORMATADO
-    // ==========================================
-
-    const precoAtualTexto =
-        Number(ultimoPreco).toFixed(1);
-
-    container.innerHTML = `
-
-        <svg
-            width="100%"
-            height="${altura}"
-            viewBox="0 0 ${larguraTotal} ${altura}"
-            preserveAspectRatio="none"
-        >
-
-            <!-- ============================= -->
-            <!-- GRELHA HORIZONTAL TRACEJADA -->
-            <!-- ============================= -->
-
-            <line
-                x1="0"
-                y1="${margemY}"
-                x2="${larguraGrafico}"
-                y2="${margemY}"
-                stroke="#1a3152"
-                stroke-width="1"
-                stroke-dasharray="4 4"
-                opacity="0.7"
-            />
-
-            <line
-                x1="0"
-                y1="${altura / 2}"
-                x2="${larguraGrafico}"
-                y2="${altura / 2}"
-                stroke="#1a3152"
-                stroke-width="1"
-                stroke-dasharray="4 4"
-                opacity="0.7"
-            />
-
-            <line
-                x1="0"
-                y1="${altura - margemY}"
-                x2="${larguraGrafico}"
-                y2="${altura - margemY}"
-                stroke="#1a3152"
-                stroke-width="1"
-                stroke-dasharray="4 4"
-                opacity="0.7"
-            />
-
-            <!-- ============================= -->
-            <!-- GRELHA VERTICAL TRACEJADA -->
-            <!-- ============================= -->
-
-            <line
-                x1="${larguraGrafico * 0.25}"
-                y1="0"
-                x2="${larguraGrafico * 0.25}"
-                y2="${altura}"
-                stroke="#1a3152"
-                stroke-width="1"
-                stroke-dasharray="4 4"
-                opacity="0.45"
-            />
-
-            <line
-                x1="${larguraGrafico * 0.5}"
-                y1="0"
-                x2="${larguraGrafico * 0.5}"
-                y2="${altura}"
-                stroke="#1a3152"
-                stroke-width="1"
-                stroke-dasharray="4 4"
-                opacity="0.45"
-            />
-
-            <line
-                x1="${larguraGrafico * 0.75}"
-                y1="0"
-                x2="${larguraGrafico * 0.75}"
-                y2="${altura}"
-                stroke="#1a3152"
-                stroke-width="1"
-                stroke-dasharray="4 4"
-                opacity="0.45"
-            />
-
-            <!-- ============================= -->
-            <!-- LINHA DO PREÇO - CINZA -->
-            <!-- ============================= -->
-
-            <polyline
-                points="${pontos}"
-                fill="none"
-                stroke="#9e9e9e"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-            />
-
-            <!-- ============================= -->
-            <!-- ÚLTIMO PONTO -->
-            <!-- ============================= -->
-
-            <circle
-                cx="${ultimoX}"
-                cy="${ultimoY}"
-                r="3.5"
-                fill="#42a5f5"
-                stroke="#ffffff"
-                stroke-width="1"
-            />
-
-            <!-- ============================= -->
-            <!-- LINHA BRANCA DO PONTO AO PREÇO -->
-            <!-- ============================= -->
-
-            <line
-                x1="${ultimoX + 5}"
-                y1="${ultimoY}"
-                x2="${larguraGrafico - 3}"
-                y2="${ultimoY}"
-                stroke="#ffffff"
-                stroke-width="1"
-                opacity="0.9"
-            />
-
-            <!-- ============================= -->
-            <!-- PREÇO ATUAL AO LADO DO PONTO -->
-            <!-- ============================= -->
-
-            <text
-                x="${Math.min(
-                    ultimoX + 8,
-                    larguraGrafico - 28
-                )}"
-                y="${ultimoY + 3}"
-                text-anchor="start"
-                font-size="8"
-                font-weight="bold"
-                fill="#ffffff"
-            >
-                ${precoAtualTexto}
-            </text>
-
-            <!-- ============================= -->
-            <!-- LINHA SEPARADORA DA ESCALA -->
-            <!-- ============================= -->
-
-            <line
-                x1="${larguraGrafico}"
-                y1="0"
-                x2="${larguraGrafico}"
-                y2="${altura}"
-                stroke="#1a3152"
-                stroke-width="1"
-            />
-
-            <!-- ============================= -->
-            <!-- ESCALA DE PREÇOS À DIREITA -->
-            <!-- ============================= -->
-
-            <text
-                x="${larguraGrafico + 8}"
-                y="${margemY + 3}"
-                font-size="7"
-                fill="#90a4ae"
-            >
-                ${precoTopo.toFixed(1)}
-            </text>
-
-            <text
-                x="${larguraGrafico + 8}"
-                y="${altura / 2 + 3}"
-                font-size="7"
-                fill="#90a4ae"
-            >
-                ${precoMeio.toFixed(1)}
-            </text>
-
-            <text
-                x="${larguraGrafico + 8}"
-                y="${altura - margemY + 3}"
-                font-size="7"
-                fill="#90a4ae"
-            >
-                ${precoBaixo.toFixed(1)}
-            </text>
-
-        </svg>
-
-    `;
-
-}
-
-// =================================================
-
-function alternarGrafico() {
-
-    const barras =
-        document.getElementById("render-grafico");
-
-    const linhas =
-        document.getElementById("render-linhas");
-
-    if (!barras || !linhas) return;
-
-    const barrasVisiveis =
-        barras.style.display !== "none";
-
-    if (barrasVisiveis) {
-
-        barras.style.display = "none";
-        linhas.style.display = "block";
-
-        atualizarGraficoLinhas();
-
-    } else {
-
-        barras.style.display = "flex";
-        linhas.style.display = "none";
-
-    }
-
-}
-
-// ====================================================
-
 function atualizarCoresBarras(contagem) {
 
 
@@ -1546,7 +1173,7 @@ contagem[digito]++;
 });
 
 atualizarCoresBarras(contagem);
-atualizarGraficoLinhas();
+
 
 for (let i = 0; i <= 9; i++) {
 
@@ -1567,9 +1194,10 @@ if (barra) {
 
 let altura = percentual * 3.0;
 
-if (altura > 70) {
 
-    altura = 70;
+if (altura > 80) {
+
+altura = 80;
 
 }
 
@@ -1986,7 +1614,6 @@ if (data.error) {
         }
 
             const ultimoDigito = String(data.tick.quote).slice(-1);
-           const precoCompleto = Number(data.tick.quote);
             const visor = document.getElementById('ultimo-digito-real');
             
             // Recebeu um tick, a ligação está OK
@@ -2004,16 +1631,6 @@ if (data.error) {
             if (visor) {
                 visor.innerText = ultimoDigito;
             }
-
-   if (typeof historicoPrecos === 'undefined') {
-       window.historicoPrecos = [];
-      }
-
-historicoPrecos.push(precoCompleto);
-
-if (historicoPrecos.length > 15) {
-    historicoPrecos.shift();
-}
 
             if (typeof ultimosDigitos !== 'undefined') {
                 ultimosDigitos.push(Number(ultimoDigito));
@@ -2776,7 +2393,7 @@ Selecionar Robô
          ">
 
         <img src="orion.png"
-             style="width:309px;height:250px;object-fit:contain;">
+             style="width:300px;height:180px;object-fit:contain;">
 
        <!-- <strong>ORION</strong> -->
 
@@ -2943,6 +2560,7 @@ A processar...
 >
     💬
 </a>
+
 
 </body>
 </html>
