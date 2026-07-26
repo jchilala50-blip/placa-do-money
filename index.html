@@ -1195,8 +1195,8 @@ function atualizarGraficoLinhas() {
     dados.forEach((preco, indice) => {
 
         const x =
-            margemEsquerda +
-            (indice * passoX);
+    margemEsquerda +
+    (indice * passoXPonto);
 
         const y =
             margemY +
@@ -1221,9 +1221,20 @@ function atualizarGraficoLinhas() {
     const ultimoPreco =
         dados[ultimoIndice];
 
-    const ultimoX =
-        margemEsquerda +
-        (ultimoIndice * passoX);
+    // Deixa espaço à direita para mostrar o preço atual
+const espacoUltimoPonto = 35;
+
+const larguraUtilPonto =
+    larguraUtil - espacoUltimoPonto;
+
+const passoXPonto =
+    dados.length > 1
+        ? larguraUtilPonto / (dados.length - 1)
+        : 0;
+
+const ultimoX =
+    margemEsquerda +
+    (ultimoIndice * passoXPonto);
 
     const ultimoY =
         margemY +
@@ -1253,6 +1264,40 @@ function atualizarGraficoLinhas() {
 
     const precoAtualTexto =
         Number(ultimoPreco).toFixed(1);
+
+    // ==========================================
+    // NÚMEROS 0-9 E BOLINHAS NA BASE
+    // ==========================================
+
+    let indicadoresDigitos = "";
+
+    for (let i = 0; i <= 9; i++) {
+
+        const x =
+            margemEsquerda +
+            (i * (larguraUtil / 9));
+
+        indicadoresDigitos += `
+            <circle
+                cx="${x}"
+                cy="${altura - 3}"
+                r="2"
+                fill="#607d8b"
+            />
+
+            <text
+                x="${x}"
+                y="${altura - 9}"
+                text-anchor="middle"
+                font-size="7"
+                font-weight="bold"
+                fill="#90a4ae"
+            >
+                ${i}
+            </text>
+        `;
+    }
+
 
     container.innerHTML = `
 
@@ -1437,8 +1482,10 @@ function atualizarGraficoLinhas() {
                 fill="#90a4ae"
             >
                 ${precoBaixo.toFixed(1)}
-            </text>
+            </tex>
 
+            <!-- NÚMEROS 0-9 E BOLINHAS -->
+            ${indicadoresDigitos}
         </svg>
 
     `;
@@ -2787,7 +2834,7 @@ Selecionar Robô
          ">
 
         <img src="orion.png"
-             style="width:309px;height:250px;object-fit:contain;">
+             style="width:300px;height:180px;object-fit:contain;">
 
        <!-- <strong>ORION</strong> -->
 
