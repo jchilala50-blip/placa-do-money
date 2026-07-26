@@ -166,29 +166,24 @@
             border-bottom: 1px solid #1a3152;
         }
 
-
-/* Contentor principal do carrossel */
+/* Carrossel dos visores gráficos */
 .carrossel-graficos {
     width: 100%;
-    overflow: hidden; /* Corta o que está fora para não aparecer ao lado */
+    overflow: hidden;
     position: relative;
+    touch-action: pan-y;
 }
 
-/* O trilho que se move */
 .trilho-graficos {
     display: flex;
-    width: 200%; /* O dobro do tamanho para meter os dois painéis a 100% cada um */
+    width: 200%;
     transition: transform 0.35s ease;
-    transform: translateX(0%);
 }
 
-/* Cada painel individual do gráfico */
 .painel-grafico {
-    width: 50%; /* Cada um passa a ter 100% da largura visível do ecrã */
+    width: 50%;
     flex-shrink: 0;
-    box-sizing: border-box;
 }
-
 
         .coluna-barra {
             display: flex;
@@ -199,7 +194,7 @@
         }
         .porcentagem-barra { font-size: 9px; color: #90a4ae; margin-bottom: 2px; }
         .corpo-barra {
-            width: 95%;
+            width: 90%;
             height: 50px;
             background-color: #ffffff;
             border-radius: 2px 2px 0 0;
@@ -285,7 +280,7 @@ transform:rotate(360deg);
     <h2 style="color: #ff3333; margin-bottom: 15px;">☢ Plataforma em Atualização</h2>
     <p style="font-size: 18px; line-height: 1.6; max-width: 400px;">
         Estamos a implementar melhorias na <strong>Placa do Money</strong>. <br>
-        Por favor, volte <strong>22h:30 minutos</strong>.
+        Por favor, volte <strong>02h:30 minutos</strong>.
     </p>
 </div>
 
@@ -364,7 +359,7 @@ transform:rotate(360deg);
 
 <script>
 
-alert("ESTAMOS EM MANUTENCAO VOLTE 22H:30");
+alert("ESTAMOS EM MANUTENCAO VOLTE 02H:30");
 
   window.onerror = function(msg, url, line) {
 
@@ -638,16 +633,6 @@ onchange="trocarVolatilidade()">
 <option value="R_75">📈 Volatility 75 Index</option>
 <option value="R_100">📈 Volatility 100 Index</option>
 </select>
-
-
-<!-- BOTÃO DE ALTERNÂNCIA (FICA ACIMA DO CARROSSEL) -->
-<button id="btn-alternar-grafico" style="background: #1a3152; color: #ffffff; border: 1px solid #385d8f; border-radius: 5px; padding: 6px 12px; font-size: 14px; cursor: pointer; display: flex; align-items: center; gap: 5px; margin-bottom: 8px;">
-    🔄 Alterar Visor
-</button>
-
-<div class="carrossel-graficos" id="carrossel-graficos">
-    <div class="trilho-graficos" id="trilho-graficos">
-
 
                 </div>
                 <div class="carrossel-graficos" id="carrossel-graficos">
