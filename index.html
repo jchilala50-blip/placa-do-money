@@ -166,25 +166,6 @@
             border-bottom: 1px solid #1a3152;
         }
 
-/* Carrossel dos visores gráficos */
-.carrossel-graficos {
-    width: 100%;
-    overflow: hidden;
-    position: relative;
-    touch-action: pan-y;
-}
-
-.trilho-graficos {
-    display: flex;
-    width: 200%;
-    transition: transform 0.35s ease;
-}
-
-.painel-grafico {
-    width: 50%;
-    flex-shrink: 0;
-}
-
         .coluna-barra {
             display: flex;
             flex-direction: column;
@@ -634,38 +615,21 @@ onchange="trocarVolatilidade()">
 <option value="R_100">📈 Volatility 100 Index</option>
 </select>
 
-                </div>
-                <div class="carrossel-graficos" id="carrossel-graficos">
+  </div>
 
-    <div class="trilho-graficos" id="trilho-graficos">
-
-        <!-- VISOR 1: GRÁFICO DE BARRAS -->
-        <div class="painel-grafico">
-
-            <div class="area-barras" id="render-grafico">
-                ${renderizarBarrasIniciais()}
-            </div>
-
-        </div>
-
-        <!-- VISOR 2: GRÁFICO DE LINHAS -->
-        <div class="painel-grafico">
-
-            <div
-                id="render-linhas"
-                style="
-                    height:100px;
-                    border-bottom:1px solid #1a3152;
-                    position:relative;
-                "
-            >
-            </div>
-
-        </div>
-
-    </div>
-
+<div class="area-barras" id="render-grafico">
+    ${renderizarBarrasIniciais()}
 </div>
+
+<div
+    id="render-linhas"
+    style="
+        display:none;
+        height:100px;
+        border-bottom:1px solid #1a3152;
+        position:relative;
+    "
+>
 </div>
 
             <div class="linha-controle">
@@ -739,7 +703,26 @@ onchange="trocarVolatilidade()">
 
 </div>
       
-            <div class="label-card" style="margin-bottom:6px;">Histórico de Transações:</div>
+            <div style="
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:6px;
+">
+    <div class="label-card">Histórico de Transações:</div>
+
+    <button
+        id="btn-alternar-grafico"
+        onclick="alternarGrafico()"
+        style="
+            background:transparent;
+            border:none;
+            font-size:20px;
+            cursor:pointer;
+            padding:0 5px;
+        "
+    >🔄</button>
+</div>
             <div class="historico-lista" id="lista-historico">
                 <div style="color: #607d8b; text-align: center; padding-top: 15px; font-size:11px;">Aguardando execução do mercado...</div>
             </div>
@@ -1244,66 +1227,38 @@ function atualizarGraficoLinhas() {
 
 }
 
-// ================================
-// CARROSSEL DOS GRÁFICOS
-// ================================
+// =================================================
 
-const carrosselGraficos =
-    document.getElementById("carrossel-graficos");
+function alternarGrafico() {
 
-const trilhoGraficos =
-    document.getElementById("trilho-graficos");
+    const barras =
+        document.getElementById("render-grafico");
 
-let graficoAtual = 0;
+    const linhas =
+        document.getElementById("render-linhas");
 
-let inicioToqueX = 0;
-let fimToqueX = 0;
+    if (!barras || !linhas) return;
 
-if (carrosselGraficos && trilhoGraficos) {
+    const barrasVisiveis =
+        barras.style.display !== "none";
 
-    carrosselGraficos.addEventListener(
-        "touchstart",
-        function(evento) {
+    if (barrasVisiveis) {
 
-            inicioToqueX =
-                evento.touches[0].clientX;
+        barras.style.display = "none";
+        linhas.style.display = "block";
 
-        },
-        { passive: true }
-    );
+        atualizarGraficoLinhas();
 
-    carrosselGraficos.addEventListener(
-        "touchend",
-        function(evento) {
+    } else {
 
-            fimToqueX =
-                evento.changedTouches[0].clientX;
+        barras.style.display = "flex";
+        linhas.style.display = "none";
 
-            const distancia =
-                fimToqueX - inicioToqueX;
-
-            // Deslizou da direita para a esquerda
-            if (distancia < -50) {
-
-                graficoAtual = 1;
-
-            }
-
-            // Deslizou da esquerda para a direita
-            else if (distancia > 50) {
-
-                graficoAtual = 0;
-
-            }
-
-            trilhoGraficos.style.transform =
-                `translateX(-${graficoAtual * 50}%)`;
-
-        },
-        { passive: true }
-    );
+    }
 
 }
+
+// ====================================================
 
 function atualizarCoresBarras(contagem) {
 
@@ -2592,7 +2547,7 @@ Selecionar Robô
          ">
 
         <img src="orion.png"
-             style="width:300px;height:180px;object-fit:contain;">
+             style="width:319px;height:200px;object-fit:contain;">
 
        <!-- <strong>ORION</strong> -->
 
