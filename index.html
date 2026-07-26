@@ -1136,14 +1136,14 @@ function atualizarGraficoLinhas() {
     const larguraTotal = container.clientWidth || 350;
     const altura = 100;
 
-    // Espaço reservado para a escala de preços à direita
-    const larguraEscala = 48;
+    // Espaço para a escala de preços à direita
+    const larguraEscala = 58;
 
-    // Área onde a linha será desenhada
+    // Área principal do gráfico
     const larguraGrafico = larguraTotal - larguraEscala;
 
     const margemEsquerda = 8;
-    const margemDireita = 8;
+    const margemDireita = 12;
     const margemY = 8;
 
     const larguraUtil =
@@ -1152,22 +1152,39 @@ function atualizarGraficoLinhas() {
     const alturaUtil =
         altura - (margemY * 2);
 
-    // Descobre o menor e o maior preço
+    // ==========================================
+    // ZOOM VERTICAL AUTOMÁTICO
+    // ==========================================
+
     let menorPreco = Math.min(...dados);
     let maiorPreco = Math.max(...dados);
 
-    // Evita divisão por zero se os preços forem iguais
-    if (menorPreco === maiorPreco) {
-        menorPreco -= 0.1;
-        maiorPreco += 0.1;
+    let variacao = maiorPreco - menorPreco;
+
+    // Se os preços estiverem muito próximos,
+    // cria uma pequena faixa para permitir zoom
+    if (variacao === 0) {
+        variacao = Math.max(Math.abs(maiorPreco) * 0.0002, 0.1);
+
+        menorPreco -= variacao;
+        maiorPreco += variacao;
+    } else {
+
+        // Zoom: pequena margem acima e abaixo
+        // para destacar as oscilações
+        const margemPreco = variacao * 0.18;
+
+        menorPreco -= margemPreco;
+        maiorPreco += margemPreco;
+
     }
 
-    // Pequeno espaço visual acima e abaixo da linha
-    const variacao = maiorPreco - menorPreco;
-    const margemPreco = variacao * 0.15;
+    const intervaloPreco =
+        maiorPreco - menorPreco;
 
-    menorPreco -= margemPreco;
-    maiorPreco += margemPreco;
+    // ==========================================
+    // POSIÇÃO HORIZONTAL DOS TICKS
+    // ==========================================
 
     const passoX = dados.length > 1
         ? larguraUtil / (dados.length - 1)
@@ -1186,7 +1203,7 @@ function atualizarGraficoLinhas() {
             alturaUtil -
             (
                 ((preco - menorPreco) /
-                (maiorPreco - menorPreco))
+                intervaloPreco)
                 * alturaUtil
             );
 
@@ -1194,10 +1211,15 @@ function atualizarGraficoLinhas() {
 
     });
 
-    // Último ponto
-    const ultimoIndice = dados.length - 1;
+    // ==========================================
+    // ÚLTIMO PREÇO
+    // ==========================================
 
-    const ultimoPreco = dados[ultimoIndice];
+    const ultimoIndice =
+        dados.length - 1;
+
+    const ultimoPreco =
+        dados[ultimoIndice];
 
     const ultimoX =
         margemEsquerda +
@@ -1208,15 +1230,29 @@ function atualizarGraficoLinhas() {
         alturaUtil -
         (
             ((ultimoPreco - menorPreco) /
-            (maiorPreco - menorPreco))
+            intervaloPreco)
             * alturaUtil
         );
 
-    // Escala de preços
-    const precoTopo = maiorPreco;
+    // ==========================================
+    // ESCALA DE PREÇOS
+    // ==========================================
+
+    const precoTopo =
+        maiorPreco;
+
     const precoMeio =
         (maiorPreco + menorPreco) / 2;
-    const precoBaixo = menorPreco;
+
+    const precoBaixo =
+        menorPreco;
+
+    // ==========================================
+    // PREÇO ATUAL FORMATADO
+    // ==========================================
+
+    const precoAtualTexto =
+        Number(ultimoPreco).toFixed(1);
 
     container.innerHTML = `
 
@@ -1227,7 +1263,9 @@ function atualizarGraficoLinhas() {
             preserveAspectRatio="none"
         >
 
+            <!-- ============================= -->
             <!-- GRELHA HORIZONTAL TRACEJADA -->
+            <!-- ============================= -->
 
             <line
                 x1="0"
@@ -1262,7 +1300,9 @@ function atualizarGraficoLinhas() {
                 opacity="0.7"
             />
 
+            <!-- ============================= -->
             <!-- GRELHA VERTICAL TRACEJADA -->
+            <!-- ============================= -->
 
             <line
                 x1="${larguraGrafico * 0.25}"
@@ -1297,18 +1337,22 @@ function atualizarGraficoLinhas() {
                 opacity="0.45"
             />
 
-            <!-- LINHA DO PREÇO -->
+            <!-- ============================= -->
+            <!-- LINHA DO PREÇO - CINZA -->
+            <!-- ============================= -->
 
             <polyline
                 points="${pontos}"
                 fill="none"
-                stroke="#42a5f5"
+                stroke="#9e9e9e"
                 stroke-width="2"
                 stroke-linecap="round"
                 stroke-linejoin="round"
             />
 
+            <!-- ============================= -->
             <!-- ÚLTIMO PONTO -->
+            <!-- ============================= -->
 
             <circle
                 cx="${ultimoX}"
@@ -1319,20 +1363,41 @@ function atualizarGraficoLinhas() {
                 stroke-width="1"
             />
 
-            <!-- PREÇO ATUAL -->
+            <!-- ============================= -->
+            <!-- LINHA BRANCA DO PONTO AO PREÇO -->
+            <!-- ============================= -->
+
+            <line
+                x1="${ultimoX + 5}"
+                y1="${ultimoY}"
+                x2="${larguraGrafico - 3}"
+                y2="${ultimoY}"
+                stroke="#ffffff"
+                stroke-width="1"
+                opacity="0.9"
+            />
+
+            <!-- ============================= -->
+            <!-- PREÇO ATUAL AO LADO DO PONTO -->
+            <!-- ============================= -->
 
             <text
-                x="${ultimoX}"
-                y="${ultimoY - 7}"
-                text-anchor="middle"
+                x="${Math.min(
+                    ultimoX + 8,
+                    larguraGrafico - 28
+                )}"
+                y="${ultimoY + 3}"
+                text-anchor="start"
                 font-size="8"
                 font-weight="bold"
                 fill="#ffffff"
             >
-                ${ultimoPreco.toFixed(1)}
+                ${precoAtualTexto}
             </text>
 
+            <!-- ============================= -->
             <!-- LINHA SEPARADORA DA ESCALA -->
+            <!-- ============================= -->
 
             <line
                 x1="${larguraGrafico}"
@@ -1343,10 +1408,12 @@ function atualizarGraficoLinhas() {
                 stroke-width="1"
             />
 
-            <!-- ESCALA DE PREÇOS -->
+            <!-- ============================= -->
+            <!-- ESCALA DE PREÇOS À DIREITA -->
+            <!-- ============================= -->
 
             <text
-                x="${larguraGrafico + 4}"
+                x="${larguraGrafico + 8}"
                 y="${margemY + 3}"
                 font-size="7"
                 fill="#90a4ae"
@@ -1355,7 +1422,7 @@ function atualizarGraficoLinhas() {
             </text>
 
             <text
-                x="${larguraGrafico + 4}"
+                x="${larguraGrafico + 8}"
                 y="${altura / 2 + 3}"
                 font-size="7"
                 fill="#90a4ae"
@@ -1364,7 +1431,7 @@ function atualizarGraficoLinhas() {
             </text>
 
             <text
-                x="${larguraGrafico + 4}"
+                x="${larguraGrafico + 8}"
                 y="${altura - margemY + 3}"
                 font-size="7"
                 fill="#90a4ae"
