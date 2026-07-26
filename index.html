@@ -1183,33 +1183,40 @@ function atualizarGraficoLinhas() {
         maiorPreco - menorPreco;
 
     // ==========================================
-    // POSIÇÃO HORIZONTAL DOS TICKS
-    // ==========================================
+// POSIÇÃO HORIZONTAL DOS TICKS
+// ==========================================
 
-    const passoX = dados.length > 1
-        ? larguraUtil / (dados.length - 1)
+// Deixa espaço à direita para o último ponto e preço
+const espacoUltimoPonto = 35;
+
+const larguraUtilPonto =
+    larguraUtil - espacoUltimoPonto;
+
+const passoXPonto =
+    dados.length > 1
+        ? larguraUtilPonto / (dados.length - 1)
         : 0;
 
-    let pontos = "";
+let pontos = "";
 
-    dados.forEach((preco, indice) => {
+dados.forEach((preco, indice) => {
 
-        const x =
-    margemEsquerda +
-    (indice * passoXPonto);
+    const x =
+        margemEsquerda +
+        (indice * passoXPonto);
 
-        const y =
-            margemY +
-            alturaUtil -
-            (
-                ((preco - menorPreco) /
-                intervaloPreco)
-                * alturaUtil
-            );
+    const y =
+        margemY +
+        alturaUtil -
+        (
+            ((preco - menorPreco) /
+            intervaloPreco)
+            * alturaUtil
+        );
 
-        pontos += `${x},${y} `;
+    pontos += `${x},${y} `;
 
-    });
+});
 
     // ==========================================
     // ÚLTIMO PREÇO
@@ -1221,16 +1228,7 @@ function atualizarGraficoLinhas() {
     const ultimoPreco =
         dados[ultimoIndice];
 
-    // Deixa espaço à direita para mostrar o preço atual
-const espacoUltimoPonto = 35;
-
-const larguraUtilPonto =
-    larguraUtil - espacoUltimoPonto;
-
-const passoXPonto =
-    dados.length > 1
-        ? larguraUtilPonto / (dados.length - 1)
-        : 0;
+    // Deixa espaço à direita para mostrar
 
 const ultimoX =
     margemEsquerda +
