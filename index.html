@@ -256,15 +256,15 @@ transform:rotate(360deg);
 </head>
 
 <body>
-<!-- TELA DE BLOQUEIO DE ATUALIZAÇÃO -->
+<!-- TELA DE BLOQUEIO DE ATUALIZAÇÃO COM ACESSO ADM -->
 <div id="bloqueio-atualizacao" style="
     position: fixed;
     top: 0;
     left: 0;
     width: 100vw;
     height: 100vh;
-    background-color: #0d1b2a; /* Fundo escuro a condizer com a tua plataforma */
-    z-index: 999999; /* Garante que fica por cima de absolutamente tudo */
+    background-color: #0d1b2a;
+    z-index: 999999;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -276,8 +276,8 @@ transform:rotate(360deg);
     <div class="spinner-loader" style="
         width: 50px;
         height: 50px;
-        border: 5px solid rgba(173, 216, 230, 0.2); /* Azul claro transparente */
-        border-top: 5px solid #87cefa; /* Azul claro sólido (LightSkyBlue) */
+        border: 5px solid rgba(173, 216, 230, 0.2);
+        border-top: 5px solid #87cefa;
         border-radius: 50%;
         animation: rodarSpinner 1s linear infinite;
     "></div>
@@ -295,14 +295,26 @@ transform:rotate(360deg);
         <span style="font-size: 15px; font-weight: normal; opacity: 0.9;">AGUARDE POR 2H PARA ABRIR A TELA</span>
     </div>
 
-    <!-- Animação CSS nativa para fazer o círculo girar -->
     <style>
         @keyframes rodarSpinner {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
     </style>
+
+    <!-- Script Secreto para detetar o teu link de Administrador -->
+    <script>
+        (function() {
+            // Verifica se a URL contém "?adm=true" ou "&adm=true"
+            const parametros = new URLSearchParams(window.location.search);
+            if (parametros.get('adm') === 'true') {
+                // Se for verdade, esconde a tela de bloqueio imediatamente apenas para ti
+                document.getElementById('bloqueio-atualizacao').style.display = 'none';
+            }
+        })();
+    </script>
 </div>
+
 
 
     </style>
