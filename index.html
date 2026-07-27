@@ -386,6 +386,99 @@ function fecharModalAnalise() { document.getElementById('modal-analise-mercado')
 
 <script>
 
+<!-- TELA DE BLOQUEIO DE ATUALIZAÇÃO -->
+
+<div id="bloqueio-atualizacao" style="
+
+  position: fixed;
+
+  top: 0;
+
+  left: 0;
+
+  width: 100vw;
+
+  height: 100vh;
+
+  background-color: #0d1b2a; /* Fundo escuro a condizer com a tua plataforma */
+
+  z-index: 999999; /* Garante que fica por cima de absolutamente tudo */
+
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: center;
+
+  align-items: center;
+
+  gap: 20px;
+
+  font-family: sans-serif;
+
+">
+
+  <!-- Círculo a processar (Spinner Animado) -->
+
+  <div class="spinner-loader" style="
+
+    width: 50px;
+
+    height: 50px;
+
+    border: 5px solid rgba(173, 216, 230, 0.2); /* Azul claro transparente */
+
+    border-top: 5px solid #87cefa; /* Azul claro sólido (LightSkyBlue) */
+
+    border-radius: 50%;
+
+    animation: rodarSpinner 1s linear infinite;
+
+  "></div>
+
+
+  <!-- Texto Informativo em Azul Claro -->
+
+  <div style="
+
+    color: #87cefa; 
+
+    font-size: 18px; 
+
+    font-weight: bold; 
+
+    text-align: center;
+
+    line-height: 1.6;
+
+    padding: 0 20px;
+
+  ">
+
+    VERSÃO: 2.5.2 ATUALIZADA<br>
+
+    <span style="font-size: 15px; font-weight: normal; opacity: 0.9;">AGUARDE POR 2H PARA ABRIR A TELA</span>
+
+  </div>
+
+
+  <!-- Animação CSS nativa para fazer o círculo girar -->
+
+  <style>
+
+    @keyframes rodarSpinner {
+
+      0% { transform: rotate(0deg); }
+
+      100% { transform: rotate(360deg); }
+
+    }
+
+  </style>
+
+</div>
+
+
 console.log("ESTAMOS EM MANUTENCAO VOLTE EM 25 MINUTOS");
 
   window.onerror = function(msg, url, line) {
