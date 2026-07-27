@@ -1234,6 +1234,80 @@ dadosVisiveis.forEach((preco, indice) => {
 
 });
 
+// ==========================================
+// LINHAS DAS OPERAÇÕES
+// ==========================================
+
+let linhasOperacoesSVG = "";
+
+if (
+    typeof linhasOperacoesGrafico !== "undefined" &&
+    linhasOperacoesGrafico.length > 0
+) {
+
+    linhasOperacoesGrafico.forEach((operacao) => {
+
+        const precoAbertura =
+            Number(operacao.precoAbertura);
+
+        const precoFecho =
+            Number(operacao.precoFecho);
+
+        // Converte preço de abertura para posição Y
+        const yAbertura =
+            margemY +
+            alturaUtil -
+            (
+                ((precoAbertura - menorPreco) /
+                intervaloPreco)
+                * alturaUtil
+            );
+
+        // Converte preço de fecho para posição Y
+        const yFecho =
+            margemY +
+            alturaUtil -
+            (
+                ((precoFecho - menorPreco) /
+                intervaloPreco)
+                * alturaUtil
+            );
+
+        // Linha de abertura
+        linhasOperacoesSVG += `
+            <line
+                x1="0"
+                y1="${yAbertura}"
+                x2="${larguraGrafico}"
+                y2="${yAbertura}"
+                stroke="#ffffff"
+                stroke-width="1"
+                stroke-dasharray="3 3"
+                opacity="0.45"
+            />
+        `;
+
+        // Linha de fecho
+        linhasOperacoesSVG += `
+            <line
+                x1="0"
+                y1="${yFecho}"
+                x2="${larguraGrafico}"
+                y2="${yFecho}"
+                stroke="${
+                    operacao.resultado === "WIN"
+                        ? "#00e676"
+                        : "#ff1744"
+                }"
+                stroke-width="2"
+                opacity="0.8"
+            />
+        `;
+
+    });
+
+}
+
     // ==========================================
     // ÚLTIMO PREÇO
     // ==========================================
@@ -1399,6 +1473,8 @@ const ultimoX =
             <!-- ============================= -->
             <!-- LINHA DO PREÇO - CINZA -->
             <!-- ============================= -->
+
+            ${linhasOperacoesSVG}
 
             <polyline
                 points="${pontos}"
@@ -1990,6 +2066,8 @@ let subscriptionTickId = null;
 
 let historicoOperacoes = [];
 
+let linhasOperacoesGrafico = [];
+
 // Memória para análise do mercado
 let memoriaMercado = [];
 
@@ -2231,6 +2309,8 @@ if (data.msg_type === 'proposal_open_contract' && data.proposal_open_contract) {
     // Captura o dígito real onde o contrato encerrou
     const ultimoDigitoReal =
         Number(String(contrato.exit_spot).slice(-1));
+const precoFecho =
+    Number(contrato.exit_spot);
 
     console.log("VOU CHAMAR processarResultadoOperacao");
 
@@ -2255,7 +2335,7 @@ if (data.msg_type === 'proposal_open_contract' && data.proposal_open_contract) {
 } // <--- ISSO FECHA O configurarEventosDoWS CORRETAMENTE
 
 // === PROCESSAR PLACAR E LIBERTAR O ROBÔ ===
-function processarResultadoOperacao(resultado, lucro, ultimoDigitoReal) {
+function processarResultadoOperacao(resultado, lucro, ultimoDigitoReal, precoFecho) {
 console.log("ENTREI EM processarResultadoOperacao");
 
     // CORRIGIDO: ID exato conforme o HTML do Bloco 1
@@ -2285,16 +2365,27 @@ console.log("ENTREI EM processarResultadoOperacao");
         lucroRealElem.innerText = `$ ${saldoFormatado}`;
         lucroRealElem.style.color = (lucroVirtual - perdaVirtual) >= 0 ? "#00e676" : "#ff1744";
     }
+// == MOSTRA LINHAS DE OPERAÇÕES NO GRÁFICO ==
+linhasOperacoesGrafico.push({
+    precoAbertura: Number(operacaoAtual.preco),
+    precoFecho: Number(precoFecho),
+    resultado: isWin ? "WIN" : "LOSS"
+});
+
+if (linhasOperacoesGrafico.length > 20) {
+    linhasOperacoesGrafico.shift();
+}
 
     // CORRIGIDO: Agora grava o dígito real de saída obtido da Deriv!
     historicoOperacoes.unshift({
-        tipo: operacaoAtual ? operacaoAtual.tipo : "-",
-        ultimo: ultimoDigitoReal, // Mudado aqui!
-        preco: operacaoAtual ? operacaoAtual.preco : 0,
-        resultado: isWin ? "WIN" : "LOSS",
-        lucro: Number(lucro).toFixed(2),
-        hora: new Date().toLocaleTimeString()
-    });
+    tipo: operacaoAtual ? operacaoAtual.tipo : "-",
+    ultimo: ultimoDigitoReal,
+    preco: operacaoAtual ? operacaoAtual.preco : 0,
+    precoFecho: precoFecho,
+    resultado: isWin ? "WIN" : "LOSS",
+    lucro: Number(lucro).toFixed(2),
+    hora: new Date().toLocaleTimeString()
+});
 
     if (historicoOperacoes.length > 20) {
         historicoOperacoes.pop();
