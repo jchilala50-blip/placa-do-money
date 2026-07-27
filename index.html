@@ -1127,6 +1127,14 @@ function atualizarGraficoLinhas() {
     const dados = (typeof historicoPrecos !== "undefined")
         ? historicoPrecos.slice()
         : [];
+// ==========================================
+// JANELA DESLIZANTE DO GRÁFICO
+// ==========================================
+
+const MAX_PONTOS_GRAFICO = 15;
+
+const dadosVisiveis =
+    dados.slice(-MAX_PONTOS_GRAFICO);
 
     if (dados.length === 0) {
         container.innerHTML = "";
@@ -1159,7 +1167,7 @@ function atualizarGraficoLinhas() {
     // Usa apenas os últimos preços para manter o zoom
 // focado no movimento atual do mercado
 const dadosZoom =
-    dados.slice(-8);
+    dadosVisiveis.slice(-8);
 
 let menorPreco =
     Math.min(...dadosZoom);
@@ -1191,23 +1199,23 @@ let maiorPreco =
         maiorPreco - menorPreco;
 
     // ==========================================
-// POSIÇÃO HORIZONTAL DOS TICKS
+// POSIÇÃO HORIZONTAL - JANELA DESLIZANTE
 // ==========================================
 
-// Deixa espaço à direita para o último ponto e preço
+// O último ponto fica sempre próximo do lado direito
 const espacoUltimoPonto = 35;
 
 const larguraUtilPonto =
     larguraUtil - espacoUltimoPonto;
 
 const passoXPonto =
-    dados.length > 1
-        ? larguraUtilPonto / (dados.length - 1)
+    dadosVisiveis.length > 1
+        ? larguraUtilPonto / (dadosVisiveis.length - 1)
         : 0;
 
 let pontos = "";
 
-dados.forEach((preco, indice) => {
+dadosVisiveis.forEach((preco, indice) => {
 
     const x =
         margemEsquerda +
@@ -1231,10 +1239,10 @@ dados.forEach((preco, indice) => {
     // ==========================================
 
     const ultimoIndice =
-        dados.length - 1;
+    dadosVisiveis.length - 1;
 
-    const ultimoPreco =
-        dados[ultimoIndice];
+const ultimoPreco =
+    dadosVisiveis[ultimoIndice];
 
     // Deixa espaço à direita para mostrar
 
@@ -1488,7 +1496,7 @@ const ultimoX =
                 fill="#90a4ae"
             >
                 ${precoBaixo.toFixed(1)}
-            </tex>
+            </text>
 
             <!-- NÚMEROS 0-9 E BOLINHAS -->
             ${indicadoresDigitos}
