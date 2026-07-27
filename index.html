@@ -1156,8 +1156,16 @@ function atualizarGraficoLinhas() {
     // ZOOM VERTICAL AUTOMÁTICO
     // ==========================================
 
-    let menorPreco = Math.min(...dados);
-    let maiorPreco = Math.max(...dados);
+    // Usa apenas os últimos preços para manter o zoom
+// focado no movimento atual do mercado
+const dadosZoom =
+    dados.slice(-8);
+
+let menorPreco =
+    Math.min(...dadosZoom);
+
+let maiorPreco =
+    Math.max(...dadosZoom);
 
     let variacao = maiorPreco - menorPreco;
 
@@ -1411,14 +1419,14 @@ const ultimoX =
             <!-- ============================= -->
 
             <line
-                x1="${ultimoX + 5}"
-                y1="${ultimoY}"
-                x2="${larguraGrafico - 3}"
-                y2="${ultimoY}"
-                stroke="#ffffff"
-                stroke-width="1"
-                opacity="0.9"
-            />
+             x1="${ultimoX + 5}"
+             y1="${ultimoY}"
+             x2="${Math.min(ultimoX + 22, larguraGrafico - 3)}"
+             y2="${ultimoY}"
+             stroke="#ffffff"
+             stroke-width="1"
+             opacity="0.9"
+             />
 
             <!-- ============================= -->
             <!-- PREÇO ATUAL AO LADO DO PONTO -->
