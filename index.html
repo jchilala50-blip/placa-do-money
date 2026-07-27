@@ -357,55 +357,50 @@ function fecharModalAnalise() { document.getElementById('modal-analise-mercado')
     </style>
 </head>
 <body>
-
-<!-- TELA DE BLOQUEIO DE ATUALIZAÇÃO -->
-<div id="bloqueio-atualizacao" style="
+<!-- NOVA TELA DE BLOQUEIO COM BARRA DE PROGRESSO -->
+<div id="tela-bloqueio-sistema" style="
+    display: flex;
+    flex-direction: column;
     position: fixed;
     top: 0;
     left: 0;
     width: 100vw;
     height: 100vh;
-    background-color: #0d1b2a; /* Fundo escuro a condizer com a tua plataforma */
-    z-index: 999999; /* Garante que fica por cima de absolutamente tudo */
-    display: flex;
-    flex-direction: column;
+    background-color: #060d1a;
+    color: white;
     justify-content: center;
     align-items: center;
-    gap: 20px;
-    font-family: sans-serif;
+    z-index: 200000;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    padding: 20px;
+    box-sizing: border-box;
 ">
-    <!-- Círculo a processar (Spinner Animado) -->
-    <div class="spinner-loader" style="
-        width: 50px;
-        height: 50px;
-        border: 5px solid rgba(173, 216, 230, 0.2); /* Azul claro transparente */
-        border-top: 5px solid #87cefa; /* Azul claro sólido (LightSkyBlue) */
-        border-radius: 50%;
-        animation: rodarSpinner 1s linear infinite;
-    "></div>
-
-    <!-- Texto Informativo em Azul Claro -->
+    <h2 style="margin-bottom: 5px; color: #ff1744; text-transform: uppercase; letter-spacing: 1px;">
+        A Carregar Sistema
+    </h2>
+    <p id="status-carregamento" style="font-size: 13px; color: #90a4ae; margin-bottom: 20px;">
+        A iniciar módulos de análise... 0%
+    </p>
+    
+    <!-- Contentor da Barra -->
     <div style="
-        color: #87cefa; 
-        font-size: 18px; 
-        font-weight: bold; 
-        text-align: center;
-        line-height: 1.6;
-        padding: 0 20px;
+        width: 80%;
+        max-width: 300px;
+        height: 8px;
+        background-color: #16263f;
+        border-radius: 4px;
+        overflow: hidden;
+        border: 1px solid #1a3152;
     ">
-        VERSÃO: 2.5.2 ATUALIZADA<br>
-        <span style="font-size: 15px; font-weight: normal; opacity: 0.9;">AGUARDE POR 1H PARA ABRIR A TELA</span>
+        <!-- A Barra que vai encher -->
+        <div id="barra-progresso-sistema" style="
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, #ff1744, #00b0ff);
+            transition: width 0.1s linear;
+        "></div>
     </div>
-
-    <!-- Animação CSS nativa para fazer o círculo girar -->
-    <style>
-        @keyframes rodarSpinner {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-    </style>
 </div>
-
 
 
 <div class="container tela-robo" id="box-auth">
