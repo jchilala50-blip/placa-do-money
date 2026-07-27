@@ -1253,10 +1253,7 @@ if (
         const precoFecho =
             Number(operacao.precoFecho);
 
-        // ==========================================
-        // POSIÇÃO Y DA ABERTURA
-        // ==========================================
-
+        // POSIÇÃO DA ABERTURA
         const yAbertura =
             margemY +
             alturaUtil -
@@ -1266,10 +1263,7 @@ if (
                 * alturaUtil
             );
 
-        // ==========================================
-        // POSIÇÃO Y DO FECHO
-        // ==========================================
-
+        // POSIÇÃO DO FECHO
         const yFecho =
             margemY +
             alturaUtil -
@@ -1279,10 +1273,7 @@ if (
                 * alturaUtil
             );
 
-        // ==========================================
-        // PONTO DE ABERTURA ●
-        // ==========================================
-
+        // MARCADOR DE ABERTURA ●
         linhasOperacoesSVG += `
             <circle
                 cx="${margemEsquerda + 4}"
@@ -1294,66 +1285,25 @@ if (
             />
         `;
 
-        // ==========================================
-        // LINHA DE ABERTURA
-        // ==========================================
-
-        linhasOperacoesSVG += `
-            <line
-                x1="${margemEsquerda + 8}"
-                y1="${yAbertura}"
-                x2="${larguraGrafico}"
-                y2="${yAbertura}"
-                stroke="#ffd600"
-                stroke-width="1"
-                stroke-dasharray="3 3"
-                opacity="0.55"
-            />
-        `;
-
-        // ==========================================
-        // LINHA DE FECHO
-        // ==========================================
-
-        linhasOperacoesSVG += `
-            <line
-                x1="0"
-                y1="${yFecho}"
-                x2="${larguraGrafico}"
-                y2="${yFecho}"
-                stroke="${
-                    operacao.resultado === "WIN"
-                        ? "#00e676"
-                        : "#ff1744"
-                }"
-                stroke-width="2"
-                stroke-dasharray="5 3"
-                opacity="0.9"
-            />
-        `;
-
-        // ==========================================
-        // PONTO DE FECHO
-        // ==========================================
-
+        // MARCADOR DE FECHO ●
         linhasOperacoesSVG += `
             <circle
                 cx="${larguraGrafico - 3}"
                 cy="${yFecho}"
-                r="3"
+                r="4"
                 fill="${
                     operacao.resultado === "WIN"
                         ? "#00e676"
                         : "#ff1744"
                 }"
                 stroke="#ffffff"
-                stroke-width="1"
+                stroke-width="1.5"
             />
         `;
 
     });
 
-}
+} 
 
     // ==========================================
     // ÚLTIMO PREÇO
