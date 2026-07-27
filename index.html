@@ -309,6 +309,35 @@ transform:rotate(360deg);
     box-sizing: border-box;
 ">
     <!-- Cabeçalho fixo -->
+
+<div style="
+    display:flex;
+    align-items:center;
+    gap:8px;
+">
+
+    <span
+        id="led-live-analise"
+        style="
+            width:9px;
+            height:9px;
+            border-radius:50%;
+            background:#00e676;
+            display:inline-block;
+            box-shadow:0 0 8px #00e676;
+        "
+    ></span>
+
+    <span style="
+        font-size:13px;
+        font-weight:bold;
+        color:#00a854;
+    ">
+        Live
+    </span>
+
+</div>
+
     <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e0e0e0; padding-bottom: 10px; margin-bottom: 20px;">
         <h2 style="margin: 0; color: #101f35; font-size: 22px; font-weight: bold;">ANÁLISE MERCADO</h2>
         <button onclick="fecharModalAnalise()" style="background: #ff1744; color: white; border: none; padding: 8px 16px; border-radius: 4px; font-weight: bold; cursor: pointer;">FECHAR</button>
@@ -2440,6 +2469,9 @@ window.addEventListener("load", async function () {
     ];
 
     let historicoTicks = {}; 
+let recomendacaoAnterior = {};
+let contadorEstabilidade = {};
+
     volatilidades.forEach(v => { historicoTicks[v.id] = []; });
 
     function iniciarSubscricoesAnalise() {
@@ -2453,15 +2485,39 @@ window.addEventListener("load", async function () {
         });
 
         const originalOnMessage = window.derivWS.onmessage;
-        window.derivWS.onmessage = function(event) {
-            if (originalOnMessage) originalOnMessage(event);
-            
-            const dados = JSON.parse(event.data);
-            if (dados.msg_type === 'tick' && dados.tick) {
-                processarNovoTickAnalise(dados.tick);
-            }
-        };
+
+window.derivWS.onmessage = function(event) {
+
+    if (originalOnMessage) {
+        originalOnMessage(event);
     }
+
+    let dados;
+
+    try {
+        dados = JSON.parse(event.data);
+    } catch (erro) {
+        return;
+    }
+
+    // A análise recebe TODOS os ticks
+    // independentemente da volatilidade selecionada no robô
+    if (
+        dados.msg_type === "tick" &&
+        dados.tick &&
+        historicoTicks[dados.tick.symbol]
+    ) {
+        processarNovoTickAnalise(dados.tick);
+
+        // LED LIVE
+        const led = document.getElementById("led-live-analise");
+
+        if (led) {
+            led.style.background = "#00e676";
+            led.style.boxShadow = "0 0 8px #00e676";
+        }
+    }
+};
 
     function processarNovoTickAnalise(tick) {
         const symbol = tick.symbol;
@@ -2518,19 +2574,64 @@ window.addEventListener("load", async function () {
         const pctRepeticao = ((maxRepeticoes / ticks.length) * 100).toFixed(0);
 
         // Mapeamento matemático real baseado nas tuas estratégias
-        let estrategiaSugerida = "🔵 VORTEX"; // Padrão baseado em tendência
-        
-        if (Math.abs(pctSubida - pctDescida) > 15) {
-            estrategiaSugerida = "🔵 VORTEX (Rise/Fall)";
-        } else if (parseInt(pctImpares) > 54 || parseInt(pctPares) > 54) {
-            estrategiaSugerida = "🔴 ORION (Even/Odd)";
-        } else if (parseInt(pctUnder) > 55) {
-            estrategiaSugerida = "⭕ SUPER EPIC (Digits Under)";
-        } else if (parseInt(pctOver) > 55) {
-            estrategiaSugerida = "🧿 TITAN (Digits Over)";
-        } else if (parseInt(pctRepeticao) > 16) {
-            estrategiaSugerida = "⚫ Money Phantom (Differs)";
-        }
+        if (!recomendacaoAnterior[symbol]) {
+    recomendacaoAnterior[symbol] = "⚪ A analisar...";
+    contadorEstabilidade[symbol] = 0;
+}
+       let novaEstrategia = "⚪ Mercado sem sinal claro";
+
+if (Math.abs(pctSubida - pctDescida) >= 20) {
+
+    novaEstrategia = "🔵 VORTEX (Rise/Fall)";
+
+} else if (
+    parseInt(pctImpares) >= 58 ||
+    parseInt(pctPares) >= 58
+) {
+
+    novaEstrategia = "🔴 ORION (Even/Odd)";
+
+} else if (parseInt(pctUnder) >= 58) {
+
+    novaEstrategia = "⭕ SUPER EPIC (Digits Under)";
+
+} else if (parseInt(pctOver) >= 58) {
+
+    novaEstrategia = "🧿 TITAN (Digits Over)";
+
+} else if (parseInt(pctRepeticao) >= 20) {
+
+    novaEstrategia = "⚫ Money Phantom (Differs)";
+}
+
+
+// ==========================================
+// ESTABILIZAÇÃO DA RECOMENDAÇÃO
+// ==========================================
+
+if (novaEstrategia === recomendacaoAnterior[symbol]) {
+
+    contadorEstabilidade[symbol]++;
+
+} else {
+
+    contadorEstabilidade[symbol] = 0;
+}
+
+
+// Só troca a recomendação depois de
+// vários ciclos confirmando o mesmo sinal
+
+if (contadorEstabilidade[symbol] >= 5) {
+
+    recomendacaoAnterior[symbol] = novaEstrategia;
+
+    contadorEstabilidade[symbol] = 0;
+}
+
+
+const estrategiaSugerida =
+    recomendacaoAnterior[symbol];
 
         atualizarPainelVisual(symbol, pctSubida, pctDescida, pctRepeticao, digitoMaisRepetido, pctImpares, pctPares, estrategiaSugerida);
     }
