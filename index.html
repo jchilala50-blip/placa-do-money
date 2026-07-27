@@ -1235,7 +1235,7 @@ dadosVisiveis.forEach((preco, indice) => {
 });
 
 // ==========================================
-// LINHAS DAS OPERAÇÕES
+// MARCADORES DAS OPERAÇÕES
 // ==========================================
 
 let linhasOperacoesSVG = "";
@@ -1253,7 +1253,10 @@ if (
         const precoFecho =
             Number(operacao.precoFecho);
 
-        // Converte preço de abertura para posição Y
+        // ==========================================
+        // POSIÇÃO Y DA ABERTURA
+        // ==========================================
+
         const yAbertura =
             margemY +
             alturaUtil -
@@ -1263,7 +1266,10 @@ if (
                 * alturaUtil
             );
 
-        // Converte preço de fecho para posição Y
+        // ==========================================
+        // POSIÇÃO Y DO FECHO
+        // ==========================================
+
         const yFecho =
             margemY +
             alturaUtil -
@@ -1273,21 +1279,42 @@ if (
                 * alturaUtil
             );
 
-        // Linha de abertura
+        // ==========================================
+        // PONTO DE ABERTURA ●
+        // ==========================================
+
         linhasOperacoesSVG += `
-            <line
-                x1="0"
-                y1="${yAbertura}"
-                x2="${larguraGrafico}"
-                y2="${yAbertura}"
+            <circle
+                cx="${margemEsquerda + 4}"
+                cy="${yAbertura}"
+                r="4"
+                fill="#ffd600"
                 stroke="#ffffff"
-                stroke-width="1"
-                stroke-dasharray="3 3"
-                opacity="0.45"
+                stroke-width="1.5"
             />
         `;
 
-        // Linha de fecho
+        // ==========================================
+        // LINHA DE ABERTURA
+        // ==========================================
+
+        linhasOperacoesSVG += `
+            <line
+                x1="${margemEsquerda + 8}"
+                y1="${yAbertura}"
+                x2="${larguraGrafico}"
+                y2="${yAbertura}"
+                stroke="#ffd600"
+                stroke-width="1"
+                stroke-dasharray="3 3"
+                opacity="0.55"
+            />
+        `;
+
+        // ==========================================
+        // LINHA DE FECHO
+        // ==========================================
+
         linhasOperacoesSVG += `
             <line
                 x1="0"
@@ -1300,7 +1327,27 @@ if (
                         : "#ff1744"
                 }"
                 stroke-width="2"
-                opacity="0.8"
+                stroke-dasharray="5 3"
+                opacity="0.9"
+            />
+        `;
+
+        // ==========================================
+        // PONTO DE FECHO
+        // ==========================================
+
+        linhasOperacoesSVG += `
+            <circle
+                cx="${larguraGrafico - 3}"
+                cy="${yFecho}"
+                r="3"
+                fill="${
+                    operacao.resultado === "WIN"
+                        ? "#00e676"
+                        : "#ff1744"
+                }"
+                stroke="#ffffff"
+                stroke-width="1"
             />
         `;
 
