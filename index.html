@@ -348,57 +348,10 @@ transform:rotate(360deg);
         <p style="text-align: center; color: #666;">A carregar dados em tempo real da Deriv...</p>
     </div>
 </div>
-
 <script>
 function abrirModalAnalise() { document.getElementById('modal-analise-mercado').style.display = 'block'; }
 function fecharModalAnalise() { document.getElementById('modal-analise-mercado').style.display = 'none'; }
 </script>
-
-<!-- NOVA TELA DE BLOQUEIO COM BARRA DE PROGRESSO -->
-<div id="tela-bloqueio-sistema" style="
-    display: flex;
-    flex-direction: column;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: #060d1a;
-    color: white;
-    justify-content: center;
-    align-items: center;
-    z-index: 200000;
-    font-family: 'Segoe UI', Arial, sans-serif;
-    padding: 20px;
-    box-sizing: border-box;
-">
-    <h2 style="margin-bottom: 5px; color: #ff1744; text-transform: uppercase; letter-spacing: 1px;">
-        A Carregar Sistema
-    </h2>
-    <p id="status-carregamento" style="font-size: 13px; color: #90a4ae; margin-bottom: 20px;">
-        A iniciar módulos de análise... 0%
-    </p>
-    
-    <!-- Contentor da Barra -->
-    <div style="
-        width: 80%;
-        max-width: 300px;
-        height: 8px;
-        background-color: #16263f;
-        border-radius: 4px;
-        overflow: hidden;
-        border: 1px solid #1a3152;
-    ">
-        <!-- A Barra que vai encher -->
-        <div id="barra-progresso-sistema" style="
-            width: 0%;
-            height: 100%;
-            background: linear-gradient(90deg, #ff1744, #00b0ff);
-            transition: width 0.1s linear;        "></div>
-    </div>
-</div>
-
-
 
 <div class="container tela-robo" id="box-auth">
 
