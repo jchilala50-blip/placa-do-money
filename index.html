@@ -174,7 +174,7 @@
         }
         .porcentagem-barra { font-size: 9px; color: #90a4ae; margin-bottom: 2px; }
         .corpo-barra {
-            width: 85%;
+            width: 90%;
             height: 50px;
             background-color: #ffffff;
             border-radius: 2px 2px 0 0;
@@ -205,6 +205,20 @@
             height: 260px; /* ou 300px se quiseres mais espaço */
             overflow-y: auto; 
             font-size: 12px;
+        }
+
+ /* COMPACTAÇÃO DOS CARTÕES DO HISTÓRICO (WIN / LOSS) */
+        .historico-lista > div {
+            padding: 4px 8px !important;    /* Reduz o espaço interno vertical para metade */
+            margin-bottom: 4px !important;  /* Diminui a distância entre cartões */
+            min-height: unset !important;   /* Retira qualquer altura mínima exagerada */
+            font-size: 11px !important;     /* Diminui ligeiramente a letra */
+        }
+
+        /* Se usares spans ou badges lá dentro, encolhe o texto deles também */
+        .historico-lista > div span, 
+        .historico-lista > div strong {
+            font-size: 11px !important;
         }
 
         /* Modal */
@@ -374,14 +388,14 @@ transform:rotate(360deg);
     color:#b0bec5;
     text-align:center;
 ">
-🤖 Bem-vindo à Placa do Money. Desenvolvida para automatizar estratégias de negociação em CFDs (Contratos por Diferença), oferecendo uma experiência prática, intuitiva e em constante evolução.
+🔴 VERSÃO 2.5.2
 </div>
 
 </div>
 
 <script>
 
-console.log("ESTAMOS EM MANUTENCAO VOLTE EM 25 MINUTOS");
+alert("ESTAMOS EM MANUTENCAO VOLTE EM 25 MINUTOS");
 
   window.onerror = function(msg, url, line) {
 
@@ -2560,26 +2574,25 @@ A processar...
     target="_blank"
     title="Grupo Oficial WhatsApp"
     style="
-        position:fixed;
+       position:fixed;
         bottom:20px;
         right:20px;
-        width:60px;
-        height:60px;
+        width:45px;
+        height:45px;
         border-radius:50%;
-        background:#25D366;
+        background:#00b0ff;
         color:white;
         display:flex;
         justify-content:center;
         align-items:center;
         text-decoration:none;
-        font-size:34px;
+        font-size:24px;
         box-shadow:0 4px 12px rgba(0,0,0,.4);
         z-index:9999;
     "
 >
     💬
 </a>
-
 
 </body>
 </html>
