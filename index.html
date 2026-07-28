@@ -270,6 +270,52 @@ transform:rotate(360deg);
 </head>
 <body>
 
+<!-- NOVA TELA DE BLOQUEIO COM BARRA DE PROGRESSO -->
+<div id="tela-bloqueio-sistema" style="
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: #060d1a;
+    color: white;
+    justify-content: center;
+    align-items: center;
+    z-index: 200000;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    padding: 20px;
+    box-sizing: border-box;
+">
+    <h2 style="margin-bottom: 5px; color: #ff1744; text-transform: uppercase; letter-spacing: 1px;">
+        A Carregar Sistema
+    </h2>
+    <p id="status-carregamento" style="font-size: 13px; color: #90a4ae; margin-bottom: 20px;">
+        A iniciar módulos de análise... 0%
+    </p>
+    
+    <!-- Contentor da Barra -->
+    <div style="
+        width: 80%;
+        max-width: 300px;
+        height: 8px;
+        background-color: #16263f;
+        border-radius: 4px;
+        overflow: hidden;
+        border: 1px solid #1a3152;
+    ">
+        <!-- A Barra que vai encher -->
+        <div id="barra-progresso-sistema" style="
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, #ff1744, #00b0ff);
+            transition: width 0.1s linear;
+        "></div>
+    </div>
+</div>
+
+
 <div class="container tela-robo" id="box-auth">
 
   <h2 id="titulo-tela">Entrar na Placa do Money</h2>
@@ -2357,146 +2403,6 @@ window.addEventListener("load", async function () {
             }
         };
     }
-
-// Sistema de Monitorização em Tempo Real para Análise das 10 Volatilidades
-(function() {
-    const volatilidades = [
-        { id: 'R_10', nome: 'Volatility 10 Index' },
-        { id: 'R_25', nome: 'Volatility 25 Index' },
-        { id: 'R_50', nome: 'Volatility 50 Index' },
-        { id: 'R_75', nome: 'Volatility 75 Index' },
-        { id: 'R_100', nome: 'Volatility 100 Index' },
-        { id: '1HZ10V', nome: 'Volatility 10(1s) Index' },
-        { id: '1HZ25V', nome: 'Volatility 25(1s) Index' },
-        { id: '1HZ50V', nome: 'Volatility 50(1s) Index' },
-        { id: '1HZ75V', nome: 'Volatility 75(1s) Index' },
-        { id: '1HZ100V', nome: 'Volatility 100(1s) Index' }
-    ];
-
-    // Armazena a memória dos últimos 50 ticks de cada uma para estatística matemática
-    let historicoTicks = {}; 
-    volatilidades.forEach(v => { historicoTicks[v.id] = []; });
-
-    // Função que pede subscrição contínua à Deriv para todas as volatilidades
-    function iniciarSubscricoesAnalise() {
-        if (!window.derivWS || window.derivWS.readyState !== 1) {
-            setTimeout(iniciarSubscricoesAnalise, 1000); // Tenta daqui a 1s se não estiver ligado
-            return;
-        }
-        
-        console.log("Placa do Money: Iniciando escuta das 10 Volatilidades...");
-        volatilidades.forEach(v => {
-            window.derivWS.send(JSON.stringify({ ticks: v.id }));
-        });
-
-        // Modifica o onmessage nativo de forma limpa para acumular dados
-        const originalOnMessage = window.derivWS.onmessage;
-        window.derivWS.onmessage = function(event) {
-            if (originalOnMessage) originalOnMessage(event); // Não quebra as funções atuais do site
-            
-            const dados = JSON.parse(event.data);
-            if (dados.msg_type === 'tick' && dados.tick) {
-                processarNovoTickAnalise(dados.tick);
-            }
-        };
-    }
-
-    // Processa os dados numéricos puros vindos do WebSocket
-    function processarNovoTickAnalise(tick) {
-        const symbol = tick.symbol;
-        if (!historicoTicks[symbol]) return;
-
-        // Guarda o tick e limita aos últimos 50
-        historicoTicks[symbol].push(tick);
-        if (historicoTicks[symbol].length > 50) historicoTicks[symbol].shift();
-
-        const ticks = historicoTicks[symbol];
-        if (ticks.length < 5) return; // Aguarda dados mínimos iniciais
-
-        // 1. CÁLCULO DE SUBIDA / DESCIDA (Rise / Fall)
-        let subidas = 0;
-        let descidas = 0;
-        for (let i = 1; i < ticks.length; i++) {
-            if (ticks[i].quote > ticks[i-1].quote) subidas++;
-            else if (ticks[i].quote < ticks[i-1].quote) descidas++;
-        }
-        const totalVariacoes = subidas + descidas || 1;
-        const pctSubida = ((subidas / totalVariacoes) * 100).toFixed(0);
-        const pctDescida = ((descidas / totalVariacoes) * 100).toFixed(0);
-
-        // 2. CÁLCULO DE DÍGITOS (Pares, Ímpares e Repetições)
-        let pares = 0, impares = 0;
-        let contagemDigitos = Array(10).fill(0);
-
-        ticks.forEach(t => {
-            const precoStr = t.quote.toFixed(t.pip_size);
-            const ultimoDigito = parseInt(precoStr.slice(-1));
-            if (!isNaN(ultimoDigito)) {
-                contagemDigitos[ultimoDigito]++;
-                if (ultimoDigito % 2 === 0) pares++; else impares++;
-            }
-        });
-
-        const pctPares = ((pares / ticks.length) * 100).toFixed(0);
-        const pctImpares = ((impares / ticks.length) * 100).toFixed(0);
-
-        // Verifica o dígito mais repetido (frequência)
-        const maxRepeticoes = Math.max(...contagemDigitos);
-        const digitoMaisRepetido = contagemDigitos.indexOf(maxRepeticoes);
-        const pctRepeticao = ((maxRepeticoes / ticks.length) * 100).toFixed(0);
-
-        // 3. INTELIGÊNCIA ARTIFICIAL: ESCOLHA DA ESTRATÉGIA COM BASE EM DADOS REAIS
-        let estrategiaSugerida = "Money Phantom"; // Padrão
-        if (parseInt(pctImpares) > 55 || parseInt(pctPares) > 55) {
-            estrategiaSugerida = "SUPER EPIC"; // Bom para Even/Odd
-        } else if (parseInt(pctRepeticao) > 18) {
-            estrategiaSugerida = "BARBARIAN DIFFERS"; // Frequência de dígito alta favorece Differs
-        } else if (Math.abs(pctSubida - pctDescida) > 20) {
-            estrategiaSugerida = "TREND VIP (Rise/Fall)"; // Forte tendência de subida/descida
-        }
-
-        atualizarPainelVisual(symbol, pctSubida, pctDescida, pctRepeticao, digitoMaisRepetido, pctImpares, pctPares, estrategiaSugerida);
-    }
-
-    // Desenha as estatísticas no ecrã em tempo real
-    function atualizarPainelVisual(symbol, subida, descida, pctRep, digitoRep, impares, pares, estrategia) {
-        const vInfo = volatilidades.find(v => v.id === symbol);
-        if (!vInfo) return;
-
-        let elemento = document.getElementById(`analise-${symbol}`);
-        const conteudoHtml = `
-            <div style="font-weight: bold; font-size: 16px; margin-bottom: 5px; color: #101f35;">${vInfo.nome}</div>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 14px; color: #444;">
-                <div>Subida: <span style="color: green; font-weight: bold;">+ ${subida}%</span></div>
-                <div>Dig. Repetições (Dígito ${digitoRep}): <span style="color: #00b0ff; font-weight: bold;">${pctRep}%</span></div>
-                <div>Descida: <span style="color: red; font-weight: bold;">- ${descida}%</span></div>
-                <div>Digt. Ímpares: <span style="font-weight: bold;">${impares}%</span></div>
-                <div></div>
-                <div>Digt. Pares: <span style="font-weight: bold;">${pares}%</span></div>
-            </div>
-            <div style="margin-top: 8px; font-weight: bold; color: #ff6d00;">
-                Recomendado usar a estratégia: <span style="background: #fff3e0; padding: 2px 6px; border-radius: 4px;">${estrategia}</span>
-            </div>
-        `;
-
-        if (!elemento) {
-            const containerGeral = document.getElementById('conteudo-analise-volatilidades');
-            if (containerGeral && containerGeral.innerHTML.includes("A carregar")) {
-                containerGeral.innerHTML = ""; // Limpa o placeholder inicial
-            }
-            elemento = document.createElement('div');
-            elemento.id = `analise-${symbol}`;
-            elemento.style.cssText = "background: #f5f7fa; border-left: 5px solid #101f35; padding: 12px; border-radius: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);";
-            containerGeral.appendChild(elemento);
-        }
-
-        elemento.innerHTML = conteudoHtml;
-    }
-
-    // Inicia o processo automático
-    setTimeout(iniciarSubscricoesAnalise, 2000);
-})();
-
 
 
 </script>
