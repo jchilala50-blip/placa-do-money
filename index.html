@@ -43,7 +43,6 @@
             margin-bottom: 15px;
             position: relative;
         }
-
         .btn-info-youtube {
             background-color: #101f35;
             border: 1px solid #1a3152;
@@ -208,20 +207,6 @@
             font-size: 12px;
         }
 
-/* COMPACTAÇÃO DOS CARTÕES DO HISTÓRICO (WIN / LOSS) */
-        .historico-lista > div {
-            padding: 4px 8px !important;    /* Reduz o espaço interno vertical para metade */
-            margin-bottom: 4px !important;  /* Diminui a distância entre cartões */
-            min-height: unset !important;   /* Retira qualquer altura mínima exagerada */
-            font-size: 11px !important;     /* Diminui ligeiramente a letra */
-        }
-
-        /* Se usares spans ou badges lá dentro, encolhe o texto deles também */
-        .historico-lista > div span, 
-        .historico-lista > div strong {
-            font-size: 11px !important;
-        }
-
         /* Modal */
 .tela-robo {
     background:
@@ -269,76 +254,6 @@ transform:rotate(360deg);
     </style>
 </head>
 <body>
-
-<!-- TELA DE BLOQUEIO COM INPUT DE SENHA VISÍVEL -->
-<div id="tela-bloqueio-manutencao" style="
-    position: fixed; 
-    top: 0; 
-    left: 0; 
-    width: 100vw; 
-    height: 100vh; 
-    background: #0d1624; 
-    color: white; 
-    display: flex; 
-    flex-direction: column; 
-    justify-content: center; 
-    align-items: center; 
-    z-index: 999999; 
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    padding: 20px;
-    box-sizing: border-box;
-">
-    <!-- Título -->
-    <h1 style="font-size: 20px; font-weight: bold; letter-spacing: 1px; color: #fff; margin-bottom: 20px; text-transform: uppercase; text-align: center;">
-        DISPONÍVEL DENTRO DE 1:45 MINUTOS
-    </h1>
-
-    <!-- Barra de Progresso a 70% -->
-    <div style="width: 100%; max-width: 320px; background: rgba(255, 255, 255, 0.1); height: 12px; border-radius: 10px; overflow: hidden; box-shadow: inset 0 1px 3px rgba(0,0,0,0.5); margin-bottom: 8px;">
-        <div style="width: 70%; background: linear-gradient(90deg, #00b0ff, #00e5ff); height: 100%; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 176, 255, 0.7);"></div>
-    </div>
-    
-    <p style="color: #708090; font-size: 12px; margin-bottom: 30px;">A carregar módulos de estabilidade (70%)</p>
-
-    <!-- CAMPO DE SENHA E BOTÃO VISÍVEIS -->
-    <div style="display: flex; flex-direction: column; align-items: center; gap: 10px; width: 100%; max-width: 260px;">
-        <input type="password" id="input-senha-adm" placeholder="Senha de Acesso" style="
-            width: 100%;
-            padding: 10px 14px;
-            background: rgba(255, 255, 255, 0.07);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 6px;
-            color: white;
-            font-size: 14px;
-            outline: none;
-            box-sizing: border-box;
-            text-align: center;
-        ">
-        <button onclick="
-            let senhaDigitada = document.getElementById('input-senha-adm').value;
-            if (senhaDigitada === 'adm123') {
-                document.getElementById('tela-bloqueio-manutencao').style.display = 'none';
-            } else {
-                alert('Senha incorreta!');
-            }
-        " style="
-            width: 100%;
-            padding: 10px;
-            background: #00b0ff;
-            color: #0d1624;
-            border: none;
-            border-radius: 6px;
-            font-weight: bold;
-            font-size: 14px;
-            cursor: pointer;
-            transition: background 0.2s;
-        " onmouseover="this.style.background='#00e5ff'" onmouseout="this.style.background='#00b0ff'">
-            Entrar como Administrador
-        </button>
-    </div>
-</div>
-
-
 
 <div class="container tela-robo" id="box-auth">
 
@@ -390,14 +305,14 @@ transform:rotate(360deg);
     color:#b0bec5;
     text-align:center;
 ">
-🔴 VERSÃO:2.6
+🤖 Bem-vindo à Placa do Money. Desenvolvida para automatizar estratégias de negociação em CFDs (Contratos por Diferença), oferecendo uma experiência prática, intuitiva e em constante evolução.
 </div>
 
 </div>
 
 <script>
 
-alert("CARREGANDO ATUALIZAÇÕES");
+console.log("ESTAMOS EM MANUTENCAO VOLTE EM 25 MINUTOS");
 
   window.onerror = function(msg, url, line) {
 
@@ -572,7 +487,6 @@ container.classList.remove('tela-robo');
                 <a href="https://youtube.com/@derivtutorialnegociacao?si=QN2oZ2GlnTZa6Unn" target="_blank" class="btn-info-youtube">ℹ</a>
                 <div class="texto-logo">
                     <h3>PLACA DO MONEY 🇧🇫🇲🇿🇺🇸🇧🇷🇦🇴</h3>
-</div>
                     <div style="font-size:9px; color:#00e676; font-weight:bold;">OPERAÇÕES AUTOMATIZADAS</div>
                 </div>
             </div>
@@ -2385,50 +2299,6 @@ window.addEventListener("load", async function () {
 
 });
 
-// Sistema de Monitorização em Tempo Real para Análise das 10 Volatilidades
-(function() {
-    const volatilidades = [
-        { id: 'R_10', nome: 'Volatility 10 Index' },
-        { id: 'R_25', nome: 'Volatility 25 Index' },
-        { id: 'R_50', nome: 'Volatility 50 Index' },
-        { id: 'R_75', nome: 'Volatility 75 Index' },
-        { id: 'R_100', nome: 'Volatility 100 Index' },
-        { id: '1HZ10V', nome: 'Volatility 10(1s) Index' },
-        { id: '1HZ25V', nome: 'Volatility 25(1s) Index' },
-        { id: '1HZ50V', nome: 'Volatility 50(1s) Index' },
-        { id: '1HZ75V', nome: 'Volatility 75(1s) Index' },
-        { id: '1HZ100V', nome: 'Volatility 100(1s) Index' }
-    ];
-
-    // Armazena a memória dos últimos 50 ticks de cada uma para estatística matemática
-    let historicoTicks = {}; 
-    volatilidades.forEach(v => { historicoTicks[v.id] = []; });
-
-    // Função que pede subscrição contínua à Deriv para todas as volatilidades
-    function iniciarSubscricoesAnalise() {
-        if (!window.derivWS || window.derivWS.readyState !== 1) {
-            setTimeout(iniciarSubscricoesAnalise, 1000); // Tenta daqui a 1s se não estiver ligado
-            return;
-        }
-        
-        console.log("Placa do Money: Iniciando escuta das 10 Volatilidades...");
-        volatilidades.forEach(v => {
-            window.derivWS.send(JSON.stringify({ ticks: v.id }));
-        });
-
-        // Modifica o onmessage nativo de forma limpa para acumular dados
-        const originalOnMessage = window.derivWS.onmessage;
-        window.derivWS.onmessage = function(event) {
-            if (originalOnMessage) originalOnMessage(event); // Não quebra as funções atuais do site
-            
-            const dados = JSON.parse(event.data);
-            if (dados.msg_type === 'tick' && dados.tick) {
-                processarNovoTickAnalise(dados.tick);
-            }
-        };
-    }
-
-
 </script>
 
 <div id="lista-robos" style="
@@ -2621,42 +2491,24 @@ A processar...
     target="_blank"
     title="Grupo Oficial WhatsApp"
     style="
-          position:fixed;
-
-    bottom:20px;
-
-    right:20px;
-
-    width:60px;
-
-    height:60px;
-
-    border-radius:50%;
-
-    background:#25D366;
-
-    color:white;
-
-    display:flex;
-
-    justify-content:center;
-
-    align-items:center;
-
-    text-decoration:none;
-
-    font-size:34px;
-
-    box-shadow:0 4px 12px rgba(0,0,0,.4);
-
-    z-index:9999;
-
-  "
-
+        position:fixed;
+        bottom:20px;
+        right:20px;
+        width:60px;
+        height:60px;
+        border-radius:50%;
+        background:#25D366;
+        color:white;
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        text-decoration:none;
+        font-size:34px;
+        box-shadow:0 4px 12px rgba(0,0,0,.4);
+        z-index:9999;
+    "
 >
-
-  💬
-
+    💬
 </a>
 
 
