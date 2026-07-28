@@ -393,7 +393,7 @@ function abrirModalAnalise() { document.getElementById('modal-analise-mercado').
 function fecharModalAnalise() { document.getElementById('modal-analise-mercado').style.display = 'none'; }
 </script>
 
-<!-- MODAL TERMINA AQUI -->
+
 
 <div class="container tela-robo" id="box-auth">
 
@@ -2499,22 +2499,26 @@ window.addEventListener("load", async function () {
         { id: '1HZ100V', nome: 'Volatility 100(1s) Index' }
     ];
 
+    // Armazena a memória dos últimos 50 ticks de cada uma para estatística matemática
     let historicoTicks = {}; 
     volatilidades.forEach(v => { historicoTicks[v.id] = []; });
 
+    // Função que pede subscrição contínua à Deriv para todas as volatilidades
     function iniciarSubscricoesAnalise() {
         if (!window.derivWS || window.derivWS.readyState !== 1) {
-            setTimeout(iniciarSubscricoesAnalise, 1000);
+            setTimeout(iniciarSubscricoesAnalise, 1000); // Tenta daqui a 1s se não estiver ligado
             return;
         }
         
+        console.log("Placa do Money: Iniciando escuta das 10 Volatilidades...");
         volatilidades.forEach(v => {
             window.derivWS.send(JSON.stringify({ ticks: v.id }));
         });
 
+        // Modifica o onmessage nativo de forma limpa para acumular dados
         const originalOnMessage = window.derivWS.onmessage;
         window.derivWS.onmessage = function(event) {
-            if (originalOnMessage) originalOnMessage(event);
+            if (originalOnMessage) originalOnMessage(event); // Não quebra as funções atuais do site
             
             const dados = JSON.parse(event.data);
             if (dados.msg_type === 'tick' && dados.tick) {
@@ -2523,17 +2527,19 @@ window.addEventListener("load", async function () {
         };
     }
 
+    // Processa os dados numéricos puros vindos do WebSocket
     function processarNovoTickAnalise(tick) {
         const symbol = tick.symbol;
         if (!historicoTicks[symbol]) return;
 
+        // Guarda o tick e limita aos últimos 50
         historicoTicks[symbol].push(tick);
         if (historicoTicks[symbol].length > 50) historicoTicks[symbol].shift();
 
         const ticks = historicoTicks[symbol];
-        if (ticks.length < 5) return; 
+        if (ticks.length < 5) return; // Aguarda dados mínimos iniciais
 
-        // 1. CÁLCULO DE SUBIDA / DESCIDA (VORTEX - Rise/Fall)
+        // 1. CÁLCULO DE SUBIDA / DESCIDA (Rise / Fall)
         let subidas = 0;
         let descidas = 0;
         for (let i = 1; i < ticks.length; i++) {
@@ -2544,7 +2550,7 @@ window.addEventListener("load", async function () {
         const pctSubida = ((subidas / totalVariacoes) * 100).toFixed(0);
         const pctDescida = ((descidas / totalVariacoes) * 100).toFixed(0);
 
-        // 2. CÁLCULO DE DÍGITOS (ORION - Even/Odd)
+        // 2. CÁLCULO DE DÍGITOS (Pares, Ímpares e Repetições)
         let pares = 0, impares = 0;
         let contagemDigitos = Array(10).fill(0);
 
@@ -2560,49 +2566,33 @@ window.addEventListener("load", async function () {
         const pctPares = ((pares / ticks.length) * 100).toFixed(0);
         const pctImpares = ((impares / ticks.length) * 100).toFixed(0);
 
-        // 3. CÁLCULO DE OVER / UNDER (SUPER EPIC & TITAN)
-        let contagemUnder = 0; // Dígitos de 0 a 4
-        let contagemOver = 0;  // Dígitos de 5 a 9
-        
-        contagemDigitos.forEach((qtd, digito) => {
-            if (digito <= 4) contagemUnder += qtd;
-            else contagemOver += qtd;
-        });
-        
-        const pctUnder = ((contagemUnder / ticks.length) * 100).toFixed(0);
-        const pctOver = ((contagemOver / ticks.length) * 100).toFixed(0);
-
-        // Frequência do dígito mais repetido (Money Phantom - Differs)
+        // Verifica o dígito mais repetido (frequência)
         const maxRepeticoes = Math.max(...contagemDigitos);
         const digitoMaisRepetido = contagemDigitos.indexOf(maxRepeticoes);
         const pctRepeticao = ((maxRepeticoes / ticks.length) * 100).toFixed(0);
 
-        // Mapeamento matemático real baseado nas tuas estratégias
-        let estrategiaSugerida = "🔵 VORTEX"; // Padrão baseado em tendência
-        
-        if (Math.abs(pctSubida - pctDescida) > 15) {
-            estrategiaSugerida = "🔵 VORTEX (Rise/Fall)";
-        } else if (parseInt(pctImpares) > 54 || parseInt(pctPares) > 54) {
-            estrategiaSugerida = "🔴 ORION (Even/Odd)";
-        } else if (parseInt(pctUnder) > 55) {
-            estrategiaSugerida = "⭕ SUPER EPIC (Digits Under)";
-        } else if (parseInt(pctOver) > 55) {
-            estrategiaSugerida = "🧿 TITAN (Digits Over)";
-        } else if (parseInt(pctRepeticao) > 16) {
-            estrategiaSugerida = "⚫ Money Phantom (Differs)";
+        // 3. INTELIGÊNCIA ARTIFICIAL: ESCOLHA DA ESTRATÉGIA COM BASE EM DADOS REAIS
+        let estrategiaSugerida = "Money Phantom"; // Padrão
+        if (parseInt(pctImpares) > 55 || parseInt(pctPares) > 55) {
+            estrategiaSugerida = "SUPER EPIC"; // Bom para Even/Odd
+        } else if (parseInt(pctRepeticao) > 18) {
+            estrategiaSugerida = "BARBARIAN DIFFERS"; // Frequência de dígito alta favorece Differs
+        } else if (Math.abs(pctSubida - pctDescida) > 20) {
+            estrategiaSugerida = "TREND VIP (Rise/Fall)"; // Forte tendência de subida/descida
         }
 
         atualizarPainelVisual(symbol, pctSubida, pctDescida, pctRepeticao, digitoMaisRepetido, pctImpares, pctPares, estrategiaSugerida);
     }
 
+    // Desenha as estatísticas no ecrã em tempo real
     function atualizarPainelVisual(symbol, subida, descida, pctRep, digitoRep, impares, pares, estrategia) {
         const vInfo = volatilidades.find(v => v.id === symbol);
         if (!vInfo) return;
 
         let elemento = document.getElementById(`analise-${symbol}`);
         const conteudoHtml = `
-            <div style="font-weight: bold; font-size: 15px; margin-bottom: 5px; color: #101f35;">${vInfo.nome}</div>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 13px; color: #444;">
+            <div style="font-weight: bold; font-size: 16px; margin-bottom: 5px; color: #101f35;">${vInfo.nome}</div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 14px; color: #444;">
                 <div>Subida: <span style="color: green; font-weight: bold;">+ ${subida}%</span></div>
                 <div>Dig. Repetições (Dígito ${digitoRep}): <span style="color: #00b0ff; font-weight: bold;">${pctRep}%</span></div>
                 <div>Descida: <span style="color: red; font-weight: bold;">- ${descida}%</span></div>
@@ -2610,15 +2600,15 @@ window.addEventListener("load", async function () {
                 <div></div>
                 <div>Digt. Pares: <span style="font-weight: bold;">${pares}%</span></div>
             </div>
-            <div style="margin-top: 8px; font-weight: bold; color: #e65100; font-size: 13px;">
-                Recomendado usar a estratégia: <span style="background: #fff3e0; padding: 3px 6px; border-radius: 4px; display: inline-block;">${estrategia}</span>
+            <div style="margin-top: 8px; font-weight: bold; color: #ff6d00;">
+                Recomendado usar a estratégia: <span style="background: #fff3e0; padding: 2px 6px; border-radius: 4px;">${estrategia}</span>
             </div>
         `;
 
         if (!elemento) {
             const containerGeral = document.getElementById('conteudo-analise-volatilidades');
             if (containerGeral && containerGeral.innerHTML.includes("A carregar")) {
-                containerGeral.innerHTML = "";
+                containerGeral.innerHTML = ""; // Limpa o placeholder inicial
             }
             elemento = document.createElement('div');
             elemento.id = `analise-${symbol}`;
@@ -2629,8 +2619,10 @@ window.addEventListener("load", async function () {
         elemento.innerHTML = conteudoHtml;
     }
 
+    // Inicia o processo automático
     setTimeout(iniciarSubscricoesAnalise, 2000);
 })();
+
 
 
 </script>
