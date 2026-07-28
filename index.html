@@ -207,6 +207,20 @@
             font-size: 12px;
         }
 
+/* COMPACTAÇÃO DOS CARTÕES DO HISTÓRICO (WIN / LOSS) */
+        .historico-lista > div {
+            padding: 4px 8px !important;    /* Reduz o espaço interno vertical para metade */
+            margin-bottom: 4px !important;  /* Diminui a distância entre cartões */
+            min-height: unset !important;   /* Retira qualquer altura mínima exagerada */
+            font-size: 11px !important;     /* Diminui ligeiramente a letra */
+        }
+
+        /* Se usares spans ou badges lá dentro, encolhe o texto deles também */
+        .historico-lista > div span, 
+        .historico-lista > div strong {
+            font-size: 11px !important;
+        }
+
         /* Modal */
 .tela-robo {
     background:
