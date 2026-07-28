@@ -270,50 +270,74 @@ transform:rotate(360deg);
 </head>
 <body>
 
-<!-- NOVA TELA DE BLOQUEIO COM BARRA DE PROGRESSO -->
-<div id="tela-bloqueio-sistema" style="
-    display: flex;
-    flex-direction: column;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: #060d1a;
-    color: white;
-    justify-content: center;
-    align-items: center;
-    z-index: 200000;
-    font-family: 'Segoe UI', Arial, sans-serif;
+<!-- TELA DE BLOQUEIO COM INPUT DE SENHA VISÍVEL -->
+<div id="tela-bloqueio-manutencao" style="
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    width: 100vw; 
+    height: 100vh; 
+    background: #0d1624; 
+    color: white; 
+    display: flex; 
+    flex-direction: column; 
+    justify-content: center; 
+    align-items: center; 
+    z-index: 999999; 
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     padding: 20px;
     box-sizing: border-box;
 ">
-    <h2 style="margin-bottom: 5px; color: #ff1744; text-transform: uppercase; letter-spacing: 1px;">
-        A Carregar Sistema
-    </h2>
-    <p id="status-carregamento" style="font-size: 13px; color: #90a4ae; margin-bottom: 20px;">
-        A iniciar módulos de análise... 0%
-    </p>
+    <!-- Título -->
+    <h1 style="font-size: 20px; font-weight: bold; letter-spacing: 1px; color: #fff; margin-bottom: 20px; text-transform: uppercase; text-align: center;">
+        DISPONÍVEL DENTRO DE 1:45 MINUTOS
+    </h1>
+
+    <!-- Barra de Progresso a 70% -->
+    <div style="width: 100%; max-width: 320px; background: rgba(255, 255, 255, 0.1); height: 12px; border-radius: 10px; overflow: hidden; box-shadow: inset 0 1px 3px rgba(0,0,0,0.5); margin-bottom: 8px;">
+        <div style="width: 70%; background: linear-gradient(90deg, #00b0ff, #00e5ff); height: 100%; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 176, 255, 0.7);"></div>
+    </div>
     
-    <!-- Contentor da Barra -->
-    <div style="
-        width: 80%;
-        max-width: 300px;
-        height: 8px;
-        background-color: #16263f;
-        border-radius: 4px;
-        overflow: hidden;
-        border: 1px solid #1a3152;
-    ">
-        <!-- A Barra que vai encher -->
-        <div id="barra-progresso-sistema" style="
-            width: 0%;
-            height: 100%;
-            background: linear-gradient(90deg, #ff1744, #00b0ff);
-            transition: width 0.1s linear;
-        "></div>
+    <p style="color: #708090; font-size: 12px; margin-bottom: 30px;">A carregar módulos de estabilidade (70%)</p>
+
+    <!-- CAMPO DE SENHA E BOTÃO VISÍVEIS -->
+    <div style="display: flex; flex-direction: column; align-items: center; gap: 10px; width: 100%; max-width: 260px;">
+        <input type="password" id="input-senha-adm" placeholder="Senha de Acesso" style="
+            width: 100%;
+            padding: 10px 14px;
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
+            color: white;
+            font-size: 14px;
+            outline: none;
+            box-sizing: border-box;
+            text-align: center;
+        ">
+        <button onclick="
+            let senhaDigitada = document.getElementById('input-senha-adm').value;
+            if (senhaDigitada === 'adm123') {
+                document.getElementById('tela-bloqueio-manutencao').style.display = 'none';
+            } else {
+                alert('Senha incorreta!');
+            }
+        " style="
+            width: 100%;
+            padding: 10px;
+            background: #00b0ff;
+            color: #0d1624;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background 0.2s;
+        " onmouseover="this.style.background='#00e5ff'" onmouseout="this.style.background='#00b0ff'">
+            Entrar como Administrador
+        </button>
     </div>
 </div>
+
 
 
 <div class="container tela-robo" id="box-auth">
@@ -2597,24 +2621,42 @@ A processar...
     target="_blank"
     title="Grupo Oficial WhatsApp"
     style="
-       position:fixed;
-        bottom:20px;
-        right:20px;
-        width:45px;
-        height:45px;
-        border-radius:50%;
-        background:#00b0ff;
-        color:white;
-        display:flex;
-        justify-content:center;
-        align-items:center;
-        text-decoration:none;
-        font-size:24px;
-        box-shadow:0 4px 12px rgba(0,0,0,.4);
-        z-index:9999;
-    "
+          position:fixed;
+
+    bottom:20px;
+
+    right:20px;
+
+    width:60px;
+
+    height:60px;
+
+    border-radius:50%;
+
+    background:#25D366;
+
+    color:white;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    text-decoration:none;
+
+    font-size:34px;
+
+    box-shadow:0 4px 12px rgba(0,0,0,.4);
+
+    z-index:9999;
+
+  "
+
 >
-    💬
+
+  💬
+
 </a>
 
 
