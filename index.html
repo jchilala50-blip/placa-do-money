@@ -360,41 +360,6 @@ transform:rotate(360deg);
 </div>
 
 
-<!-- MODAL BRANCO: ANÁLISES MERCADO -->
-<div id="modal-analise-mercado" style="
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: white;
-    color: #101f35;
-    z-index: 100000;
-    overflow-y: auto;
-    font-family: sans-serif;
-    padding: 20px;
-    box-sizing: border-box;
-">
-    <!-- Cabeçalho fixo -->
-    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e0e0e0; padding-bottom: 10px; margin-bottom: 20px;">
-        <h2 style="margin: 0; color: #101f35; font-size: 22px; font-weight: bold;">ANÁLISE MERCADO</h2>
-        <button onclick="fecharModalAnalise()" style="background: #ff1744; color: white; border: none; padding: 8px 16px; border-radius: 4px; font-weight: bold; cursor: pointer;">FECHAR</button>
-    </div>
-
-    <!-- Container onde as 10 volatilidades serão injetadas em tempo real -->
-    <div id="conteudo-analise-volatilidades" style="display: flex; flex-direction: column; gap: 20px;">
-        <p style="text-align: center; color: #666;">A carregar dados em tempo real da Deriv...</p>
-    </div>
-</div>
-
-<script>
-function abrirModalAnalise() { document.getElementById('modal-analise-mercado').style.display = 'block'; }
-function fecharModalAnalise() { document.getElementById('modal-analise-mercado').style.display = 'none'; }
-</script>
-
-
-
 <div class="container tela-robo" id="box-auth">
 
   <h2 id="titulo-tela">Entrar na Placa do Money</h2>
