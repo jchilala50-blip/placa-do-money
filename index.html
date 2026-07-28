@@ -43,6 +43,28 @@
             margin-bottom: 15px;
             position: relative;
         }
+
+   .btn-analise-mercado {
+    background-color: #ff1744;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    font-size: 16px;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    
+    /* CORREÇÃO DO POSICIONAMENTO PARA A DIREITA */
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+   }
+
         .btn-info-youtube {
             background-color: #101f35;
             border: 1px solid #1a3152;
@@ -338,7 +360,40 @@ transform:rotate(360deg);
 </div>
 
 
+<!-- MODAL BRANCO: ANÁLISES MERCADO -->
+<div id="modal-analise-mercado" style="
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: white;
+    color: #101f35;
+    z-index: 100000;
+    overflow-y: auto;
+    font-family: sans-serif;
+    padding: 20px;
+    box-sizing: border-box;
+">
+    <!-- Cabeçalho fixo -->
+    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e0e0e0; padding-bottom: 10px; margin-bottom: 20px;">
+        <h2 style="margin: 0; color: #101f35; font-size: 22px; font-weight: bold;">ANÁLISE MERCADO</h2>
+        <button onclick="fecharModalAnalise()" style="background: #ff1744; color: white; border: none; padding: 8px 16px; border-radius: 4px; font-weight: bold; cursor: pointer;">FECHAR</button>
+    </div>
 
+    <!-- Container onde as 10 volatilidades serão injetadas em tempo real -->
+    <div id="conteudo-analise-volatilidades" style="display: flex; flex-direction: column; gap: 20px;">
+        <p style="text-align: center; color: #666;">A carregar dados em tempo real da Deriv...</p>
+    </div>
+</div>
+
+<script>
+function abrirModalAnalise() { document.getElementById('modal-analise-mercado').style.display = 'block'; }
+function fecharModalAnalise() { document.getElementById('modal-analise-mercado').style.display = 'none'; }
+</script>
+
+<!-- MODAL TERMINA AQUI -->
 
 <div class="container tela-robo" id="box-auth">
 
@@ -390,14 +445,14 @@ transform:rotate(360deg);
     color:#b0bec5;
     text-align:center;
 ">
-🤖 Bem-vindo à Placa do Money. Desenvolvida para automatizar estratégias de negociação em CFDs (Contratos por Diferença), oferecendo uma experiência prática, intuitiva e em constante evolução.
+🔴 VERSÃO:2.6
 </div>
 
 </div>
 
 <script>
 
-console.log("ESTAMOS EM MANUTENCAO VOLTE EM 25 MINUTOS");
+alert("CARREGANDO ATUALIZAÇÕES");
 
   window.onerror = function(msg, url, line) {
 
@@ -572,6 +627,8 @@ container.classList.remove('tela-robo');
                 <a href="https://youtube.com/@derivtutorialnegociacao?si=QN2oZ2GlnTZa6Unn" target="_blank" class="btn-info-youtube">ℹ</a>
                 <div class="texto-logo">
                     <h3>PLACA DO MONEY 🇧🇫🇲🇿🇺🇸🇧🇷🇦🇴</h3>
+<button onclick="abrirModalAnalise()" class="btn-analise-mercado">🔄</button>
+</div>
                     <div style="font-size:9px; color:#00e676; font-weight:bold;">OPERAÇÕES AUTOMATIZADAS</div>
                 </div>
             </div>
@@ -2384,6 +2441,198 @@ window.addEventListener("load", async function () {
 
 });
 
+// Sistema de Monitorização em Tempo Real para Análise das 10 Volatilidades
+(function() {
+    const volatilidades = [
+        { id: 'R_10', nome: 'Volatility 10 Index' },
+        { id: 'R_25', nome: 'Volatility 25 Index' },
+        { id: 'R_50', nome: 'Volatility 50 Index' },
+        { id: 'R_75', nome: 'Volatility 75 Index' },
+        { id: 'R_100', nome: 'Volatility 100 Index' },
+        { id: '1HZ10V', nome: 'Volatility 10(1s) Index' },
+        { id: '1HZ25V', nome: 'Volatility 25(1s) Index' },
+        { id: '1HZ50V', nome: 'Volatility 50(1s) Index' },
+        { id: '1HZ75V', nome: 'Volatility 75(1s) Index' },
+        { id: '1HZ100V', nome: 'Volatility 100(1s) Index' }
+    ];
+
+    // Armazena a memória dos últimos 50 ticks de cada uma para estatística matemática
+    let historicoTicks = {}; 
+    volatilidades.forEach(v => { historicoTicks[v.id] = []; });
+
+    // Função que pede subscrição contínua à Deriv para todas as volatilidades
+    function iniciarSubscricoesAnalise() {
+        if (!window.derivWS || window.derivWS.readyState !== 1) {
+            setTimeout(iniciarSubscricoesAnalise, 1000); // Tenta daqui a 1s se não estiver ligado
+            return;
+        }
+        
+        console.log("Placa do Money: Iniciando escuta das 10 Volatilidades...");
+        volatilidades.forEach(v => {
+            window.derivWS.send(JSON.stringify({ ticks: v.id }));
+        });
+
+        // Modifica o onmessage nativo de forma limpa para acumular dados
+        const originalOnMessage = window.derivWS.onmessage;
+        window.derivWS.onmessage = function(event) {
+            if (originalOnMessage) originalOnMessage(event); // Não quebra as funções atuais do site
+            
+            const dados = JSON.parse(event.data);
+            if (dados.msg_type === 'tick' && dados.tick) {
+                processarNovoTickAnalise(dados.tick);
+            }
+        };
+    }
+
+// Sistema de Monitorização em Tempo Real para Análise das 10 Volatilidades
+(function() {
+    const volatilidades = [
+        { id: 'R_10', nome: 'Volatility 10 Index' },
+        { id: 'R_25', nome: 'Volatility 25 Index' },
+        { id: 'R_50', nome: 'Volatility 50 Index' },
+        { id: 'R_75', nome: 'Volatility 75 Index' },
+        { id: 'R_100', nome: 'Volatility 100 Index' },
+        { id: '1HZ10V', nome: 'Volatility 10(1s) Index' },
+        { id: '1HZ25V', nome: 'Volatility 25(1s) Index' },
+        { id: '1HZ50V', nome: 'Volatility 50(1s) Index' },
+        { id: '1HZ75V', nome: 'Volatility 75(1s) Index' },
+        { id: '1HZ100V', nome: 'Volatility 100(1s) Index' }
+    ];
+
+    let historicoTicks = {}; 
+    volatilidades.forEach(v => { historicoTicks[v.id] = []; });
+
+    function iniciarSubscricoesAnalise() {
+        if (!window.derivWS || window.derivWS.readyState !== 1) {
+            setTimeout(iniciarSubscricoesAnalise, 1000);
+            return;
+        }
+        
+        volatilidades.forEach(v => {
+            window.derivWS.send(JSON.stringify({ ticks: v.id }));
+        });
+
+        const originalOnMessage = window.derivWS.onmessage;
+        window.derivWS.onmessage = function(event) {
+            if (originalOnMessage) originalOnMessage(event);
+            
+            const dados = JSON.parse(event.data);
+            if (dados.msg_type === 'tick' && dados.tick) {
+                processarNovoTickAnalise(dados.tick);
+            }
+        };
+    }
+
+    function processarNovoTickAnalise(tick) {
+        const symbol = tick.symbol;
+        if (!historicoTicks[symbol]) return;
+
+        historicoTicks[symbol].push(tick);
+        if (historicoTicks[symbol].length > 50) historicoTicks[symbol].shift();
+
+        const ticks = historicoTicks[symbol];
+        if (ticks.length < 5) return; 
+
+        // 1. CÁLCULO DE SUBIDA / DESCIDA (VORTEX - Rise/Fall)
+        let subidas = 0;
+        let descidas = 0;
+        for (let i = 1; i < ticks.length; i++) {
+            if (ticks[i].quote > ticks[i-1].quote) subidas++;
+            else if (ticks[i].quote < ticks[i-1].quote) descidas++;
+        }
+        const totalVariacoes = subidas + descidas || 1;
+        const pctSubida = ((subidas / totalVariacoes) * 100).toFixed(0);
+        const pctDescida = ((descidas / totalVariacoes) * 100).toFixed(0);
+
+        // 2. CÁLCULO DE DÍGITOS (ORION - Even/Odd)
+        let pares = 0, impares = 0;
+        let contagemDigitos = Array(10).fill(0);
+
+        ticks.forEach(t => {
+            const precoStr = t.quote.toFixed(t.pip_size);
+            const ultimoDigito = parseInt(precoStr.slice(-1));
+            if (!isNaN(ultimoDigito)) {
+                contagemDigitos[ultimoDigito]++;
+                if (ultimoDigito % 2 === 0) pares++; else impares++;
+            }
+        });
+
+        const pctPares = ((pares / ticks.length) * 100).toFixed(0);
+        const pctImpares = ((impares / ticks.length) * 100).toFixed(0);
+
+        // 3. CÁLCULO DE OVER / UNDER (SUPER EPIC & TITAN)
+        let contagemUnder = 0; // Dígitos de 0 a 4
+        let contagemOver = 0;  // Dígitos de 5 a 9
+        
+        contagemDigitos.forEach((qtd, digito) => {
+            if (digito <= 4) contagemUnder += qtd;
+            else contagemOver += qtd;
+        });
+        
+        const pctUnder = ((contagemUnder / ticks.length) * 100).toFixed(0);
+        const pctOver = ((contagemOver / ticks.length) * 100).toFixed(0);
+
+        // Frequência do dígito mais repetido (Money Phantom - Differs)
+        const maxRepeticoes = Math.max(...contagemDigitos);
+        const digitoMaisRepetido = contagemDigitos.indexOf(maxRepeticoes);
+        const pctRepeticao = ((maxRepeticoes / ticks.length) * 100).toFixed(0);
+
+        // Mapeamento matemático real baseado nas tuas estratégias
+        let estrategiaSugerida = "🔵 VORTEX"; // Padrão baseado em tendência
+        
+        if (Math.abs(pctSubida - pctDescida) > 15) {
+            estrategiaSugerida = "🔵 VORTEX (Rise/Fall)";
+        } else if (parseInt(pctImpares) > 54 || parseInt(pctPares) > 54) {
+            estrategiaSugerida = "🔴 ORION (Even/Odd)";
+        } else if (parseInt(pctUnder) > 55) {
+            estrategiaSugerida = "⭕ SUPER EPIC (Digits Under)";
+        } else if (parseInt(pctOver) > 55) {
+            estrategiaSugerida = "🧿 TITAN (Digits Over)";
+        } else if (parseInt(pctRepeticao) > 16) {
+            estrategiaSugerida = "⚫ Money Phantom (Differs)";
+        }
+
+        atualizarPainelVisual(symbol, pctSubida, pctDescida, pctRepeticao, digitoMaisRepetido, pctImpares, pctPares, estrategiaSugerida);
+    }
+
+    function atualizarPainelVisual(symbol, subida, descida, pctRep, digitoRep, impares, pares, estrategia) {
+        const vInfo = volatilidades.find(v => v.id === symbol);
+        if (!vInfo) return;
+
+        let elemento = document.getElementById(`analise-${symbol}`);
+        const conteudoHtml = `
+            <div style="font-weight: bold; font-size: 15px; margin-bottom: 5px; color: #101f35;">${vInfo.nome}</div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 13px; color: #444;">
+                <div>Subida: <span style="color: green; font-weight: bold;">+ ${subida}%</span></div>
+                <div>Dig. Repetições (Dígito ${digitoRep}): <span style="color: #00b0ff; font-weight: bold;">${pctRep}%</span></div>
+                <div>Descida: <span style="color: red; font-weight: bold;">- ${descida}%</span></div>
+                <div>Digt. Ímpares: <span style="font-weight: bold;">${impares}%</span></div>
+                <div></div>
+                <div>Digt. Pares: <span style="font-weight: bold;">${pares}%</span></div>
+            </div>
+            <div style="margin-top: 8px; font-weight: bold; color: #e65100; font-size: 13px;">
+                Recomendado usar a estratégia: <span style="background: #fff3e0; padding: 3px 6px; border-radius: 4px; display: inline-block;">${estrategia}</span>
+            </div>
+        `;
+
+        if (!elemento) {
+            const containerGeral = document.getElementById('conteudo-analise-volatilidades');
+            if (containerGeral && containerGeral.innerHTML.includes("A carregar")) {
+                containerGeral.innerHTML = "";
+            }
+            elemento = document.createElement('div');
+            elemento.id = `analise-${symbol}`;
+            elemento.style.cssText = "background: #f5f7fa; border-left: 5px solid #101f35; padding: 12px; border-radius: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);";
+            containerGeral.appendChild(elemento);
+        }
+
+        elemento.innerHTML = conteudoHtml;
+    }
+
+    setTimeout(iniciarSubscricoesAnalise, 2000);
+})();
+
+
 </script>
 
 <div id="lista-robos" style="
@@ -2576,19 +2825,19 @@ A processar...
     target="_blank"
     title="Grupo Oficial WhatsApp"
     style="
-        position:fixed;
+       position:fixed;
         bottom:20px;
         right:20px;
-        width:60px;
-        height:60px;
+        width:45px;
+        height:45px;
         border-radius:50%;
-        background:#25D366;
+        background:#00b0ff;
         color:white;
         display:flex;
         justify-content:center;
         align-items:center;
         text-decoration:none;
-        font-size:34px;
+        font-size:24px;
         box-shadow:0 4px 12px rgba(0,0,0,.4);
         z-index:9999;
     "
