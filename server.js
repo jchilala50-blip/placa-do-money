@@ -167,22 +167,41 @@ app.post('/login', async (req, res) => {
 
 });
 
-// ---NOVA ROTA PARA MANTER SESSÃO PERSITENTE---
-
-app.get('/sessao', (req, res) => {
-
-    if (req.session.usuario) {
-        return res.json({
-            autenticado: true,
-            usuario: req.session.usuario
-        });
+// ---NOVA ROTA PARA MANTER SESSÃO PERSISTENTE CORRIGIDA---
+app.get('/sessao', async (req, res) => {
+    if (!req.session.usuario) {
+        return res.json({ autenticado: false, precisaDeriv: true });
     }
 
-    res.json({
-        autenticado: false
-    });
+    try {
+        // Verifica se o token da Deriv já existe para este utilizador no Supabase
+        const resultado = await db.query(
+            "SELECT deriv_token FROM usuarios WHERE id = $1",
+            [req.session.usuario.id]
+        );
 
+        const temTokenDeriv = resultado.rows.length > 0 && resultado.rows[0].deriv_token;
+
+        if (temTokenDeriv) {
+            return res.json({
+                autenticado: true,
+                usuario: req.session.usuario,
+                precisaDeriv: false // Não precisa ir para a Deriv de novo
+            });
+        }
+
+        return res.json({
+            autenticado: true,
+            usuario: req.session.usuario,
+            precisaDeriv: true
+        });
+
+    } catch (erro) {
+        console.error("Erro ao verificar token no Supabase:", erro);
+        return res.status(500).json({ erro: "Erro interno no servidor." });
+    }
 });
+
 
 // ---ROTA GARANTE QUE A SESSAO SEJA BEM TERMINADA 
 
@@ -369,43 +388,40 @@ contas.data.data.forEach(conta => {
 
 });
 
-  const accountId = contas.data.data[0].account_id;
+          // --- CÓDIGO ATUALIZADO PARA EVITAR TELA BRANCA NO CALLBACK ---
+        const accountId = contas.data.data[0].account_id;
 
-    const otp = await axios.post(
-        `https://api.derivws.com/trading/v1/options/accounts/${accountId}/otp`,
-        {},
-        {
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Deriv-App-ID': CLIENT_ID,
-                'Content-Type': 'application/json'
-            },
-            timeout: 15000
+        // Geramos o OTP normalmente na primeira autenticação
+        const otp = await axios.post(
+            `https://derivws.com{accountId}/otp`,
+            {},
+            {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Deriv-App-ID': CLIENT_ID,
+                    'Content-Type': 'application/json'
+                },
+                timeout: 15000
+            }
+        );
+
+        console.log("=== OTP DERIV GERADO COM SUCESSO ===");
+        const wsUrl = otp.data.data.url;
+
+        // Redireciona passando o status de sucesso para o frontend saber que terminou
+        return res.redirect(`/index.html?ws_url=${encodeURIComponent(wsUrl)}&auth=success`);
+
+    } catch (erroContas) {
+        console.log("=== ERRO CONTAS DERIV ===");
+        if (erroContas.response) {
+            console.log("Status:", erroContas.response.status);
+            console.log(JSON.stringify(erroContas.response.data, null, 2));
+        } else {
+            console.log(erroContas.message);
         }
-    );
-
-    console.log("=== OTP DERIV ===");
-    console.log(JSON.stringify(otp.data, null, 2));
-
-    const wsUrl = otp.data.data.url;
-
-    return res.redirect(
-        `/index.html?ws_url=${encodeURIComponent(wsUrl)}&auth=success`
-    );
-
-} catch (erroContas) {
-
-    console.log("=== ERRO CONTAS DERIV ===");
-
-    if (erroContas.response) {
-        console.log("Status:", erroContas.response.status);
-        console.log(JSON.stringify(erroContas.response.data, null, 2));
-    } else {
-        console.log(erroContas.message);
+        // Se der erro de consentimento duplicado, limpa a URL e manda para o index em segurança
+        return res.redirect('/index.html?erro=auth_duplicada');
     }
-
-    return res.status(500).send('Erro ao obter contas/OTP da Deriv.');
-}
         
     } catch (err) {
         console.error('=== ERRO NO TOKEN ===');

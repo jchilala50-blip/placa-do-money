@@ -829,152 +829,106 @@ onchange="trocarVolatilidade()">
         `;
         atualizarCoresBarras();
 
-    // LIGAÇÃO REAL COM A DERIV VIA WEBSOCKET
+// =================================================================
+// LIGAÇÃO REAL COM A DERIV VIA WEBSOCKET (VERSÃO BLINDADA)
+// =================================================================
 
 const params = new URLSearchParams(window.location.search);
+let wsUrl = params.get('ws_url') || sessionStorage.getItem('deriv_ws_url');
 
+// Função centralizada para gerir o ciclo de vida da ligação
+async function inicializarConexaoDeriv() {
+    try {
+        // 1. Pergunta ao servidor o estado da sessão antes de qualquer ação
+        const checarSessao = await fetch('/sessao');
+        const statusSessao = await checarSessao.json();
 
-let wsUrl =
+        // Se não está logado localmente na Placa do Money, vai para o login local
+        if (!statusSessao.autenticado) {
+            console.log("Utilizador não autenticado localmente. Redirecionando...");
+            window.location.href = '/login.html'; 
+            return;
+        }
 
+        // Se está logado mas nunca autorizou a Deriv, inicia o OAuth do botão azul
+        if (statusSessao.precisaDeriv) {
+            console.log("Token da Deriv em falta. Iniciando fluxo OAuth...");
+            conectarViaOAuth();
+            return;
+        }
 
-params.get('ws_url') ||
+        // Se veio do callback fresco com ws_url na barra de endereços
+        if (params.get('ws_url')) {
+            sessionStorage.setItem('deriv_ws_url', wsUrl);
+            window.history.replaceState({}, document.title, '/index.html'); // Limpa a URL com segurança
+            estabelecerConexaoWebSocket(wsUrl);
+            return;
+        }
 
+        // SE NÃO TEM WS_URL NA BARRA (Acesso posterior/Recarregamento): Pede nova OTP
+        console.log("PEDINDO NOVA OTP - SESSÃO PERSISTENTE DETETADA");
+        const elementoTipoConta = document.getElementById('tipo-conta');
+        const tipoConta = elementoTipoConta ? elementoTipoConta.value : 'REAL';
 
-sessionStorage.getItem('deriv_ws_url');
+        const resposta = await fetch('/api/novo-otp?tipo=' + tipoConta);
+        const dados = await resposta.json();
 
+        if (dados.success && dados.ws_url) {
+            wsUrl = dados.ws_url;
+            sessionStorage.setItem('deriv_ws_url', wsUrl);
+            estabelecerConexaoWebSocket(wsUrl);
+        } else {
+            console.log("Falha ao obter OTP nova do servidor:", dados.erro);
+            // Se o token guardado falhou ou foi revogado, força nova autorização de forma transparente
+            conectarViaOAuth();
+        }
 
-
-if (!params.get('ws_url')) {
-
-
-console.log("PEDINDO NOVA OTP");
-
-
-try {
-
-
-const tipoConta =
-
-
-document.getElementById('tipo-conta').value;
-
-
-
-const resposta =
-
-
-await fetch(
-
-
-'/api/novo-otp?tipo=' +
-
-
-tipoConta
-
-
-);
-
-
-const dados = await resposta.json();
-
-
-if (dados.success && dados.ws_url) {
-
-
-wsUrl = dados.ws_url;
-
-console.log(
-wsUrl);
-
-sessionStorage.setItem(
-
-
-'deriv_ws_url',
-
-
-wsUrl
-
-
-);
-
-
+    } catch (erro) {
+        console.log("Erro fatal no fluxo de inicialização:", erro);
+        // Proteção contra loops: se quebrar, tenta reconectar em 5 segundos
+        setTimeout(inicializarConexaoDeriv, 5000);
+    }
 }
 
+// Função isolada que cria o WebSocket com os seus parâmetros originais
+function estabelecerConexaoWebSocket(urlParaConectar) {
+    if (urlParaConectar) {
+        const ws = new WebSocket(urlParaConectar);
+        window.derivWS = ws;
 
-} catch (erro) {
+        // Executa a sua função interna de configuração
+        if (typeof configurarEventosDoWS === "function") {
+            configurarEventosDoWS(ws);
+        }
 
+        ws.onopen = function () {
+            console.log("WS ABRIU");
+            ws.send(JSON.stringify({
+                balance: 1,
+                subscribe: 1,
+                req_id: 1
+            }));
 
-console.log(
+            // Verifica se a variável do símbolo existe antes de enviar
+            if (typeof simboloAtual !== 'undefined') {
+                ws.send(JSON.stringify({
+                    ticks: simboloAtual
+                }));
+            }
+        };
 
+        ws.onerror = function(err) {
+            console.log("WS ERROR:", err);
+        };
 
-"Falha ao obter OTP nova:",
-
-
-erro
-
-
-);
-
-
+        ws.onclose = function(event) {
+            console.log("WS FECHOU", event.code);
+        };
+    }
 }
 
-
-}
-
-
-if (wsUrl) {
-
-
-const ws = new WebSocket(wsUrl);
-
-
-window.derivWS = ws;
-
-
-configurarEventosDoWS(ws);
-
-
-ws.onopen = function () {
-
-
-console.log("WS ABRIU");
-
-
-ws.send(JSON.stringify({
-
-balance: 1,
-
-subscribe: 1,
-
-req_id: 1
-
-}));
-
-
-ws.send(JSON.stringify({
-
-ticks: simboloAtual
-
-}));
-
-};
-
-
-ws.onerror = function(err) {
-
-console.log("WS ERROR:", err);
-
-};
-
-
-ws.onclose = function(event) {
-
-console.log("WS FECHOU", event.code);
-
-};
-
-
-}// FECHA if (wsUrl)
+// Dispara o gatilho principal assim que a estrutura do HTML estiver pronta
+document.addEventListener("DOMContentLoaded", inicializarConexaoDeriv);
 
 
 // Delay de 1 segundo para o HTML assentar antes de pintar as barras
