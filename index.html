@@ -2340,37 +2340,14 @@ if (tipoGuardado) {
     }, 300);
 }
 
-if (typeof irParaDashboardReal === 'function') { irParaDashboardReal();
+if (typeof irParaDashboardReal === 'function')
+ { irParaDashboardReal();
 
 }
 
 } else {
 
-
-const wsSalvo = sessionStorage.getItem('deriv_ws_url');
-
-if (wsSalvo) {
-
-const tipoGuardado = sessionStorage.getItem("tipoConta");
-
-if (tipoGuardado) {
-    setTimeout(() => {
-        const seletor = document.getElementById("tipo-conta");
-
-        if (seletor) {
-            seletor.value = tipoGuardado;
-        }
-    }, 300);
-}
-
-if (typeof irParaDashboardReal === 'function') {
-
-irParaDashboardReal();
-
-}
-
-
-}
+    sessionStorage.removeItem('deriv_ws_url');
 
 }
 
