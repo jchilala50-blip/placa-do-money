@@ -715,7 +715,7 @@ sessionStorage.getItem('deriv_ws_url');
 if (!params.get('ws_url')) {
 
 
-console.log("PEDINDO NOVA OTP");
+alert("PEDINDO NOVA OTP");
 
 
 try {
@@ -805,7 +805,7 @@ configurarEventosDoWS(ws);
 ws.onopen = function () {
 
 
-console.log("WS ABRIU");
+alert("WS ABRIU");
 
 
 ws.send(JSON.stringify({
