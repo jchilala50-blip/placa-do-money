@@ -712,7 +712,8 @@ sessionStorage.getItem('deriv_ws_url');
 
 
 
-if (!params.get('ws_url')) {
+if (!params.get('ws_url') || !sessionStorage.getItem('deriv_ws_url')) {
+
 
 
 alert("PEDINDO NOVA OTP");
