@@ -14,17 +14,15 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser()); // CORREÇÃO AMY: Ativar leitura de cookies
 
-// --- CONFIGURAÇÃO DE SESSÃO AJUSTADA PARA O RENDER ---
 app.use(session({
     secret: 'placa-do-money-secret',
-    resave: true,                // Força a sessão a ser salva de volta no armazenamento
-    saveUninitialized: false,     // Não cria sessões vazias
+    resave: false,
+    saveUninitialized: false,
     cookie: {
-        maxAge: 24 * 60 * 60 * 1000, // 1 dia de duração
-        secure: process.env.NODE_ENV === 'production', // Ativa HTTPS apenas em produção (Render)
-        sameSite: 'lax'          // Permite que o cookie seja mantido após redirecionamentos externos (como o da Deriv)
+        maxAge: 24 * 60 * 60 * 1000
     }
 }));
+
 
 const db = new Pool({
     connectionString: process.env.DATABASE_URL,
@@ -169,41 +167,22 @@ app.post('/login', async (req, res) => {
 
 });
 
-// ---NOVA ROTA PARA MANTER SESSÃO PERSISTENTE CORRIGIDA---
-app.get('/sessao', async (req, res) => {
-    if (!req.session.usuario) {
-        return res.json({ autenticado: false, precisaDeriv: true });
-    }
+// ---NOVA ROTA PARA MANTER SESSÃO PERSITENTE---
 
-    try {
-        // Verifica se o token da Deriv já existe para este utilizador no Supabase
-        const resultado = await db.query(
-            "SELECT deriv_token FROM usuarios WHERE id = $1",
-            [req.session.usuario.id]
-        );
+app.get('/sessao', (req, res) => {
 
-        const temTokenDeriv = resultado.rows.length > 0 && resultado.rows[0].deriv_token;
-
-        if (temTokenDeriv) {
-            return res.json({
-                autenticado: true,
-                usuario: req.session.usuario,
-                precisaDeriv: false // Não precisa ir para a Deriv de novo
-            });
-        }
-
+    if (req.session.usuario) {
         return res.json({
             autenticado: true,
-            usuario: req.session.usuario,
-            precisaDeriv: true
+            usuario: req.session.usuario
         });
-
-    } catch (erro) {
-        console.error("Erro ao verificar token no Supabase:", erro);
-        return res.status(500).json({ erro: "Erro interno no servidor." });
     }
-});
 
+    res.json({
+        autenticado: false
+    });
+
+});
 
 // ---ROTA GARANTE QUE A SESSAO SEJA BEM TERMINADA 
 
@@ -390,40 +369,43 @@ contas.data.data.forEach(conta => {
 
 });
 
-          // --- CÓDIGO ATUALIZADO PARA EVITAR TELA BRANCA NO CALLBACK ---
-        const accountId = contas.data.data[0].account_id;
+  const accountId = contas.data.data[0].account_id;
 
-        // Geramos o OTP normalmente na primeira autenticação
-        const otp = await axios.post(
-            `https://derivws.com{accountId}/otp`,
-            {},
-            {
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Deriv-App-ID': CLIENT_ID,
-                    'Content-Type': 'application/json'
-                },
-                timeout: 15000
-            }
-        );
-
-        console.log("=== OTP DERIV GERADO COM SUCESSO ===");
-        const wsUrl = otp.data.data.url;
-
-        // Redireciona passando o status de sucesso para o frontend saber que terminou
-        return res.redirect(`/index.html?ws_url=${encodeURIComponent(wsUrl)}&auth=success`);
-
-    } catch (erroContas) {
-        console.log("=== ERRO CONTAS DERIV ===");
-        if (erroContas.response) {
-            console.log("Status:", erroContas.response.status);
-            console.log(JSON.stringify(erroContas.response.data, null, 2));
-        } else {
-            console.log(erroContas.message);
+    const otp = await axios.post(
+        `https://api.derivws.com/trading/v1/options/accounts/${accountId}/otp`,
+        {},
+        {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Deriv-App-ID': CLIENT_ID,
+                'Content-Type': 'application/json'
+            },
+            timeout: 15000
         }
-        // Se der erro de consentimento duplicado, limpa a URL e manda para o index em segurança
-        return res.redirect('/index.html?erro=auth_duplicada');
+    );
+
+    console.log("=== OTP DERIV ===");
+    console.log(JSON.stringify(otp.data, null, 2));
+
+    const wsUrl = otp.data.data.url;
+
+    return res.redirect(
+        `/index.html?ws_url=${encodeURIComponent(wsUrl)}&auth=success`
+    );
+
+} catch (erroContas) {
+
+    console.log("=== ERRO CONTAS DERIV ===");
+
+    if (erroContas.response) {
+        console.log("Status:", erroContas.response.status);
+        console.log(JSON.stringify(erroContas.response.data, null, 2));
+    } else {
+        console.log(erroContas.message);
     }
+
+    return res.status(500).send('Erro ao obter contas/OTP da Deriv.');
+}
         
     } catch (err) {
         console.error('=== ERRO NO TOKEN ===');
