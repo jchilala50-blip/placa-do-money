@@ -247,6 +247,10 @@ res.json({ url: link });
 
 
 // --- FLUXO DE AUTENTICAÇÃO DA DERIV ---
+
+const codigosUsados = new Set();
+
+
 app.get('/callback', async (req, res) => {
     const { code, state, error, error_description } = req.query;
 
@@ -254,6 +258,23 @@ app.get('/callback', async (req, res) => {
         console.error(`Erro da Deriv no callback: ${error_description}`);
         return res.status(400).send(`Erro da Deriv: ${error_description}`);
     }
+
+    // NOVO FILTRO: Se o código já foi usado nos últimos minutos, ignora e vai para a dashboard
+    if (code && codigosUsados.has(code)) {
+        console.log(`[OAuth] Código ${code} já processado anteriormente. Redirecionando utilizador.`);
+        return res.redirect('/index.html');
+    }
+
+    // Registar o código atual como "usado"
+    if (code) {
+        codigosUsados.add(code);
+        // Limpa da memória após 5 minutos para não acumular lixo
+        setTimeout(() => codigosUsados.delete(code), 300000);
+    }
+
+
+
+
 
     // CORREÇÃO AMY: Resgatar o verifier salvo no Cookie do navegador
     const code_verifier = req.cookies.deriv_verifier;
