@@ -14,15 +14,17 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser()); // CORREÇÃO AMY: Ativar leitura de cookies
 
+// --- CONFIGURAÇÃO DE SESSÃO AJUSTADA PARA O RENDER ---
 app.use(session({
     secret: 'placa-do-money-secret',
-    resave: false,
-    saveUninitialized: false,
+    resave: true,                // Força a sessão a ser salva de volta no armazenamento
+    saveUninitialized: false,     // Não cria sessões vazias
     cookie: {
-        maxAge: 24 * 60 * 60 * 1000
+        maxAge: 24 * 60 * 60 * 1000, // 1 dia de duração
+        secure: process.env.NODE_ENV === 'production', // Ativa HTTPS apenas em produção (Render)
+        sameSite: 'lax'          // Permite que o cookie seja mantido após redirecionamentos externos (como o da Deriv)
     }
 }));
-
 
 const db = new Pool({
     connectionString: process.env.DATABASE_URL,
