@@ -696,45 +696,62 @@ onchange="trocarVolatilidade()">
             </div>
         `;
         atualizarCoresBarras();
-
 // =================================================================
-// LIGAÇÃO REAL COM A DERIV VIA WEBSOCKET (VERSÃO BLINDADA)
+// LIGAÇÃO REAL COM A DERIV VIA WEBSOCKET (VERSÃO ANTI-ERRO)
 // =================================================================
 
+// 1. LIMPEZA RADICAL: Remove os parâmetros da URL IMEDIATAMENTE para o telemóvel não repetir o código
 const params = new URLSearchParams(window.location.search);
-let wsUrl = params.get('ws_url') || sessionStorage.getItem('deriv_ws_url');
+let wsUrl = params.get('ws_url');
+
+if (wsUrl) {
+    // Guarda o link limpo no sessionStorage e apaga da barra de endereços NA HORA
+    sessionStorage.setItem('deriv_ws_url', wsUrl);
+    window.history.replaceState({}, document.title, window.location.pathname);
+} else {
+    // Se não veio na URL, tenta ler o que já estava guardado
+    wsUrl = sessionStorage.getItem('deriv_ws_url');
+}
 
 // Função centralizada para gerir o ciclo de vida da ligação
 async function inicializarConexaoDeriv() {
     try {
-        // 1. Pergunta ao servidor o estado da sessão antes de qualquer ação
+        // 2. Pergunta ao servidor o estado da sessão local
         const checarSessao = await fetch('/sessao');
         const statusSessao = await checarSessao.json();
 
-        // Se não está logado localmente na Placa do Money, vai para o login local
+        // Se não está logado na Placa do Money, para tudo e vai para o login
         if (!statusSessao.autenticado) {
-            console.log("Utilizador não autenticado localmente. Redirecionando...");
+            console.log("Utilizador não autenticado localmente.");
             window.location.href = '/login.html'; 
             return;
         }
 
-        // Se está logado mas nunca autorizou a Deriv, inicia o OAuth do botão azul
-        if (statusSessao.precisaDeriv) {
-            console.log("Token da Deriv em falta. Iniciando fluxo OAuth...");
-            conectarViaOAuth();
+        // Se o servidor avisar que você JÁ tem o Token no Supabase, use a OTP persistente!
+        if (statusSessao.precisaDeriv === false) {
+            console.log("Utilizador já tem Token no Supabase. Pedindo nova OTP...");
+            executarPedidoDeNovaOtp();
             return;
         }
 
-        // Se veio do callback fresco com ws_url na barra de endereços
-        if (params.get('ws_url')) {
-            sessionStorage.setItem('deriv_ws_url', wsUrl);
-            window.history.replaceState({}, document.title, '/index.html'); // Limpa a URL com segurança
+        // Se o token acabou de ser gerado (sucesso no fluxo)
+        if (wsUrl) {
             estabelecerConexaoWebSocket(wsUrl);
             return;
         }
 
-        // SE NÃO TEM WS_URL NA BARRA (Acesso posterior/Recarregamento): Pede nova OTP
-        console.log("PEDINDO NOVA OTP - SESSÃO PERSISTENTE DETETADA");
+        // Caso contrário, se não tem token nenhum em lado nenhum, vai para a Deriv
+        console.log("Nenhum token encontrado. Redirecionando para a Deriv...");
+        conectarViaOAuth();
+
+    } catch (erro) {
+        console.log("Erro no fluxo de inicialização:", erro);
+    }
+}
+
+// Função isolada para pedir a nova OTP sem colidir com o login da Deriv
+async function ejecutarPedidoDeNovaOtp() {
+    try {
         const elementoTipoConta = document.getElementById('tipo-conta');
         const tipoConta = elementoTipoConta ? elementoTipoConta.value : 'REAL';
 
@@ -746,52 +763,35 @@ async function inicializarConexaoDeriv() {
             sessionStorage.setItem('deriv_ws_url', wsUrl);
             estabelecerConexaoWebSocket(wsUrl);
         } else {
-            console.log("Falha ao obter OTP nova do servidor:", dados.erro);
-            // Se o token guardado falhou ou foi revogado, força nova autorização de forma transparente
+            console.log("Falha ao obter OTP. Forçando reautenticação limpa...");
+            sessionStorage.removeItem('deriv_ws_url');
             conectarViaOAuth();
         }
-
-    } catch (erro) {
-        console.log("Erro fatal no fluxo de inicialização:", erro);
-        // Proteção contra loops: se quebrar, tenta reconectar em 5 segundos
-        setTimeout(inicializarConexaoDeriv, 5000);
+    } catch (e) {
+        console.error("Erro ao processar nova OTP:", e);
     }
 }
 
-// Função isolada que cria o WebSocket com os seus parâmetros originais
+// Função isolada que cria o WebSocket
 function estabelecerConexaoWebSocket(urlParaConectar) {
     if (urlParaConectar) {
         const ws = new WebSocket(urlParaConectar);
         window.derivWS = ws;
 
-        // Executa a sua função interna de configuração
         if (typeof configurarEventosDoWS === "function") {
             configurarEventosDoWS(ws);
         }
 
         ws.onopen = function () {
             console.log("WS ABRIU");
-            ws.send(JSON.stringify({
-                balance: 1,
-                subscribe: 1,
-                req_id: 1
-            }));
-
-            // Verifica se a variável do símbolo existe antes de enviar
+            ws.send(JSON.stringify({ balance: 1, subscribe: 1, req_id: 1 }));
             if (typeof simboloAtual !== 'undefined') {
-                ws.send(JSON.stringify({
-                    ticks: simboloAtual
-                }));
+                ws.send(JSON.stringify({ ticks: simboloAtual }));
             }
         };
 
-        ws.onerror = function(err) {
-            console.log("WS ERROR:", err);
-        };
-
-        ws.onclose = function(event) {
-            console.log("WS FECHOU", event.code);
-        };
+        ws.onerror = function(err) { console.log("WS ERROR:", err); };
+        ws.onclose = function(event) { console.log("WS FECHOU", event.code); };
     }
 }
 
