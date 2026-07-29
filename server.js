@@ -264,8 +264,9 @@ app.get('/callback', async (req, res) => {
     console.log("Verifier recuperado do Cookie?:", code_verifier ? "Sim" : "Não (Render teria apagado se fosse memória)");
 
     if (!code || !code_verifier) {
-        return res.status(400).send(`Falha na autenticação: Código ou Verifier ausente no navegador. Certifique-se de que aceita cookies.`);
-    }
+    console.log("Detectada tentativa de reutilização de sessão ou histórico. Redirecionando para login limpo.");
+    return res.redirect('/index.html');
+}
 
     try {
         // CORREÇÃO AMY: Formato URLSearchParams (Form-urlencoded) obrigatório
