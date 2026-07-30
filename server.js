@@ -8,6 +8,7 @@ const session = require('express-session');
 const { Pool } = require('pg');
 const bcrypt = require('bcryptjs');
 const app = express();
+app.set('trust proxy', 1);
 const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
@@ -271,8 +272,6 @@ app.get('/callback', async (req, res) => {
         // Limpa da memória após 5 minutos para não acumular lixo
         setTimeout(() => codigosUsados.delete(code), 300000);
     }
-
-
 
 
 
