@@ -197,43 +197,7 @@ app.post('/logout', (req, res) => {
 
 });
 
-app.get('/api/deriv-auth-url', (req, res) => {
-    // FORÇAR LIMPEZA DE COOKIES ANTIGOS/CORROMPIDOS ANTES DE CRIAR UM NOVO
-    res.clearCookie('deriv_verifier');
-
-    // 1. Gera o code_verifier seguro com 50 caracteres
-    const caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~';
-    const code_verifier = [...Array(50)].map(() => caracteres[Math.floor(Math.random() * caracteres.length)]).join('');
-
-    // 2. Cria o code_challenge usando o crypto (S256 obrigatório da Deriv)
-    const code_challenge = crypto
-        .createHash('sha256')
-        .update(code_verifier)
-        .digest('base64')
-        .replace(/\+/g, '-')
-        .replace(/\//g, '_')
-        .replace(/=+$/, '');
-
-    // 3. Gera o state
-    const state = [...Array(10)].map(() => (~~(Math.random() * 36)).toString(36)).join('');
-
-    // 4. Salva o verifier puro no cookie do navegador (AUMENTADO PARA 1 HORA = 3600000ms)
-    res.cookie('deriv_verifier', code_verifier, {
-        maxAge: 3600000, 
-        httpOnly: true,
-        secure: true,
-        sameSite: 'lax'
-    });
-
-    // 5. Monta a URL final
-    const authUrl = 'https://auth.deriv.com/oauth2/auth'
-        + `?response_type=code`
-        + `&client_id=${CLIENT_ID}`
-        + `&redirect_uri=${encodeURIComponent(REDIRECT_URI)}`
-        + `&scope=trade`
-        + `&state=${state}`
-        + `&code_challenge=${code_challenge}`
-        + `&code_challenge_method=S256`;
+   // === Aqui fica o codigo que removi ===
 
     res.json({ url: authUrl }); // Garante que responde com a URL limpa
 });
