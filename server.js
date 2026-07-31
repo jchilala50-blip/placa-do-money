@@ -197,7 +197,43 @@ app.post('/logout', (req, res) => {
 
 });
 
-   // === Aqui fica o codigo que removi ===
+   app.get('/api/deriv-auth-url', (req, res) => {
+    // FORÇAR LIMPEZA DE COOKIES ANTIGOS/CORROMPIDOS ANTES DE CRIAR UM NOVO
+    res.clearCookie('deriv_verifier');
+
+    // 1. Gera o code_verifier seguro com 50 caracteres
+    const caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~';
+    const code_verifier = [...Array(50)].map(() => caracteres[Math.floor(Math.random() * caracteres.length)]).join('');
+
+    // 2. Cria o code_challenge usando o crypto (S256 obrigatório da Deriv)
+    const code_challenge = crypto
+        .createHash('sha256')
+        .update(code_verifier)
+        .digest('base64')
+        .replace(/\+/g, '-')
+        .replace(/\//g, '_')
+        .replace(/=+$/, '');
+
+    // 3. Gera o state
+    const state = [...Array(10)].map(() => (~~(Math.random() * 36)).toString(36)).join('');
+
+    // 4. Salva o verifier puro no cookie do navegador (AUMENTADO PARA 1 HORA = 3600000ms)
+    res.cookie('deriv_verifier', code_verifier, {
+        maxAge: 3600000, 
+        httpOnly: true,
+        secure: true,
+        sameSite: 'lax'
+    });
+
+    // 5. Monta a URL final
+    const authUrl = 'https://auth.deriv.com/oauth2/auth'
+        + `?response_type=code`
+        + `&client_id=${CLIENT_ID}`
+        + `&redirect_uri=${encodeURIComponent(REDIRECT_URI)}`
+        + `&scope=trade`
+        + `&state=${state}`
+        + `&code_challenge=${code_challenge}`
+        + `&code_challenge_method=S256`;
 
     res.json({ url: authUrl }); // Garante que responde com a URL limpa
 });
@@ -212,33 +248,7 @@ res.json({ url: link });
 });
 
 
-// --- FLUXO DE AUTENTICAÇÃO DA DERIV ---
-
-const codigosUsados = new Set();
-
-
-app.get('/callback', async (req, res) => {
-    const { code, state, error, error_description } = req.query;
-
-    if (error) {
-        console.error(`Erro da Deriv no callback: ${error_description}`);
-        return res.status(400).send(`Erro da Deriv: ${error_description}`);
-    }
-
-    // NOVO FILTRO: Se o código já foi usado nos últimos minutos, ignora e vai para a dashboard
-    if (code && codigosUsados.has(code)) {
-        console.log(`[OAuth] Código ${code} já processado anteriormente. Redirecionando utilizador.`);
-        return res.redirect('/index.html');
-    }
-
-    // Registar o código atual como "usado"
-    if (code) {
-        codigosUsados.add(code);
-        // Limpa da memória após 5 minutos para não acumular lixo
-        setTimeout(() => codigosUsados.delete(code), 300000);
-    }
-
-
+// --- AQUI SAIU O CODIGO DE AUTENTICACAO ---
 
     // CORREÇÃO AMY: Resgatar o verifier salvo no Cookie do navegador
     const code_verifier = req.cookies.deriv_verifier;
