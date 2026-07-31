@@ -207,6 +207,21 @@
             font-size: 12px;
         }
 
+ /* COMPACTAÇÃO DOS CARTÕES DO HISTÓRICO (WIN / LOSS) */
+        .historico-lista > div {
+            padding: 4px 8px !important;    /* Reduz o espaço interno vertical para metade */
+            margin-bottom: 4px !important;  /* Diminui a distância entre cartões */
+            min-height: unset !important;   /* Retira qualquer altura mínima exagerada */
+            font-size: 11px !important;     /* Diminui ligeiramente a letra */
+        }
+
+        /* Se usares spans ou badges lá dentro, encolhe o texto deles também */
+        .historico-lista > div span, 
+        .historico-lista > div strong {
+            font-size: 11px !important;
+        }
+
+
         /* Modal */
 .tela-robo {
     background:
@@ -295,7 +310,7 @@ box-sizing: border-box;
 
 <h1 style="font-size: 20px; font-weight: bold; letter-spacing: 1px; color: #fff; margin-bottom: 20px; text-transform: uppercase; text-align: center;">
 
-ESTAMOS TRABALHANDO NO SENTIDO PARA MELHORAR AS CONDIÇÕES DA PLACA DO MONEY SEJA PACIENTE ADM:JOAQUIM CHILALA TCHIPILICA 
+NOVA VERSÃO DISPONÍVEL DENTRO DE 2h
 
 </h1>
 
@@ -438,7 +453,7 @@ Entrar como Administrador
     color:#b0bec5;
     text-align:center;
 ">
-🤖 Bem-vindo à Placa do Money. Desenvolvida para automatizar estratégias de negociação em CFDs (Contratos por Diferença), oferecendo uma experiência prática, intuitiva e em constante evolução.
+🔴 VERSÃO 2.5.2
 </div>
 
 </div>
