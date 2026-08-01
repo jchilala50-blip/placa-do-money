@@ -71,16 +71,16 @@ const percentagemImpares =
         ? Math.round((impares / total) * 100)
         : 0;
 
-console.log(
+if (typeof atualizarCartaoPares === "function") {
 
-    "[ANÁLISE]",
+    atualizarCartaoPares(
 
-    simbolo,
+        percentagemPares,
 
-    "Pares:", percentagemPares + "%",
+        "VORTEX"
 
-    "Ímpares:", percentagemImpares + "%"
+    );
 
-);
+}
 
 }
