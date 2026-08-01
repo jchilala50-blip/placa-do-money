@@ -140,18 +140,46 @@ function atualizarCartaoPares(percentagem, bot) {
 }
 
 // === =========================================
+
+let temporizadorSemTicks = null;
+
 function atualizarStatusLive() {
 
-    const led = document.getElementById("led-live");
-    const texto = document.getElementById("texto-live");
+    const ledLive = document.getElementById("led-live");
+    const textoLive = document.getElementById("texto-live");
 
-    if (!led || !texto) {
+    const ledStatus = document.getElementById("led-status");
+    const textoStatus = document.getElementById("texto-status");
+
+    if (
+        !ledLive ||
+        !textoLive ||
+        !ledStatus ||
+        !textoStatus
+    ){
         return;
     }
 
-    led.style.background = "#00ff00";
-    led.style.boxShadow = "0 0 10px #00ff00";
+    ledLive.style.background = "#00ff00";
+    ledLive.style.boxShadow = "0 0 10px #00ff00";
+    textoLive.innerText = "LIVE";
 
-    texto.innerText = "LIVE";
+    ledStatus.style.background = "#ffd600";
+    ledStatus.style.boxShadow = "0 0 10px #ffd600";
+    textoStatus.innerText = "Working";
+
+    clearTimeout(temporizadorSemTicks);
+
+    temporizadorSemTicks = setTimeout(function(){
+
+        ledLive.style.background = "#ff1744";
+        ledLive.style.boxShadow = "0 0 10px #ff1744";
+        textoLive.innerText = "LIVE";
+
+        ledStatus.style.background = "#ff1744";
+        ledStatus.style.boxShadow = "0 0 10px #ff1744";
+        textoStatus.innerText = "No Ticks";
+
+    },5000);
 
 }

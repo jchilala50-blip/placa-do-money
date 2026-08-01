@@ -170,6 +170,8 @@ border:1px solid #1d3557;
 
 border-radius:8px;
 
+
+
 padding:8px;
 
 }
@@ -300,5 +302,40 @@ color:white;
 font-size:13px;
 
 font-weight:bold;
+
+}
+
+
+
+#led-live,
+#led-status{
+
+    width:10px;
+    height:10px;
+
+    border-radius:50%;
+
+    display:inline-block;
+
+    margin-right:6px;
+
+    background:#ff1744;
+
+    box-shadow:0 0 8px #ff1744;
+
+    vertical-align:middle;
+
+}
+
+#texto-live,
+#texto-status{
+
+    color:white;
+
+    font-size:12px;
+
+    font-weight:bold;
+
+    vertical-align:middle;
 
 }
