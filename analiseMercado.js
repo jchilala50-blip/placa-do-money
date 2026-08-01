@@ -89,6 +89,17 @@ const percentagemImpares =
         ? Math.round((impares / total) * 100)
         : 0;
 
+const percentagemUnder =
+    total > 0
+        ? Math.round((under / total) * 100)
+        : 0;
+
+const percentagemOver =
+    total > 0
+        ? Math.round((over / total) * 100)
+        : 0;
+
+
 if (typeof atualizarCartaoPares === "function") {
 
     const botRecomendado =
