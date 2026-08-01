@@ -77,13 +77,21 @@ const percentagemImpares =
 
 if (typeof atualizarCartaoPares === "function") {
 
-    atualizarCartaoPares(
+    const botRecomendado =
 
-        percentagemPares,
+    percentagemPares >= percentagemImpares
 
-        "VORTEX"
+        ? "ORION"
 
-    );
+        : "VORTEX";
+
+atualizarCartaoPares(
+
+    percentagemPares,
+
+    botRecomendado
+
+);
 
 }
 
