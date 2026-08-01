@@ -30,7 +30,7 @@ window.abrirJanelaAnalise = function () {
 
             <span id="led-live"></span>
 
-            <span>LIVE</span>
+            <span id="texto-live">LIVE</span>
 
         </div>
 
