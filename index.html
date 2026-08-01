@@ -781,6 +781,26 @@ onchange="trocarVolatilidade()">
 
 </div>
 
+
+<button
+    id="btn-analise"
+    onclick="abrirJanelaAnalise()"
+    title="Sistema de Análises"
+    style="
+        width:42px;
+        height:42px;
+        border-radius:50%;
+        border:none;
+        background:#d50000;
+        color:white;
+        font-size:18px;
+        cursor:pointer;
+        margin-left:10px;
+    ">
+    🔘
+</button>
+
+
 <span
     onclick="limparHistorico()"
     title="Limpar histórico"
@@ -1109,7 +1129,7 @@ if (!autorizacaoCompra) {
 }
 
     // 3. ESTRATÉGIA OVER
-else if (estrategia === 'over' && ultimoDigito > 4) {
+else if (estrategia === 'over' && ultimoDigito > 5) {
 
     operacaoAtual = {
         ativa: true,
@@ -1121,7 +1141,7 @@ else if (estrategia === 'over' && ultimoDigito > 4) {
         aguardandoResultado: true
     };
 
-    comprarContratoDeriv('DIGITOVER', 4, 2);
+    comprarContratoDeriv('DIGITOVER', 5,1 );
 }
 
     // 4. ESTRATÉGIA UNDER
@@ -2659,6 +2679,11 @@ position:fixed;
 >
     💬
 </a>
+
+<link rel="stylesheet" href="analise.css">
+
+<script src="analiseMercado.js"></script>
+<script src="analiseUI.js"></script>
 
 </body>
 </html>
