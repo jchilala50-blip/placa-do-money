@@ -78,6 +78,11 @@ PARES
 </div>
 
 </div>
+</div>
+
+</div>
+
+</div>
     `;
 
     document.body.appendChild(janela);
@@ -93,3 +98,43 @@ PARES
 };
 
 })();
+
+// === FUNÇÃO ATUALIZAR CARTÃO ==
+
+function atualizarCartaoPares(percentagem, bot) {
+
+    const percentual =
+        document.getElementById("percentual-pares");
+
+    const barra =
+        document.getElementById("barra-pares");
+
+    const botRecomendado =
+        document.getElementById("bot-pares");
+
+    if (!percentual || !barra || !botRecomendado) {
+        return;
+    }
+
+    percentual.innerText = percentagem + "%";
+
+    const blocosCheios =
+        Math.round(percentagem / 10);
+
+    barra.innerText =
+        "■".repeat(blocosCheios) +
+        "□".repeat(10 - blocosCheios);
+
+    if (percentagem <= 30) {
+
+        barra.style.color = "#ff1744";
+
+    } else {
+
+        barra.style.color = "#00ff66";
+
+    }
+
+    botRecomendado.innerText = bot;
+
+}
