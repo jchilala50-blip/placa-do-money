@@ -2,13 +2,13 @@
 
 position:fixed;
 
-top:70px;
+top:0;
 
-right:25px;
+right:0;
 
-width:420px;
+width:100vw;
 
-height:560px;
+height:100vh;
 
 background:#000;
 
