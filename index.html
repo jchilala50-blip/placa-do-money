@@ -270,80 +270,6 @@ transform:rotate(360deg);
 </head>
 <body>
 
-<div id="modal-analise-mercado" style="
-display:none;
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:#ffffff;
-z-index:999999;
-overflow-y:auto;
-padding:20px;
-box-sizing:border-box;
-">
-
-<div style="
-display:flex;
-justify-content:space-between;
-align-items:center;
-margin-bottom:20px;
-">
-
-<h2 style="margin:0;color:#101f35;">
-☢ Sistema Inteligente de Análise
-</h2>
-
-<div style="display:flex;align-items:center;gap:6px;">
-
-<span
-id="led-live"
-style="
-width:8px;
-height:8px;
-border-radius:50%;
-background:#ff3b30;
-display:inline-block;
-"></span>
-
-<span
-style="
-font-size:13px;
-font-weight:bold;
-color:#101f35;
-">
-Live
-</span>
-
-<button
-onclick="fecharModalAnalise()"
-style="
-margin-left:12px;
-background:#101f35;
-color:white;
-border:none;
-padding:7px 12px;
-border-radius:6px;
-cursor:pointer;
-">
-✖
-</button>
-
-</div>
-
-</div>
-
-<div id="conteudo-analise-volatilidades">
-
-<p style="color:#666;text-align:center;">
-A carregar dados...
-</p>
-
-</div>
-
-</div>
-
 
 <!-- TELA DE BLOQUEIO COM INPUT DE SENHA VISÍVEL -->
 
@@ -708,27 +634,6 @@ container.classList.remove('tela-robo');
         container.innerHTML = `
             <div class="topo-plataforma">
                 <a href="https://youtube.com/@derivtutorialnegociacao?si=QN2oZ2GlnTZa6Unn" target="_blank" class="btn-info-youtube">ℹ</a>
-<div id="btn-analise"
-     onclick="abrirModalAnalise()"
-     style="
-        position:absolute;
-        top:10px;
-        right:10px;
-        width:34px;
-        height:34px;
-        border-radius:50%;
-        background:#101f35;
-        color:#fff;
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        cursor:pointer;
-        font-size:16px;
-        z-index:999;
-     ">
-☢
-</div>
-
                 <div class="texto-logo">
                     <h3>PLACA DO MONEY 🇧🇫🇲🇿🇺🇸🇧🇷🇦🇴</h3>
                     <div style="font-size:9px; color:#00e676; font-weight:bold;">OPERAÇÕES AUTOMATIZADAS</div>
@@ -2544,15 +2449,6 @@ window.addEventListener("load", async function () {
 
 });
 
-function abrirModalAnalise() {
-    document.getElementById("modal-analise-mercado").style.display = "block";
-}
-
-function fecharModalAnalise() {
-    document.getElementById("modal-analise-mercado").style.display = "none";
-}
-
-
 </script>
 
 <div id="lista-robos" style="
@@ -2745,26 +2641,25 @@ A processar...
     target="_blank"
     title="Grupo Oficial WhatsApp"
     style="
-        position:fixed;
+position:fixed;
         bottom:20px;
         right:20px;
-        width:60px;
-        height:60px;
+        width:45px;
+        height:45px;
         border-radius:50%;
-        background:#25D366;
+        background:#00b0ff;
         color:white;
         display:flex;
         justify-content:center;
         align-items:center;
         text-decoration:none;
-        font-size:34px;
+        font-size:24px;
         box-shadow:0 4px 12px rgba(0,0,0,.4);
         z-index:9999;
     "
 >
     💬
 </a>
-
 
 </body>
 </html>
