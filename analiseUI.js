@@ -36,9 +36,23 @@ window.abrirJanelaAnalise = function () {
 
         <div id="conteudo-analise">
 
-            Em desenvolvimento...
+    <div id="painel-status">
+
+        <div id="status-tick">
+
+            <span id="led-live"></span>
+
+            <span id="texto-live">AGUARDANDO TICKS...</span>
 
         </div>
+
+    </div>
+
+    <div id="cards-analise">
+
+    </div>
+
+</div>
     `;
 
     document.body.appendChild(janela);
