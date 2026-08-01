@@ -51,6 +51,10 @@ let pares = 0;
 
 let impares = 0;
 
+let under = 0;
+
+let over = 0;
+
 for (const tick of memoria.ticks) {
 
     if (tick.digito % 2 === 0) {
@@ -62,6 +66,16 @@ for (const tick of memoria.ticks) {
         impares++;
 
     }
+
+if (tick.digito < 5) {
+
+    under++;
+
+} else if (tick.digito > 5) {
+
+    over++;
+
+}
 
 }
 
