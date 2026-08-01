@@ -38,15 +38,15 @@ window.abrirJanelaAnalise = function () {
 
     <div id="painel-status">
 
-        <div id="status-tick">
+    <div id="status-tick">
 
-            <span id="led-live"></span>
+        <span id="led-status">🟡</span>
 
-            <span id="texto-live">AGUARDANDO TICKS...</span>
-
-        </div>
+        <span id="texto-status">Working</span>
 
     </div>
+
+</div>
 
     <div id="cards-analise">
 
