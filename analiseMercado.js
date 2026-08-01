@@ -41,4 +41,46 @@ function receberTickAnalise(ultimoDigito, simbolo) {
 
     );
 
+const total = memoria.ticks.length;
+
+let pares = 0;
+
+let impares = 0;
+
+for (const tick of memoria.ticks) {
+
+    if (tick.digito % 2 === 0) {
+
+        pares++;
+
+    } else {
+
+        impares++;
+
+    }
+
+}
+
+const percentagemPares =
+    total > 0
+        ? Math.round((pares / total) * 100)
+        : 0;
+
+const percentagemImpares =
+    total > 0
+        ? Math.round((impares / total) * 100)
+        : 0;
+
+console.log(
+
+    "[ANÁLISE]",
+
+    simbolo,
+
+    "Pares:", percentagemPares + "%",
+
+    "Ímpares:", percentagemImpares + "%"
+
+);
+
 }
