@@ -138,3 +138,20 @@ function atualizarCartaoPares(percentagem, bot) {
     botRecomendado.innerText = bot;
 
 }
+
+// === =========================================
+function atualizarStatusLive() {
+
+    const led = document.getElementById("led-live");
+    const texto = document.getElementById("texto-live");
+
+    if (!led || !texto) {
+        return;
+    }
+
+    led.style.background = "#00ff00";
+    led.style.boxShadow = "0 0 10px #00ff00";
+
+    texto.innerText = "LIVE";
+
+}

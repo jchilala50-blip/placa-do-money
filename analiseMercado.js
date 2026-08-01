@@ -25,6 +25,10 @@ function receberTickAnalise(ultimoDigito, simbolo) {
 
     const memoria = obterMemoriaVolatilidade(simbolo);
 
+if (typeof atualizarStatusLive === "function") {
+    atualizarStatusLive();
+}
+
     memoria.ticks.push({
 
         digito: ultimoDigito,
