@@ -270,6 +270,81 @@ transform:rotate(360deg);
 </head>
 <body>
 
+<div id="modal-analise-mercado" style="
+display:none;
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:#ffffff;
+z-index:999999;
+overflow-y:auto;
+padding:20px;
+box-sizing:border-box;
+">
+
+<div style="
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:20px;
+">
+
+<h2 style="margin:0;color:#101f35;">
+☢ Sistema Inteligente de Análise
+</h2>
+
+<div style="display:flex;align-items:center;gap:6px;">
+
+<span
+id="led-live"
+style="
+width:8px;
+height:8px;
+border-radius:50%;
+background:#ff3b30;
+display:inline-block;
+"></span>
+
+<span
+style="
+font-size:13px;
+font-weight:bold;
+color:#101f35;
+">
+Live
+</span>
+
+<button
+onclick="fecharModalAnalise()"
+style="
+margin-left:12px;
+background:#101f35;
+color:white;
+border:none;
+padding:7px 12px;
+border-radius:6px;
+cursor:pointer;
+">
+✖
+</button>
+
+</div>
+
+</div>
+
+<div id="conteudo-analise-volatilidades">
+
+<p style="color:#666;text-align:center;">
+A carregar dados...
+</p>
+
+</div>
+
+</div>
+
+
 <!-- TELA DE BLOQUEIO COM INPUT DE SENHA VISÍVEL -->
 
 <div id="tela-bloqueio-manutencao" style="
@@ -404,6 +479,27 @@ Entrar como Administrador
 
 
 <div class="container tela-robo" id="box-auth">
+<div id="btn-analise"
+     onclick="abrirModalAnalise()"
+     style="
+        position:absolute;
+        top:10px;
+        right:10px;
+        width:34px;
+        height:34px;
+        border-radius:50%;
+        background:#101f35;
+        color:#fff;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        cursor:pointer;
+        font-size:16px;
+        z-index:999;
+     ">
+☢
+</div>
+
 
   <h2 id="titulo-tela">Entrar na Placa do Money</h2>
 
@@ -460,7 +556,7 @@ Entrar como Administrador
 
 <script>
 
-console.log("ESTAMOS EM MANUTENCAO VOLTE EM 25 MINUTOS");
+alert("SEM FALHA DE SCRIPT");
 
   window.onerror = function(msg, url, line) {
 
@@ -2447,6 +2543,15 @@ window.addEventListener("load", async function () {
     mostrarProcessando("Aguarde...");
 
 });
+
+function abrirModalAnalise() {
+    document.getElementById("modal-analise-mercado").style.display = "block";
+}
+
+function fecharModalAnalise() {
+    document.getElementById("modal-analise-mercado").style.display = "none";
+}
+
 
 </script>
 
