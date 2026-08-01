@@ -1765,6 +1765,18 @@ if (data.error) {
                   memoriaMercado.shift();
                  }
 
+// ===== Envia o tick para o Sistema de Análises =========
+
+if (typeof receberTickAnalise === "function") {
+
+    receberTickAnalise(
+        Number(ultimoDigito),
+        simboloAtual
+    );
+
+}
+
+// ======================================================
 const estrategia =
 document.getElementById("estrategia-robo").value;
 
