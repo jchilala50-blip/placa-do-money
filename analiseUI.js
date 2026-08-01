@@ -52,7 +52,7 @@ window.abrirJanelaAnalise = function () {
 
 <div class="card-analise">
 
-<div class="titulo-card">
+<div class="titulo-card" id="titulo-volatilidade">
 Volatility 100 (1s) Index
 </div>
 
@@ -60,24 +60,21 @@ Volatility 100 (1s) Index
 PARES
 </div>
 
-<div class="barra-fundo">
+<div class="barra-texto">
 
-<div class="barra-progresso"
-style="width:35%;"></div>
+<span class="blocos-barra" id="barra-pares">
+□□□□□□□□□□
+</span>
 
-</div>
+<span class="valor-percentagem" id="percentual-pares">
+0%
+</span>
 
-<div class="percentagem">
-35%
 </div>
 
 <div class="bot-recomendado">
 ✔ Bot recomendado:
-<b>VORTEX</b>
-</div>
-
-</div>
-
+<b id="bot-pares">VORTEX</b>
 </div>
 
 </div>
