@@ -119,8 +119,17 @@ function receberTickAnalise(ultimoDigito, simbolo) {
 
         atualizarCartaoUnder(percentagemUnder, botUnder);
     }
+
+    // --- PROCESSAMENTO EM TEMPO REAL DO CARTÃO 3 (MONEY PHANTOM) ---
+    if (typeof atualizarCartaoPhantom === "function") {
+        const totalC3 = memoria.cartao3.ticks.length;
+        const progressoTicks = Math.min(Math.round((totalC3 / 60) * 100), 100);
+        atualizarCartaoPhantom(progressoTicks, "-");
+    }
+
 }
 
+// ===TERMINA A FUNÇÃO RECEBER TICKS ANALISE ==
 
 function calcularAnalisePares() {
     // Procura a memória específica da volatilidade ativa (ex: "1HZ100V")
@@ -195,34 +204,34 @@ function calcularAnaliseUnder() {
 }
 
 //=== COMEÇO DA ANALISE DO MOMEY PANTHON ===
-
-
-
 function calcularAnalisePhantom() {
     const memoria = obterMemoriaVolatilidade("1HZ100V");
     const ticks = memoria.cartao3.ticks;
     const total = ticks.length;
 
-    if (total < 2) {
+    // Se não houver amostragem suficiente, limpa e sai
+    if (total < 5) {
         memoria.cartao3.ticks = [];
         return;
     }
 
     let repeticoes = 0;
 
-    // Varre os ticks comparando o dígito atual com o anterior para achar repetições
+    // Conta quantas vezes o dígito foi igual ao anterior
     for (let i = 1; i < total; i++) {
         if (ticks[i].digito === ticks[i - 1].digito) {
             repeticoes++;
         }
     }
 
-    // Calcula a percentagem baseada na taxa de padrões repetidos no ciclo
-    // Se o mercado repetiu muitos dígitos seguidos, a percentagem sobe
-    const percentagemPhantom = Math.min(Math.round((repeticoes / (total - 1)) * 100) * 2, 100); 
+    // Calcula a taxa de repetição em percentagem
+    const taxaRepeticao = Math.round((repeticoes / (total - 1)) * 100);
+    
+    // A assertividade do Phantom é o inverso da repetição (pouca repetição = alta assertividade)
+    const percentagemPhantom = 100 - taxaRepeticao;
     let botPhantom = "-";
 
-    // Regra Rigorosa: Se a taxa de repetição estoirar os 80%
+    // REGRA: Poucos repetidos (Taxa de repetição baixa, ex: menos de 20%, significando assertividade >= 80%)
     if (percentagemPhantom >= 80) {
         botPhantom = "MONEY PHANTOM";
         
@@ -231,11 +240,12 @@ function calcularAnalisePhantom() {
         if (visor) visor.innerText = "PHANTOM: " + contadorPhantom;
     }
 
+    // Atualiza a UI com o veredito final do ciclo de 60s
     if (typeof atualizarCartaoPhantom === "function") {
         atualizarCartaoPhantom(percentagemPhantom, botPhantom);
     }
 
-    // Limpa RIGOROSAMENTE apenas a memória do Cartão 3 para o próximo minuto
+    // Limpa rigidamente a memória do Cartão 3 para o próximo minuto
     memoria.cartao3.ticks = [];
 }
 
