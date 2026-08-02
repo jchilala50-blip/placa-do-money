@@ -108,6 +108,37 @@ ANÁLISE: ORION / VORTEX
 <b id="bot-pares">VORTEX</b>
 </div>
 
+
+<div class="card-analise">
+
+<div class="titulo-card">
+Análise: TITAN / SUPER EPIC
+</div>
+
+<div class="tipo-estrategia">
+UNDER / OVER
+</div>
+
+<div class="barra-texto">
+
+<span class="blocos-barra" id="barra-under">
+□□□□□□□□□□
+</span>
+
+<span class="valor-percentagem" id="percentual-under">
+0%
+</span>
+
+</div>
+
+<div class="bot-recomendado">
+✔ Bot recomendado:
+<b id="bot-under">-</b>
+</div>
+
+</div>
+
+
 </div>
 </div>
 
