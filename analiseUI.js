@@ -111,12 +111,20 @@ ANÁLISE: ORION / VORTEX
 
 <div class="card-analise">
 
+<div style="
+display:flex;
+justify-content:space-between;
+align-items:center;
+">
+
 <div class="titulo-card">
-Análise: TITAN / SUPER EPIC
+Volatility 100 (1s) Index
+</div>
+
 </div>
 
 <div class="tipo-estrategia">
-UNDER / OVER
+ANÁLISE: TITAN / SUPER EPIC
 </div>
 
 <div class="barra-texto">
@@ -205,6 +213,48 @@ function atualizarCartaoPares(percentagem, bot) {
     botRecomendado.innerText = bot;
 
 }
+
+// === SEGUNDO CARTÃO ==
+
+function atualizarCartaoUnder(percentagem, bot) {
+
+    const percentual =
+        document.getElementById("percentual-under");
+
+    const barra =
+        document.getElementById("barra-under");
+
+    const botRecomendado =
+        document.getElementById("bot-under");
+
+    if (!percentual || !barra || !botRecomendado) {
+        return;
+    }
+
+    percentual.innerText = percentagem + "%";
+
+    const blocosCheios =
+        Math.round(percentagem / 10);
+
+    barra.innerText =
+        "■".repeat(blocosCheios) +
+        "□".repeat(10 - blocosCheios);
+
+    if (percentagem <= 30) {
+
+        barra.style.color = "#ff1744";
+
+    } else {
+
+        barra.style.color = "#00ff66";
+
+    }
+
+    botRecomendado.innerText = bot;
+
+}
+
+
 
 // === =========================================
 

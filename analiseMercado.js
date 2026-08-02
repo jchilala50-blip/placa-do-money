@@ -171,11 +171,30 @@ function calcularAnalisePares() {
     }
 
     let pares = 0;
+    let impares = 0;
+    let under = 0;
+    let over = 0;
 
     for (const tick of memoria.ticks) {
 
         if (tick.digito % 2 === 0) {
+
             pares++;
+
+        } else {
+
+            impares++;
+
+        }
+
+        if (tick.digito < 5) {
+
+            under++;
+
+        } else if (tick.digito > 5) {
+
+            over++;
+
         }
 
     }
@@ -183,10 +202,19 @@ function calcularAnalisePares() {
     const percentagemPares =
         Math.round((pares / total) * 100);
 
+    const percentagemUnder =
+        Math.round((under / total) * 100);
+
     let botRecomendado = "-";
 
     if (percentagemPares >= 80) {
+
         botRecomendado = "ORION";
+
+    } else if (impares >= pares && Math.round((impares / total) * 100) >= 80) {
+
+        botRecomendado = "VORTEX";
+
     }
 
     if (typeof atualizarCartaoPares === "function") {
@@ -198,7 +226,27 @@ function calcularAnalisePares() {
 
     }
 
-    // Limpa a memória para iniciar um novo ciclo
+    let botUnder = "-";
+
+    if (percentagemUnder >= 80) {
+
+        botUnder = "SUPER EPIC";
+
+    } else if (Math.round((over / total) * 100) >= 80) {
+
+        botUnder = "TITAN";
+
+    }
+
+    if (typeof atualizarCartaoUnder === "function") {
+
+        atualizarCartaoUnder(
+            percentagemUnder,
+            botUnder
+        );
+
+    }
+
     memoria.ticks = [];
 
 }
