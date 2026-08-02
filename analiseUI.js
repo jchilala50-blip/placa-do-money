@@ -170,25 +170,6 @@ function atualizarCartaoPares(percentagem, bot) {
 
     }
 
-if (bot === "ORION") {
-
-    contadorOrion++;
-
-    document.getElementById("contador-orion").innerText =
-        "ORION: " + contadorOrion;
-
-}
-
-else if (bot === "VORTEX") {
-
-    contadorVortex++;
-
-    document.getElementById("contador-vortex").innerText =
-        "VORTEX: " + contadorVortex;
-
-}
-
-
 
     botRecomendado.innerText = bot;
 

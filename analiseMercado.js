@@ -114,6 +114,38 @@ if (percentagemPares >= 80) {
 
 }
 
+// =====NUMERO DE VEZES QUE O BOT É RECOMENDADO=================
+
+if (botRecomendado === "ORION") {
+
+    contadorOrion++;
+
+    const visor =
+        document.getElementById("contador-orion");
+
+    if (visor) {
+        visor.innerText =
+            "ORION: " + contadorOrion;
+    }
+
+}
+
+else if (botRecomendado === "VORTEX") {
+
+    contadorVortex++;
+
+    const visor =
+        document.getElementById("contador-vortex");
+
+    if (visor) {
+        visor.innerText =
+            "VORTEX: " + contadorVortex;
+    }
+
+}
+
+// ================================================================
+
 atualizarCartaoPares(
 
     percentagemPares,
