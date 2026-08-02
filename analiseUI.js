@@ -108,7 +108,6 @@ ANÁLISE: ORION / VORTEX
 <b id="bot-pares">VORTEX</b>
 </div>
 
-
 <div class="card-analise">
 
 <div style="
@@ -119,6 +118,29 @@ align-items:center;
 
 <div class="titulo-card">
 Volatility 100 (1s) Index
+</div>
+
+<div style="
+display:flex;
+align-items:center;
+gap:10px;
+font-size:10px;
+font-weight:bold;
+color:#00e676;
+">
+
+<span id="contador-titan">
+TITAN: 0
+</span>
+
+<span id="contador-epic">
+SUPER EPIC: 0
+</span>
+
+<span id="temporizador-under">
+0s
+</span>
+
 </div>
 
 </div>
@@ -145,6 +167,64 @@ ANÁLISE: TITAN / SUPER EPIC
 </div>
 
 </div>
+
+
+<div class="card-analise">
+
+<div style="
+display:flex;
+justify-content:space-between;
+align-items:center;
+">
+
+<div class="titulo-card">
+Volatility 100 (1s) Index
+</div>
+
+<div style="
+display:flex;
+align-items:center;
+gap:10px;
+font-size:10px;
+font-weight:bold;
+color:#00e676;
+">
+
+<span id="contador-phantom">
+PHANTOM: 0
+</span>
+
+<span id="temporizador-phantom">
+0s
+</span>
+
+</div>
+
+</div>
+
+<div class="tipo-estrategia">
+ANÁLISE: MONEY PHANTOM
+</div>
+
+<div class="barra-texto">
+
+<span class="blocks-barra" id="barra-phantom">
+□□□□□□□□□□
+</span>
+
+<span class="valor-percentagem" id="percentual-phantom">
+0%
+</span>
+
+</div>
+
+<div class="bot-recommended">
+✔ Bot recomendado:
+<b id="bot-phantom">-</b>
+</div>
+
+</div>
+
 
 
 </div>
@@ -332,3 +412,75 @@ setInterval(function () {
     visor.innerText = segundosAnalise + "s";
 
 }, 1000);
+
+let contadorTitan = 0;
+let contadorEpic = 0;
+let segundosUnder = 0;
+
+// ===============================
+// TEMPORIZADOR DO CARTÃO UNDER/OVER
+// ===============================
+setInterval(function () {
+    const visor = document.getElementById("temporizador-under");
+    if (!visor) return;
+
+    segundosUnder++;
+
+    if (segundosUnder >= 60) {
+        if (typeof calcularAnaliseUnder === "function") {
+            calcularAnaliseUnder();
+        }
+        segundosUnder = 1;
+    }
+
+    visor.innerText = segundosUnder + "s";
+}, 1000);
+
+
+// == INICIO TEMPORIZADOR DO MONEY PANTHOM === 
+
+
+let contadorPhantom = 0;
+let segundosPhantom = 0;
+
+// === FUNÇÃO ATUALIZAR CARTÃO 3 (MONEY PHANTOM) ==
+function atualizarCartaoPhantom(percentagem, bot) {
+    const percentual = document.getElementById("percentual-phantom");
+    const barra = document.getElementById("barra-phantom");
+    const botRecomendado = document.getElementById("bot-phantom");
+
+    if (!percentual || !barra || !botRecomendado) return;
+
+    percentual.innerText = percentagem + "%";
+
+    const blocosCheios = Math.round(percentagem / 10);
+    barra.innerText = "■".repeat(blocosCheios) + "□".repeat(10 - blocosCheios);
+
+    if (percentagem <= 30) {
+        barra.style.color = "#ff1744";
+    } else {
+        barra.style.color = "#00ff66";
+    }
+
+    botRecomendado.innerText = bot;
+}
+
+// ===============================
+// TEMPORIZADOR DO CARTÃO 3 (MONEY PHANTOM)
+// ===============================
+setInterval(function () {
+    const visor = document.getElementById("temporizador-phantom");
+    if (!visor) return;
+
+    segundosPhantom++;
+
+    if (segundosPhantom >= 60) {
+        if (typeof calcularAnalisePhantom === "function") {
+            calcularAnalisePhantom();
+        }
+        segundosPhantom = 1;
+    }
+
+    visor.innerText = segundosPhantom + "s";
+}, 1000);
+
