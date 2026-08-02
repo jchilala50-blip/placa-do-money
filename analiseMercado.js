@@ -124,3 +124,4 @@ atualizarCartaoPares(
 
 }
 
+}
