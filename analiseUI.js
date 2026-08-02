@@ -62,20 +62,33 @@ align-items:center;
 Volatility 100 (1s) Index
 </div>
 
-<div
-id="temporizador-pares"
-style="
-font-size:11px;
-color:#00e676;
+<div style="
+display:flex;
+align-items:center;
+gap:10px;
+font-size:10px;
 font-weight:bold;
+color:#00e676;
 ">
+
+<span id="contador-orion">
+ORION: 0
+</span>
+
+<span id="contador-vortex">
+VORTEX: 0
+</span>
+
+<span id="temporizador-pares">
 0s
+</span>
+
 </div>
 
 </div>
 
 <div class="tipo-estrategia">
-PARES
+ANÁLISE: ORION / VORTEX
 </div>
 
 <div class="barra-texto">
@@ -117,6 +130,10 @@ PARES
 
 })();
 
+
+let contadorOrion = 0;
+let contadorVortex = 0;
+
 // === FUNÇÃO ATUALIZAR CARTÃO ==
 
 function atualizarCartaoPares(percentagem, bot) {
@@ -152,6 +169,26 @@ function atualizarCartaoPares(percentagem, bot) {
         barra.style.color = "#00ff66";
 
     }
+
+if (bot === "ORION") {
+
+    contadorOrion++;
+
+    document.getElementById("contador-orion").innerText =
+        "ORION: " + contadorOrion;
+
+}
+
+else if (bot === "VORTEX") {
+
+    contadorVortex++;
+
+    document.getElementById("contador-vortex").innerText =
+        "VORTEX: " + contadorVortex;
+
+}
+
+
 
     botRecomendado.innerText = bot;
 
