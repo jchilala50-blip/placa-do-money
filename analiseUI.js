@@ -224,10 +224,17 @@ function atualizarStatusLive() {
 // ===============================
 // TEMPORIZADOR DO CARTÃO PARES
 // ===============================
+let intervaloAnalise = null;
 
 let segundosAnalise = 0;
 
-setInterval(function () {
+
+if (intervaloAnalise) {
+    clearInterval(intervaloAnalise);
+}
+
+intervaloAnalise = setInterval(function () {
+
 
     const visor =
         document.getElementById("temporizador-pares");
