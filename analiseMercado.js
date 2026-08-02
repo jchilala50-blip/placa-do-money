@@ -125,3 +125,48 @@ atualizarCartaoPares(
 }
 
 }
+
+
+function calcularAnalisePares() {
+
+    const memoria =
+        obterMemoriaVolatilidade("1HZ100V");
+
+    const total = memoria.ticks.length;
+
+    if (total === 0) {
+        return;
+    }
+
+    let pares = 0;
+
+    for (const tick of memoria.ticks) {
+
+        if (tick.digito % 2 === 0) {
+            pares++;
+        }
+
+    }
+
+    const percentagemPares =
+        Math.round((pares / total) * 100);
+
+    let botRecomendado = "-";
+
+    if (percentagemPares >= 80) {
+        botRecomendado = "ORION";
+    }
+
+    if (typeof atualizarCartaoPares === "function") {
+
+        atualizarCartaoPares(
+            percentagemPares,
+            botRecomendado
+        );
+
+    }
+
+    // Limpa a memória para iniciar um novo ciclo
+    memoria.ticks = [];
+
+}

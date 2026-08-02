@@ -52,8 +52,26 @@ window.abrirJanelaAnalise = function () {
 
 <div class="card-analise">
 
+<div style="
+display:flex;
+justify-content:space-between;
+align-items:center;
+">
+
 <div class="titulo-card" id="titulo-volatilidade">
 Volatility 100 (1s) Index
+</div>
+
+<div
+id="temporizador-pares"
+style="
+font-size:11px;
+color:#00e676;
+font-weight:bold;
+">
+0s
+</div>
+
 </div>
 
 <div class="tipo-estrategia">
@@ -183,3 +201,35 @@ function atualizarStatusLive() {
     },5000);
 
 }
+
+
+// ===============================
+// TEMPORIZADOR DO CARTÃO PARES
+// ===============================
+
+let segundosAnalise = 0;
+
+setInterval(function () {
+
+    const visor =
+        document.getElementById("temporizador-pares");
+
+    if (!visor) {
+        return;
+    }
+
+    segundosAnalise++;
+
+    if (segundosAnalise >= 60) {
+
+    if (typeof calcularAnalisePares === "function") {
+        calcularAnalisePares();
+    }
+
+    segundosAnalise = 1;
+
+}
+
+    visor.innerText = segundosAnalise + "s";
+
+}, 1000);
