@@ -102,13 +102,17 @@ const percentagemOver =
 
 if (typeof atualizarCartaoPares === "function") {
 
-    const botRecomendado =
+let botRecomendado = "-";
 
-    percentagemPares >= percentagemImpares
+if (percentagemPares >= 80) {
 
-        ? "ORION"
+    botRecomendado = "ORION";
 
-        : "VORTEX";
+} else if (percentagemImpares >= 80) {
+
+    botRecomendado = "VORTEX";
+
+}
 
 atualizarCartaoPares(
 
@@ -120,4 +124,3 @@ atualizarCartaoPares(
 
 }
 
-}
