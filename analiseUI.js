@@ -484,3 +484,41 @@ setInterval(function () {
     visor.innerText = segundosPhantom + "s";
 }, 1000);
 
+
+// === FUNÇÃO PARA EMITIR SINAL SONORO ===
+window.emitirSomNotificacao = function () {
+    try {
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        
+        // Primeiro bip (mais grave)
+        const oscilador1 = audioCtx.createOscillator();
+        const ganho1 = audioCtx.createGain();
+        oscilador1.type = "sine";
+        oscilador1.frequency.setValueAtTime(600, audioCtx.currentTime); // Frequência do som
+        ganho1.gain.setValueAtTime(0.1, audioCtx.currentTime); // Volume
+        ganho1.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
+        oscilador1.connect(ganho1);
+        ganho1.connect(audioCtx.destination);
+        oscilador1.start();
+        oscilador1.stop(audioCtx.currentTime + 0.15);
+
+        // Segundo bip (mais agudo, logo a seguir para fazer um som "bip-bip")
+        setTimeout(() => {
+            const oscilador2 = audioCtx.createOscillator();
+            const ganho2 = audioCtx.createGain();
+            oscilador2.type = "sine";
+            oscilador2.frequency.setValueAtTime(800, audioCtx.currentTime);
+            ganho2.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            ganho2.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
+            oscilador2.connect(ganho2);
+            ganho2.connect(audioCtx.destination);
+            oscilador2.start();
+            oscilador2.stop(audioCtx.currentTime + 0.2);
+        }, 120);
+
+    } catch (e) {
+        console.log("Áudio ainda não permitido pelo navegador:", e);
+    }
+};
+
+

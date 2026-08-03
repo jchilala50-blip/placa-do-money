@@ -175,6 +175,12 @@ function calcularAnalisePares() {
         botRecomendado = "VORTEX";
     }
 
+
+ // SE QUALQUER UM DOS TRÊS MANDAR OPERAR, ESTE CARTÃO TOCA O AVISO CENTRAL
+    if (typeof window.emitirSomNotificacao === "function") {
+        window.emitirSomNotificacao();
+    }
+
     if (typeof atualizarCartaoPares === "function") {
         atualizarCartaoPares(percentagemPares, botRecomendado);
     }
