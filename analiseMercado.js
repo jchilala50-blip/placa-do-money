@@ -233,7 +233,6 @@ function calcularAnalisePhantom() {
     // Procura a memória dinâmica que foi selecionada no teu index.html!
     const memoria = obterMemoriaVolatilidade(window.volatilidadeAtiva);
     const total = memoria.cartao3.ticks.length;
-    const total = ticks.length;
 
     // Se não houver amostragem suficiente, limpa e sai
     if (total < 5) {
