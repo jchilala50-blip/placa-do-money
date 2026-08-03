@@ -1,3 +1,5 @@
+window.volatilidadeAtiva = window.volatilidadeAtiva || "1HZ100V";
+
 // ===============================
 // SISTEMA DE ANÁLISES DO MERCADO
 // ===============================
@@ -148,8 +150,8 @@ function receberTickAnalise(ultimoDigito, simbolo) {
 // ===TERMINA A FUNÇÃO RECEBER TICKS ANALISE ==
 
 function calcularAnalisePares() {
-    // Procura a memória específica da volatilidade ativa (ex: "1HZ100V")
-    const memoria = obterMemoriaVolatilidade("1HZ100V");
+    // Procura a memória dinâmica que foi selecionada no teu index.html!
+    const memoria = obterMemoriaVolatilidade(window.volatilidadeAtiva);
     const total = memoria.cartao1.ticks.length;
 
     if (total === 0) return;
@@ -190,9 +192,10 @@ function calcularAnalisePares() {
 }
 
 function calcularAnaliseUnder() {
-    // Procura a memória específica da volatilidade ativa (ex: "1HZ100V")
-    const memoria = obterMemoriaVolatilidade("1HZ100V");
+    // Procura a memória dinâmica que foi selecionada no teu index.html!
+    const memoria = obterMemoriaVolatilidade(window.volatilidadeAtiva);
     const total = memoria.cartao2.ticks.length;
+
 
     if (total === 0) return;
 
@@ -227,8 +230,9 @@ function calcularAnaliseUnder() {
 
 //=== COMEÇO DA ANALISE DO MOMEY PANTHON ===
 function calcularAnalisePhantom() {
-    const memoria = obterMemoriaVolatilidade("1HZ100V");
-    const ticks = memoria.cartao3.ticks;
+    // Procura a memória dinâmica que foi selecionada no teu index.html!
+    const memoria = obterMemoriaVolatilidade(window.volatilidadeAtiva);
+    const total = memoria.cartao3.ticks.length;
     const total = ticks.length;
 
     // Se não houver amostragem suficiente, limpa e sai

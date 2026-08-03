@@ -1593,6 +1593,11 @@ function trocarVolatilidade() {
         simboloAtual
     );
 
+    // ====== A LINHA MÁGICA PARA ATUALIZAR CARTOES ======
+    window.volatilidadeAtiva = simboloAtual;
+    // ================================================
+
+
  if (
     window.derivWS &&
     window.derivWS.readyState === 1
