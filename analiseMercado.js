@@ -227,27 +227,27 @@ function calcularAnaliseUnder() {
     // Limpa RIGOROSAMENTE apenas a memória do Cartão 2
     memoria.cartao2.ticks = [];
 }
+    
 
 //=== COMEÇO DA ANALISE DO MOMEY PANTHON ===
 function calcularAnalisePhantom() {
     // Procura a memória dinâmica que foi selecionada no teu index.html!
     const memoria = obterMemoriaVolatilidade(window.volatilidadeAtiva);
-    const total = memoria.cartao3.ticks.length;
+    const ticks = memoria.cartao3.ticks; // <-- A LINHA MÁGICA QUE FALTAVA!
+    const total = ticks.length;
 
-    // Se não houver amostragem suficiente, limpa e sai
-    if (total < 5) {
-        memoria.cartao3.ticks = [];
-        return;
-    }
+    // Se não houver amostragem suficiente, apenas sai sem apagar a memória
+    if (total < 5) return;
 
     let repeticoes = 0;
 
     // Conta quantas vezes o dígito foi igual ao anterior
     for (let i = 1; i < total; i++) {
-        if (ticks[i].digito === ticks[i - 1].digito) {
+        if (ticks[i] && ticks[i - 1] && ticks[i].digito === ticks[i - 1].digito) {
             repeticoes++;
         }
     }
+
 
     // Calcula a taxa de repetição em percentagem
     const taxaRepeticao = Math.round((repeticoes / (total - 1)) * 100);
