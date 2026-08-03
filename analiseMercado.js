@@ -120,11 +120,27 @@ function receberTickAnalise(ultimoDigito, simbolo) {
         atualizarCartaoUnder(percentagemUnder, botUnder);
     }
 
-    // --- PROCESSAMENTO EM TEMPO REAL DO CARTÃO 3 (MONEY PHANTOM) ---
+      // --- PROCESSAMENTO EM TEMPO REAL DO CARTÃO 3 (MONEY PHANTOM) ---
     if (typeof atualizarCartaoPhantom === "function") {
-        const totalC3 = memoria.cartao3.ticks.length;
-        const progressoTicks = Math.min(Math.round((totalC3 / 60) * 100), 100);
-        atualizarCartaoPhantom(progressoTicks, "-");
+        const ticksC3 = memoria.cartao3.ticks;
+        const totalC3 = ticksC3.length;
+        
+        if (totalC3 >= 2) {
+            let repeticoesReal = 0;
+            // Varre o que acumulou até agora para ver se há repetições
+            for (let i = 1; i < totalC3; i++) {
+                if (ticksC3[i].digito === ticksC3[i - 1].digito) {
+                    repeticoesReal++;
+                }
+            }
+            // A percentagem que o utilizador vê é a taxa de NÃO-REPETIÇÃO (alta = bom para operar)
+            const taxaRepeticaoReal = Math.round((repeticoesReal / (totalC3 - 1)) * 100);
+            const percentagemPhantomReal = 100 - taxaRepeticaoReal;
+            
+            atualizarCartaoPhantom(percentagemPhantomReal, "-");
+        } else {
+            atualizarCartaoPhantom(0, "-");
+        }
     }
 
 }
