@@ -34,197 +34,82 @@ window.abrirJanelaAnalise = function () {
 
         </div>
 
-        <div id="conteudo-analise">
+    <div id="conteudo-analise">
+        <div id="painel-status">
+            <div id="status-tick">
+                <span id="led-status">🟡</span>
+                <span id="texto-status">Working</span>
+            </div>
+        </div>
 
-    <div id="painel-status">
+        <div id="cards-analise">
+            <!-- CARTÃO 1 -->
+            <div class="card-analise">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <div class="titulo-card" id="titulo-volatilidade-1">Volatility 100 (1s) Index</div>
+                    <div style="display:flex; align-items:center; gap:10px; font-size:10px; font-weight:bold; color:#00e676;">
+                        <span id="contador-orion">ORION: 0</span>
+                        <span id="contador-vortex">VORTEX: 0</span>
+                        <span id="temporizador-pares">0s</span>
+                    </div>
+                </div>
+                <div class="tipo-estrategia">ANÁLISE: ORION / VORTEX</div>
+                <div class="barra-texto">
+                    <span class="blocos-barra" id="barra-pares">□□□□□□□□□□</span>
+                    <span class="valor-percentagem" id="percentual-pares">0%</span>
+                </div>
+                <div class="bot-recomendado">✔ Bot recomendado: <b id="bot-pares">VORTEX</b></div>
+            </div>
 
-    <div id="status-tick">
+            <!-- CARTÃO 2 -->
+            <div class="card-analise">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <div class="titulo-card" id="titulo-volatilidade-2">Volatility 100 (1s) Index</div>
+                    <div style="display:flex; align-items:center; gap:10px; font-size:10px; font-weight:bold; color:#00e676;">
+                        <span id="contador-titan">TITAN: 0</span>
+                        <span id="contador-epic">SUPER EPIC: 0</span>
+                        <span id="temporizador-under">0s</span>
+                    </div>
+                </div>
+                <div class="tipo-estrategia">ANÁLISE: TITAN / SUPER EPIC</div>
+                <div class="barra-texto">
+                    <span class="blocos-barra" id="barra-under">□□□□□□□□□□</span>
+                    <span class="valor-percentagem" id="percentual-under">0%</span>
+                </div>
+                <div class="bot-recomendado">✔ Bot recomendado: <b id="bot-under">-</b></div>
+            </div>
 
-        <span id="led-status">🟡</span>
+            <!-- CARTÃO 3 -->
+            <div class="card-analise">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <div class="titulo-card" id="titulo-volatilidade-3">Volatility 100 (1s) Index</div>
+                    <div style="display:flex; align-items:center; gap:10px; font-size:10px; font-weight:bold; color:#00e676;">
+                        <span id="contador-phantom">PHANTOM: 0</span>
+                        <span id="temporizador-phantom">0s</span>
+                    </div>
+                </div>
+                <div class="tipo-estrategia">ANÁLISE: MONEY PHANTOM</div>
+                <div class="barra-texto">
+                    <span class="blocks-barra" id="barra-phantom">□□□□□□□□□□</span>
+                    <span class="valor-percentagem" id="percentual-phantom">0%</span>
+                </div>
+                <div class="bot-recommended">✔ Bot recomendado: <b id="bot-phantom">-</b></div>
+            </div>
 
-        <span id="texto-status">Working</span>
+            <!-- CARTÃO DE RECOMENDAÇÕES (BRANCO CREME) -->
+            <div style="background-color: #FFFDD0; color: #222; padding: 12px; margin-top: 15px; border-radius: 8px; font-size: 11px; font-family: sans-serif; line-height: 1.5; box-shadow: 0 2px 4px rgba(0,0,0,0.3); text-align: left;">
+                <b style="font-size: 12px; display: block; margin-bottom: 6px; color: #000;">📋 RECOMENDAÇÕES:</b>
+                <div style="margin-bottom: 3px;">1️⃣ Selecione o mercado para operações</div>
+                <div style="margin-bottom: 3px;">2️⃣ Aguarde a recomendação da análise</div>
+                <div style="margin-bottom: 3px;">3️⃣ Selecione a estratégia recomendada</div>
+                <div style="margin-bottom: 3px;">4️⃣ Visitar periodicamente o painel</div>
+                <div style="margin-bottom: 6px;">5️⃣ Verifique o número de recomendações. Quanto maior melhor.</div>
+                <hr style="border: 0; border-top: 1px solid #e5d3b3; margin: 8px 0;">
+                <i style="font-size: 10px; color: #555; display: block; line-height: 1.3;"><b>Obs:</b> Esta analise é feita rigorosamente contra tendência em caso de dúvidas de como dominar contacte o programador no grupo PLACA DO MONEY.</i>
+            </div>
 
+        </div>
     </div>
-
-</div>
-
-    <div id="cards-analise">
-
-<div class="card-analise">
-
-<div style="
-display:flex;
-justify-content:space-between;
-align-items:center;
-">
-
-<div class="titulo-card" id="titulo-volatilidade">
-Volatility 100 (1s) Index
-</div>
-
-<div style="
-display:flex;
-align-items:center;
-gap:10px;
-font-size:10px;
-font-weight:bold;
-color:#00e676;
-">
-
-<span id="contador-orion">
-ORION: 0
-</span>
-
-<span id="contador-vortex">
-VORTEX: 0
-</span>
-
-<span id="temporizador-pares">
-0s
-</span>
-
-</div>
-
-</div>
-
-<div class="tipo-estrategia">
-ANÁLISE: ORION / VORTEX
-</div>
-
-<div class="barra-texto">
-
-<span class="blocos-barra" id="barra-pares">
-□□□□□□□□□□
-</span>
-
-<span class="valor-percentagem" id="percentual-pares">
-0%
-</span>
-
-</div>
-
-<div class="bot-recomendado">
-✔ Bot recomendado:
-<b id="bot-pares">VORTEX</b>
-</div>
-
-<div class="card-analise">
-
-<div style="
-display:flex;
-justify-content:space-between;
-align-items:center;
-">
-
-<div class="titulo-card">
-Volatility 100 (1s) Index
-</div>
-
-<div style="
-display:flex;
-align-items:center;
-gap:10px;
-font-size:10px;
-font-weight:bold;
-color:#00e676;
-">
-
-<span id="contador-titan">
-TITAN: 0
-</span>
-
-<span id="contador-epic">
-SUPER EPIC: 0
-</span>
-
-<span id="temporizador-under">
-0s
-</span>
-
-</div>
-
-</div>
-
-<div class="tipo-estrategia">
-ANÁLISE: TITAN / SUPER EPIC
-</div>
-
-<div class="barra-texto">
-
-<span class="blocos-barra" id="barra-under">
-□□□□□□□□□□
-</span>
-
-<span class="valor-percentagem" id="percentual-under">
-0%
-</span>
-
-</div>
-
-<div class="bot-recomendado">
-✔ Bot recomendado:
-<b id="bot-under">-</b>
-</div>
-
-</div>
-
-
-<div class="card-analise">
-
-<div style="
-display:flex;
-justify-content:space-between;
-align-items:center;
-">
-
-<div class="titulo-card">
-Volatility 100 (1s) Index
-</div>
-
-<div style="
-display:flex;
-align-items:center;
-gap:10px;
-font-size:10px;
-font-weight:bold;
-color:#00e676;
-">
-
-<span id="contador-phantom">
-PHANTOM: 0
-</span>
-
-<span id="temporizador-phantom">
-0s
-</span>
-
-</div>
-
-</div>
-
-<div class="tipo-estrategia">
-ANÁLISE: MONEY PHANTOM
-</div>
-
-<div class="barra-texto">
-
-<span class="blocks-barra" id="barra-phantom">
-□□□□□□□□□□
-</span>
-
-<span class="valor-percentagem" id="percentual-phantom">
-0%
-</span>
-
-</div>
-
-<div class="bot-recommended">
-✔ Bot recomendado:
-<b id="bot-phantom">-</b>
-</div>
-
-</div>
-
 
 
 </div>
@@ -521,4 +406,31 @@ window.emitirSomNotificacao = function () {
     }
 };
 
+
+
+// Atualiza os nomes dos mercados nos cartões dinamicamente
+setInterval(() => {
+    const nomesMercados = {
+        "1HZ10V": "Volatility 10 (1s) Index",
+        "1HZ25V": "Volatility 25 (1s) Index",
+        "1HZ50V": "Volatility 50 (1s) Index",
+        "1HZ75V": "Volatility 75 (1s) Index",
+        "1HZ100V": "Volatility 100 (1s) Index",
+        "R_10": "Volatility 10 Index",
+        "R_25": "Volatility 25 Index",
+        "R_50": "Volatility 50 Index",
+        "R_75": "Volatility 75 Index",
+        "R_100": "Volatility 100 Index"
+    };
+
+    const mercadoAtual = nomesMercados[window.volatilidadeAtiva] || "Volatility 100 (1s) Index";
+
+    const t1 = document.getElementById("titulo-volatilidade-1");
+    const t2 = document.getElementById("titulo-volatilidade-2");
+    const t3 = document.getElementById("titulo-volatilidade-3");
+
+    if (t1 && t1.innerText !== mercadoAtual) t1.innerText = mercadoAtual;
+    if (t2 && t2.innerText !== mercadoAtual) t2.innerText = mercadoAtual;
+    if (t3 && t3.innerText !== mercadoAtual) t3.innerText = mercadoAtual;
+}, 500); // Sincroniza a cada meio segundo
 
