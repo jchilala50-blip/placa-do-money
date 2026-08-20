@@ -1743,6 +1743,7 @@ JSON.stringify(data)
     operacaoAtual.contractId = contract_id;
     console.log("Contrato comprado:", contract_id);
 
+
 const estado = document.getElementById("estado-operacao");
 
 if (estado) {
@@ -1750,17 +1751,37 @@ if (estado) {
     estado.style.color = "#ffd600";
 }
 
-    // 🔥 AGORA SIM: ativar tracking do contrato
+// 🛡️ TRAVA ANTI-HIBERNAÇÃO: Se em 10s a Deriv não responder, reseta o estado
+if (window.travaSeguranca) clearTimeout(window.travaSeguranca);
+window.travaSeguranca = setTimeout(() => {
+    const est = document.getElementById("estado-operacao");
+    if (est && est.innerText.includes("PROCESSANDO")) {
+        console.warn("⚠️ Deriv não respondeu a tempo! Forçando libertação...");
+        est.innerText = "🟢 AGUARDANDO SINAL";
+        est.style.color = "#00e676";
+        // Resetamos a flag de operação para permitir novas entradas
+        if (typeof operacaoAtual !== 'undefined') {
+            operacaoAtual = null; 
+        }
+    }
+}, 10000);
+
+// 🔥 ATIVAR TRACKING DO CONTRATO
 console.log("VOU ACOMPANHAR O CONTRATO: " + contract_id);
-    ws.send(JSON.stringify({
-        proposal_open_contract: 1,
-        contract_id: contract_id,
-        subscribe: 1
-    }));
-}
+ws.send(JSON.stringify({
+    proposal_open_contract: 1,
+    contract_id: contract_id,
+    subscribe: 1
+}));
+
+
+
 
          // 🎫 3. TRATAR RESULTADO DA COMPRA VIA PROPOSAL_OPEN_CONTRACT
 if (data.msg_type === 'proposal_open_contract' && data.proposal_open_contract) {
+
+// Limpa o temporizador de segurança pois a Deriv respondeu com sucesso
+if (window.travaSeguranca) clearTimeout(window.travaSeguranca);
 
     console.log(JSON.stringify(data));
 
