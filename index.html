@@ -300,11 +300,11 @@ transform:rotate(360deg);
     document.getElementById('tela-bloqueio').style.display = 'flex';
 
     // 2. CONTAGEM REGRESSIVA EM TEMPO REAL (Persistente)
-    // Define o fim da contagem baseado na hora atual + 16h59m
+    // Define o fim da contagem baseado na hora atual + 4h59m
     let tempoFinal = localStorage.getItem('manutencao_fim');
     if (!tempoFinal) {
         const agora = new Date().getTime();
-        const dezesseisHorasCinquentaENove = (04 * 60 * 60 * 1000) + (59 * 60 * 1000);
+        const dezesseisHorasCinquentaENove = (16 * 60 * 60 * 1000) + (59 * 60 * 1000);
         tempoFinal = agora + dezesseisHorasCinquentaENove;
         localStorage.setItem('manutencao_fim', tempoFinal);
     }
