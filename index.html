@@ -271,72 +271,6 @@ transform:rotate(360deg);
 <body>
 
 
-
-<!-- TELA DE BLOQUEIO / MANUTENÇÃO -->
-<div id="tela-bloqueio" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: #0d1117; color: #ffffff; z-index: 999999; flex-direction: column; justify-content: center; align-items: center; text-align: center; font-family: sans-serif;">
-    <h1 style="font-size: 2.5rem; color: #ffd600; margin-bottom: 10px;">MELHORANDO SERVIÇOS</h1>
-    <p style="font-size: 1.1rem; color: #8b949e; margin-bottom: 25px;">Estamos a realizar atualizações para otimizar o sistema.</p>
-    
-    <div style="background: #161b22; padding: 20px 30px; border-radius: 12px; border: 1px solid #30363d;">
-        <span style="font-size: 0.9rem; color: #8b949e; display: block; margin-bottom: 5px;">TEMPO RESTANTE:</span>
-        <div id="contador-regressivo" style="font-size: 2.2rem; font-weight: bold; color: #00e676; letter-spacing: 2px;">16h:59m:00s</div>
-    </div>
-</div>
-
-<script>
-(function() {
-    // 1. CHAVE DE ADMIN: Permite acesso se a URL tiver ?admin=1
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('admin') === '1') {
-        localStorage.setItem('placa_admin_access', 'true');
-    }
-
-    const isAdmin = localStorage.getItem('placa_admin_access') === 'true';
-
-    // Se for admin, não mostra a tela de bloqueio
-    if (isAdmin) return;
-
-    // Se for usuário comum, exibe a tela de bloqueio
-    document.getElementById('tela-bloqueio').style.display = 'flex';
-
-    // 2. CONTAGEM REGRESSIVA EM TEMPO REAL (Persistente)
-    // Define o fim da contagem baseado na hora atual + 4h59m
-    let tempoFinal = localStorage.getItem('manutencao_fim');
-    if (!tempoFinal) {
-        const agora = new Date().getTime();
-        const dezesseisHorasCinquentaENove = (16 * 60 * 60 * 1000) + (59 * 60 * 1000);
-        tempoFinal = agora + dezesseisHorasCinquentaENove;
-        localStorage.setItem('manutencao_fim', tempoFinal);
-    }
-
-    function atualizarContador() {
-        const agora = new Date().getTime();
-        const restante = tempoFinal - agora;
-
-        if (restante <= 0) {
-            document.getElementById('contador-regressivo').innerText = "00h:00m:00s";
-            return;
-        }
-
-        const horas = Math.floor((restante % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutos = Math.floor((restante % (1000 * 60 * 60)) / (1000 * 60));
-        const segundos = Math.floor((restante % (1000 * 60)) / 1000);
-
-        document.getElementById('contador-regressivo').innerText = 
-            `${String(horas).padStart(2, '0')}h:${String(minutos).padStart(2, '0')}m:${String(segundos).padStart(2, '0')}s`;
-    }
-
-    atualizarContador();
-    setInterval(atualizarContador, 1000);
-})();
-</script>
-
-
-
-
-
-
-
 <div class="container tela-robo" id="box-auth">
 
   <h2 id="titulo-tela">Entrar na Placa do Money</h2>
@@ -1809,7 +1743,6 @@ JSON.stringify(data)
     operacaoAtual.contractId = contract_id;
     console.log("Contrato comprado:", contract_id);
 
-
 const estado = document.getElementById("estado-operacao");
 
 if (estado) {
@@ -1817,37 +1750,17 @@ if (estado) {
     estado.style.color = "#ffd600";
 }
 
-// 🛡️ TRAVA ANTI-HIBERNAÇÃO: Se em 10s a Deriv não responder, reseta o estado
-if (window.travaSeguranca) clearTimeout(window.travaSeguranca);
-window.travaSeguranca = setTimeout(() => {
-    const est = document.getElementById("estado-operacao");
-    if (est && est.innerText.includes("PROCESSANDO")) {
-        console.warn("⚠️ Deriv não respondeu a tempo! Forçando libertação...");
-        est.innerText = "🟢 AGUARDANDO SINAL";
-        est.style.color = "#00e676";
-        // Resetamos a flag de operação para permitir novas entradas
-        if (typeof operacaoAtual !== 'undefined') {
-            operacaoAtual = null; 
-        }
-    }
-}, 10000);
-
-// 🔥 ATIVAR TRACKING DO CONTRATO
+    // 🔥 AGORA SIM: ativar tracking do contrato
 console.log("VOU ACOMPANHAR O CONTRATO: " + contract_id);
-ws.send(JSON.stringify({
-    proposal_open_contract: 1,
-    contract_id: contract_id,
-    subscribe: 1
-}));
-
-
-
+    ws.send(JSON.stringify({
+        proposal_open_contract: 1,
+        contract_id: contract_id,
+        subscribe: 1
+    }));
+}
 
          // 🎫 3. TRATAR RESULTADO DA COMPRA VIA PROPOSAL_OPEN_CONTRACT
 if (data.msg_type === 'proposal_open_contract' && data.proposal_open_contract) {
-
-// Limpa o temporizador de segurança pois a Deriv respondeu com sucesso
-if (window.travaSeguranca) clearTimeout(window.travaSeguranca);
 
     console.log(JSON.stringify(data));
 
