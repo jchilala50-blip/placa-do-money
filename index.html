@@ -1862,9 +1862,6 @@ if (data.msg_type === 'proposal_open_contract' && data.proposal_open_contract) {
     console.log("VOU CHAMAR 
 processarResultadoOperacao");
 
-
- if (window.timerVerificacaoContrato) clearTimeout(window.timerVerificacaoContrato);
-
     processarResultadoOperacao(
         contrato.status === "won",
         Number(contrato.profit),
