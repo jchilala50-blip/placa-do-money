@@ -394,7 +394,7 @@ transform:rotate(360deg);
 
 <script>
 
-console.log("BEM VINDO");
+alert("BEM VINDO");
 
   window.onerror = function(msg, url, line) {
 
@@ -1816,14 +1816,26 @@ if (estado) {
     estado.style.color = "#ffd600";
 }
 
-    // 🔥 AGORA SIM: ativar tracking do contrato
+        // 🔥 AGORA SIM: ativar tracking do contrato
 console.log("VOU ACOMPANHAR O CONTRATO: " + contract_id);
+
+    if (window.timerVerificacaoContrato) clearTimeout(window.timerVerificacaoContrato);
+
     ws.send(JSON.stringify({
         proposal_open_contract: 1,
         contract_id: contract_id,
         subscribe: 1
     }));
-}
+
+    // 🛡️ GUARDA DE SEGURANÇA: Solicita novamente se a Deriv atrasar mais de 8s
+    window.timerVerificacaoContrato = setTimeout(() => {
+        console.warn("⚠️ Atraso detectado na Deriv. Solicitando estado do contrato: " + contract_id);
+        ws.send(JSON.stringify({
+            proposal_open_contract: 1,
+            contract_id: contract_id
+        }));
+    }, 8000);
+
 
          // 🎫 3. TRATAR RESULTADO DA COMPRA VIA PROPOSAL_OPEN_CONTRACT
 if (data.msg_type === 'proposal_open_contract' && data.proposal_open_contract) {
@@ -1847,13 +1859,19 @@ if (data.msg_type === 'proposal_open_contract' && data.proposal_open_contract) {
     const ultimoDigitoReal =
         Number(String(contrato.exit_spot).slice(-1));
 
-    console.log("VOU CHAMAR processarResultadoOperacao");
+    console.log("VOU CHAMAR 
+processarResultadoOperacao");
+
+
+ if (window.timerVerificacaoContrato) clearTimeout(window.timerVerificacaoContrato);
 
     processarResultadoOperacao(
         contrato.status === "won",
         Number(contrato.profit),
         ultimoDigitoReal
     );
+
+
 
 }
 
