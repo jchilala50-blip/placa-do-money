@@ -1819,8 +1819,6 @@ if (estado) {
         // 🔥 AGORA SIM: ativar tracking do contrato
 console.log("VOU ACOMPANHAR O CONTRATO: " + contract_id);
 
-    if (window.timerVerificacaoContrato) clearTimeout(window.timerVerificacaoContrato);
-
     ws.send(JSON.stringify({
         proposal_open_contract: 1,
         contract_id: contract_id,
