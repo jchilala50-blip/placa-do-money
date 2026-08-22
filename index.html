@@ -1827,16 +1827,6 @@ console.log("VOU ACOMPANHAR O CONTRATO: " + contract_id);
         subscribe: 1
     }));
 
-    // 🛡️ GUARDA DE SEGURANÇA: Solicita novamente se a Deriv atrasar mais de 8s
-    window.timerVerificacaoContrato = setTimeout(() => {
-        console.warn("⚠️ Atraso detectado na Deriv. Solicitando estado do contrato: " + contract_id);
-        ws.send(JSON.stringify({
-            proposal_open_contract: 1,
-            contract_id: contract_id
-        }));
-    }, 8000);
-
-
          // 🎫 3. TRATAR RESULTADO DA COMPRA VIA PROPOSAL_OPEN_CONTRACT
 if (data.msg_type === 'proposal_open_contract' && data.proposal_open_contract) {
 
