@@ -1278,50 +1278,69 @@ temporizadorOperacao = setTimeout(() => {
     comprarContratoDeriv('DIGITUNDER', 5, 2);
 }
 
+ 
     // 5. ESTRATÉGIA REPETIÇÃO
     else if (estrategia === 'repeticao') {
-        // Precisamos de pelo menos dois dígitos no histórico para comparar
         if (ultimosDigitos.length >= 2) {
             const penultimoDigito = ultimosDigitos[ultimosDigitos.length - 2];
-            
+
             if (ultimoDigito === penultimoDigito) {
                 console.log(`Dígito repetido detetado! [${ultimoDigito} = ${penultimoDigito}]`);
                 operacaoAtual = {
-    ativa: true,
-    tipo: "REPETIÇÃO",
-    preco: 0.35,
-    tickEntrada: ultimoDigito,
-    proposalId: null,
-    contractId: null,
-    aguardandoResultado: true
-};
+                    ativa: true,
+                    tipo: "REPETIÇÃO",
+                    preco: 0.35,
+                    tickEntrada: ultimoDigito,
+                    proposalId: null,
+                    contractId: null,
+                    aguardandoResultado: true
+                };
 
-clearTimeout(temporizadorOperacao);
+                clearTimeout(temporizadorOperacao);
 
-temporizadorOperacao = setTimeout(() => {
+                temporizadorOperacao = setTimeout(() => {
+                    if (operacaoAtual && operacaoAtual.ativa) {
+                        cancelarOperacaoPresa("Tempo máximo excedido");
+                    }
+                }, 10000);
 
-    if (
-        operacaoAtual &&
-        operacaoAtual.ativa
-    ) {
-
-        cancelarOperacaoPresa(
-            "Tempo máximo excedido"
-        );
-
-    }
-
-}, 10000);
-
-
-
-const tipoContrato = ultimoDigito % 2 !== 0 ? 'DIGITODD' : 'DIGITEVEN';
-
-comprarContratoDeriv(tipoContrato, 5);
+                const tipoContrato = ultimoDigito % 2 !== 0 ? 'DIGITODD' : 'DIGITEVEN';
+                comprarContratoDeriv(tipoContrato, 5);
             }
         }
     }
+    // 6. ESTRATÉGIA RAIN MONEY (COMBINAÇÃO DE CONDIÇÕES)
+    else if (estrategia === 'rain_money') {
+        const resultadoRain = calcularScoreRainMoney();
+
+        console.log(`☔ RAIN MONEY — Score: ${resultadoRain.score}/100 | Direção: ${resultadoRain.direcao}`);
+
+        if (resultadoRain.score >= 80 && resultadoRain.direcao) {
+            const tipoContrato = resultadoRain.direcao === "EVEN" ? "DIGITEVEN" : "DIGITODD";
+
+            operacaoAtual = {
+                ativa: true,
+                tipo: `RAIN MONEY (${resultadoRain.direcao})`,
+                preco: 0.35,
+                tickEntrada: ultimoDigito,
+                proposalId: null,
+                contractId: null,
+                aguardandoResultado: true
+            };
+
+            clearTimeout(temporizadorOperacao);
+
+            temporizadorOperacao = setTimeout(() => {
+                if (operacaoAtual && operacaoAtual.ativa) {
+                    cancelarOperacaoPresa("Tempo máximo excedido");
+                }
+            }, 10000);
+
+            comprarContratoDeriv(tipoContrato, 3);
+        }
+    }
 }
+
 
 
 function renderizarBarrasIniciais() {
