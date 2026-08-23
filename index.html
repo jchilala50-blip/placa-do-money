@@ -361,7 +361,7 @@ transform:rotate(360deg);
     color:#b0bec5;
     text-align:center;
 ">
-🔴 VERSÃO 2.5.2
+🔴 VERSÃO 3
 </div>
 
 </div>
@@ -1764,6 +1764,11 @@ if (data.error) {
             "⚠️ Operação ativa recebeu erro da Deriv."
         );
 
+window.operacaoPendente = {
+    ...operacaoAtual
+};
+
+
         operacaoAtual.ativa = false;
         operacaoAtual.aguardandoResultado = false;
         operacaoAtual.proposalId = null;
@@ -1961,6 +1966,23 @@ if (data.msg_type === 'proposal_open_contract' && data.proposal_open_contract) {
     console.log(JSON.stringify(data));
 
     const contrato = data.proposal_open_contract;
+
+if (
+    window.operacaoPendente &&
+    window.operacaoPendente.contractId === contrato.contract_id
+) {
+    console.log(
+        "🔄 Recuperando operação pendente:",
+        contrato.contract_id
+    );
+
+    operacaoAtual = {
+        ...window.operacaoPendente
+    };
+
+    window.operacaoPendente = null;
+}
+
 
     // Se o contrato ainda não foi fechado, aguarda
     if (!contrato.is_sold) return;
