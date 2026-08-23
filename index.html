@@ -1463,64 +1463,62 @@ if(percentual >= 15) {
 }
 
 function atualizarGraficoReal() {
+    const contagem = Array(10).fill(0);
 
-const contagem = Array(10).fill(0);
+    ultimosDigitos.forEach(digito => {
+        if (!isNaN(digito) && digito >= 0 && digito <= 9) {
+            contagem[digito]++;
+        }
+    });
 
-ultimosDigitos.forEach(digito => {
+    atualizarCoresBarras(contagem);
 
-if (!isNaN(digito) && digito >= 0 && digito <= 9) {
+    for (let i = 0; i <= 9; i++) {
+        const barra = document.getElementById(`barra-${i}`);
+        const texto = document.getElementById(`perc-${i}`);
 
-contagem[digito]++;
+        const percentual = ultimosDigitos.length > 0 ? Math.round(
+            (contagem[i] / ultimosDigitos.length) * 100
+        ) : 0;
 
+        if (barra) {
+            let altura = percentual * 3.0;
+            if (altura > 80) {
+                altura = 80;
+            }
+            barra.style.height = Math.max(altura, 10) + "px";
+        }
+
+        if (texto) {
+            texto.innerText = percentual + "%";
+
+            // Deteta a cor atual da barra para aplicar no círculo do texto
+            const corBarra = barra ? window.getComputedStyle(barra).backgroundColor : "";
+            const ehVerde = corBarra.includes("0, 230, 118") || corBarra.includes("0, 255") || corBarra.includes("green");
+
+            const corFundo = ehVerde ? "rgba(0, 230, 118, 0.25)" : "rgba(255, 23, 68, 0.25)";
+            const corBorda = ehVerde ? "#00e676" : "#ff1744";
+
+            // Aplica o estilo circular no rótulo da percentagem
+            Object.assign(texto.style, {
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: "26px",
+                height: "26px",
+                borderRadius: "50%",
+                backgroundColor: corFundo,
+                border: `1px solid ${corBorda}`,
+                color: "#ffffff",
+                fontSize: "9px",
+                fontWeight: "bold",
+                boxShadow: `0 0 6px ${corBorda}`,
+                margin: "0 auto 4px auto"
+            });
+        }
+    }
 }
 
-});
-
-atualizarCoresBarras(contagem);
-
-
-for (let i = 0; i <= 9; i++) {
-
-const barra = document.getElementById(`barra-${i}`);
-
-const texto = document.getElementById(`perc-${i}`);
-
-
-const percentual = ultimosDigitos.length > 0 ? Math.round(
-
-(contagem[i] / ultimosDigitos.length) * 100
-
-) : 0;
-
-
-if (barra) {
-
-
-let altura = percentual * 3.0;
-
-
-if (altura > 80) {
-
-altura = 80;
-
-}
-
-barra.style.height =
-
-Math.max(altura, 10) + "px";
-
-}
-
-
-if (texto) {
-
-texto.innerText = percentual + "%";
-
-}
-
-}
-
-}
 
 function abrirListaRobos() {
 
