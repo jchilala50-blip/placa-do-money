@@ -2730,6 +2730,34 @@ window.addEventListener("load", async function () {
 
 });
 
+
+// ========================================================
+// 🔔 GESTOR DE NOTIFICAÇÃO DIÁRIA (8 SEGUNDOS)
+// ========================================================
+function verificarNotificacaoDiaria() {
+    const hoje = new Date().toISOString().split('T')[0]; // Pega a data atual (AAAA-MM-DD)
+    const ultimaExibicao = localStorage.getItem("data_notificacao_placa");
+
+    if (ultimaExibicao !== hoje) {
+        const notif = document.getElementById("notificacao-boas-vindas");
+        if (notif) {
+            notif.style.display = "block";
+
+            // Regista que a mensagem já foi mostrada hoje
+            localStorage.setItem("data_notificacao_placa", hoje);
+
+            // Oculta a notificação após 8 segundos
+            setTimeout(() => {
+                notif.style.display = "none";
+            }, 8000);
+        }
+    }
+}
+
+// Executa a verificação assim que a página termina de carregar
+window.addEventListener("DOMContentLoaded", verificarNotificacaoDiaria);
+
+
 </script>
 
 <div id="lista-robos" style="
@@ -2871,7 +2899,7 @@ Selecionar Robô
      ">
 
     <img src="RAIN MONEY.png"
-         style="width:300px;height:180px;object-fit:contain;">
+         style="width:305px;height:180px;object-fit:contain;">
 
    <!-- <strong>RAIN MONEY</strong> -->
 
@@ -2966,6 +2994,41 @@ position:fixed;
 
 <script src="analiseMercado.js"></script>
 <script src="analiseUI.js"></script>
+
+<!-- 🔔 NOTIFICAÇÃO DE BOAS-VINDAS (ONCE A DAY) -->
+<div id="notificacao-boas-vindas" style="
+    display: none;
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+    width: 90%;
+    max-width: 380px;
+    background: rgba(16, 31, 53, 0.95);
+    border: 1px solid #00e5ff;
+    border-radius: 12px;
+    padding: 14px 18px;
+    text-align: center;
+    box-shadow: 0 0 20px rgba(0, 229, 255, 0.4);
+    backdrop-filter: blur(8px);
+    animation: fadeInDown 0.5s ease;
+">
+    <div style="color: #00e5ff; font-weight: bold; font-size: 14px; margin-bottom: 4px;">
+        👋 Bem-vindo à Placa do Money da Deriv
+    </div>
+    <div style="color: #ffffff; font-size: 12px; line-height: 1.4;">
+        com Análise e Operações Automatizadas
+    </div>
+</div>
+
+<style>
+@keyframes fadeInDown {
+    from { opacity: 0; transform: translate(-50%, -20px); }
+    to { opacity: 1; transform: translate(-50%, 0); }
+}
+</style>
+
 
 </body>
 </html>
