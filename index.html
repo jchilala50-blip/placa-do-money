@@ -271,45 +271,6 @@ transform:rotate(360deg);
 <body>
 
 
-    <!-- TELA DE BLOQUEIO -->
-    <div id="tela-bloqueio" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: #0d1117; color: #ffffff; z-index: 999999; flex-direction: column; justify-content: center; align-items: center; text-align: center; font-family: sans-serif;">
-        <div style="width: 60px; height: 60px; border: 6px solid #30363d; border-top: 6px solid #00bfff; border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 25px;"></div>
-        <h2 style="font-size: 1.5rem; color: #ffffff; font-weight: 500; letter-spacing: 1px; margin: 0;">Actualização concluída</h2>
-    </div>
-
-    <style>
-    @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-    }
-    </style>
-
-    <script>
-    (function() {
-        const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.get('admin') === '1') {
-            localStorage.setItem('placa_admin_access', 'true');
-        }
-
-        const isAdmin = localStorage.getItem('placa_admin_access') === 'true';
-
-        window.addEventListener('DOMContentLoaded', () => {
-            if (!isAdmin) {
-                const tela = document.getElementById('tela-bloqueio');
-                if (tela) {
-                    tela.style.setProperty('display', 'flex', 'important');
-                }
-            }
-        });
-    })();
-    </script>
-
-    <!-- O RESTO DO TEU CÓDIGO DO PROJETO VEM AQUI EM BAIXO -->
-
-
-
-
-
 <div class="container tela-robo" id="box-auth">
 
   <h2 id="titulo-tela">Entrar na Placa do Money</h2>
@@ -360,14 +321,14 @@ transform:rotate(360deg);
     color:#b0bec5;
     text-align:center;
 ">
-🔮 V 3
+🔮 V 3              🇦🇴🇺🇸🇧🇷🇯🇴
 </div>
 
 </div>
 
 <script>
 
-alert("BEM VINDO");
+console.log("BEM VINDO");
 
   window.onerror = function(msg, url, line) {
 
@@ -541,8 +502,31 @@ container.classList.remove('tela-robo');
             <div class="topo-plataforma">
                 <a href="https://youtube.com/@derivtutorialnegociacao?si=QN2oZ2GlnTZa6Unn" target="_blank" class="btn-info-youtube">ℹ</a>
                 <div class="texto-logo">
-                    <h3>PLACA DO MONEY 🇧🇫🇲🇿🇺🇸🇧🇷🇦🇴</h3>
-                    <div style="font-size:9px; color:#00e676; font-weight:bold;">OPERAÇÕES AUTOMATIZADAS</div>
+                    <!-- 🚀 CABEÇALHO PRINCIPAL CENTRALIZADO -->
+<div style="text-align: center; margin-top: 10px; margin-bottom: 15px;">
+    <h1 style="
+        color: #00e5ff;
+        font-family: Arial, sans-serif;
+        font-size: 20px;
+        font-weight: 900;
+        letter-spacing: 1.5px;
+        margin: 0;
+        text-shadow: 0 0 12px rgba(0, 229, 255, 0.6);
+        text-transform: uppercase;
+    ">
+        PLACA DO MONEY OFICIAL
+    </h1>
+    <div style="
+        color: #8fa0b5;
+        font-size: 11px;
+        font-weight: 500;
+        letter-spacing: 1px;
+        margin-top: 2px;
+        text-transform: lowercase;
+    ">
+        mercado sintético
+    </div>
+</div>
                 </div>
             </div>
             
