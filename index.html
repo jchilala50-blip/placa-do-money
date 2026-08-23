@@ -935,6 +935,40 @@ if (isNaN(stake) || stake < 0.35) {
 }
 
 
+function cancelarOperacaoPresa(motivo) {
+
+    console.warn(
+        "⚠️ OPERAÇÃO LIBERTADA:",
+        motivo
+    );
+
+    clearTimeout(temporizadorOperacao);
+    temporizadorOperacao = null;
+
+    operacaoAtual = {
+        ativa: false,
+        tipo: "",
+        preco: 0,
+        tickEntrada: null,
+        proposalId: null,
+        contractId: null,
+        aguardandoResultado: false
+    };
+
+    const estado =
+        document.getElementById(
+            "estado-operacao"
+        );
+
+    if (estado) {
+        estado.innerText =
+            "⚪ Pronto para nova análise";
+        estado.style.color =
+            "#42a5f5";
+    }
+}
+
+
 // === MOTOR DE PROCESSAMENTO DAS 5 ESTRATÉGIAS ===
 
 function executarMotorEstrategias(ultimoDigito, tickId) {
@@ -972,9 +1006,27 @@ if (!autorizacaoCompra) {
     aguardandoResultado: true
 };
 
-comprarContratoDeriv('DIGITODD', 3);
+clearTimeout(temporizadorOperacao);
+
+temporizadorOperacao = setTimeout(() => {
+
+    if (
+        operacaoAtual &&
+        operacaoAtual.ativa
+    ) {
+
+        cancelarOperacaoPresa(
+            "Tempo máximo excedido"
+        );
+
     }
-    
+
+}, 10000);
+
+
+comprarContratoDeriv('DIGITODD', 3);
+    }    
+
    // 2. ESTRATÉGIA PAR
 else if (estrategia === 'par' && ultimoDigito % 2 === 0) {
 
@@ -993,6 +1045,25 @@ if (!autorizacaoCompra) {
         aguardandoResultado: true
     };
 
+clearTimeout(temporizadorOperacao);
+
+temporizadorOperacao = setTimeout(() => {
+
+    if (
+        operacaoAtual &&
+        operacaoAtual.ativa
+    ) {
+
+        cancelarOperacaoPresa(
+            "Tempo máximo excedido"
+        );
+
+    }
+
+}, 10000);
+
+
+
     comprarContratoDeriv('DIGITEVEN', 3);
 }
 
@@ -1009,6 +1080,24 @@ else if (estrategia === 'over' && ultimoDigito > 5) {
         aguardandoResultado: true
     };
 
+clearTimeout(temporizadorOperacao);
+
+temporizadorOperacao = setTimeout(() => {
+
+    if (
+        operacaoAtual &&
+        operacaoAtual.ativa
+    ) {
+
+        cancelarOperacaoPresa(
+            "Tempo máximo excedido"
+        );
+
+    }
+
+}, 10000);
+
+
     comprarContratoDeriv('DIGITOVER', 5,1 );
 }
 
@@ -1024,6 +1113,24 @@ else if (estrategia === 'under' && ultimoDigito < 5) {
         contractId: null,
         aguardandoResultado: true
     };
+
+clearTimeout(temporizadorOperacao);
+
+temporizadorOperacao = setTimeout(() => {
+
+    if (
+        operacaoAtual &&
+        operacaoAtual.ativa
+    ) {
+
+        cancelarOperacaoPresa(
+            "Tempo máximo excedido"
+        );
+
+    }
+
+}, 10000);
+
 
     comprarContratoDeriv('DIGITUNDER', 5, 2);
 }
@@ -1045,6 +1152,25 @@ else if (estrategia === 'under' && ultimoDigito < 5) {
     contractId: null,
     aguardandoResultado: true
 };
+
+clearTimeout(temporizadorOperacao);
+
+temporizadorOperacao = setTimeout(() => {
+
+    if (
+        operacaoAtual &&
+        operacaoAtual.ativa
+    ) {
+
+        cancelarOperacaoPresa(
+            "Tempo máximo excedido"
+        );
+
+    }
+
+}, 20000);
+
+
 
 const tipoContrato = ultimoDigito % 2 !== 0 ? 'DIGITODD' : 'DIGITEVEN';
 
@@ -1538,6 +1664,8 @@ let subscriptionTickId = null;
 
 let historicoOperacoes = [];
 
+let temporizadorOperacao = null;
+
 // Memória para análise do mercado
 let memoriaMercado = [];
 
@@ -1574,9 +1702,10 @@ if (data.msg_type !== "tick") {
     console.log("MSG_TYPE: " + data.msg_type);
 }
 
+
 if (data.error) {
 
- console.log(
+    console.log(
         "ERRO DERIV\n\n" +
         "REQ_ID: " + (data.req_id || "SEM REQ_ID") +
         "\n\n" +
@@ -1585,7 +1714,34 @@ if (data.error) {
         JSON.stringify(window.ultimaMensagem)
     );
 
+    if (
+        typeof operacaoAtual !== "undefined" &&
+        operacaoAtual &&
+        operacaoAtual.ativa === true
+    ) {
+
+        console.warn(
+            "⚠️ Operação ativa recebeu erro da Deriv."
+        );
+
+        operacaoAtual.ativa = false;
+        operacaoAtual.aguardandoResultado = false;
+        operacaoAtual.proposalId = null;
+        operacaoAtual.contractId = null;
+
+        const estado =
+            document.getElementById("estado-operacao");
+
+        if (estado) {
+            estado.innerText =
+                "⚠️ Erro na operação — pronto para nova análise";
+            estado.style.color =
+                "#ff9800";
+        }
+    }
 }
+
+
         console.log("Mensagem recebida do WS:", data);
 
         // 💰 1. TRATAR SALDO (BALANCE)
@@ -1805,6 +1961,10 @@ if (data.msg_type === 'proposal_open_contract' && data.proposal_open_contract) {
 
 // === PROCESSAR PLACAR E LIBERTAR O ROBÔ ===
 function processarResultadoOperacao(resultado, lucro, ultimoDigitoReal) {
+
+clearTimeout(temporizadorOperacao);
+temporizadorOperacao = null;
+
 console.log("ENTREI EM processarResultadoOperacao");
 
     // CORRIGIDO: ID exato conforme o HTML do Bloco 1
