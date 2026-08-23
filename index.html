@@ -615,6 +615,8 @@ Nenhuma 📁 ▼
     <option value="under">SUPER EPIC</option>
 
     <option value="repeticao">MONEY PHANTOM</option>
+    
+    <option value="rain_money">☔ RAIN MONEY</option>
 
 </select>
                 </div>
@@ -1007,6 +1009,105 @@ function cancelarOperacaoPresa(motivo) {
     }
 }
 
+// ========================================================
+// ☔ ESTRATÉGIA RAIN MONEY — COMBINAÇÃO DE CONDIÇÕES (100 PTS)
+// ========================================================
+function calcularScoreRainMoney() {
+    if (!memoriaMercado || memoriaMercado.length < 10) {
+        return { score: 0, direcao: null };
+    }
+
+    const ultimos10 = memoriaMercado.slice(-10);
+    const ultimos4 = memoriaMercado.slice(-4);
+    
+    let pontosSequencia = 0;
+    let pontosFrequencia = 0;
+    let pontosDirecao = 0;
+    let pontosConfirmacao = 0;
+    let direcaoSugerida = null; // Exemplo: "EVEN", "ODD", "OVER", "UNDER"
+
+    // 1. CONDIÇÃO 1 — SEQUÊNCIA (Até 30 pontos)
+    const pares = ultimos10.filter(d => d % 2 === 0).length;
+    const impares = 10 - pares;
+    const diferencaSeq = Math.abs(pares - impares);
+
+    if (diferencaSeq >= 6) {
+        pontosSequencia = 30; // Dominância clara (ex: 8 pares e 2 ímpares)
+    } else if (diferencaSeq >= 4) {
+        pontosSequencia = 20; // Tendência moderada
+    } else if (diferencaSeq >= 2) {
+        pontosSequencia = 10; // Padrão fraco
+    } else {
+        pontosSequencia = 0;
+    }
+
+    // Define a direção com base no grupo dominante da sequência/frequência
+    direcaoSugerida = pares > impares ? "EVEN" : "ODD";
+
+    // 2. CONDIÇÃO 2 — FREQUÊNCIA (Até 25 pontos)
+    const altos = ultimos10.filter(d => d >= 5).length;
+    const baixos = 10 - altos;
+    const diferencaFreq = Math.abs(altos - baixos);
+
+    if (diferencaFreq >= 6) {
+        pontosFrequencia = 25; // Concentração muito forte
+    } else if (diferencaFreq >= 4) {
+        pontosFrequencia = 20; // Concentração forte
+    } else if (diferencaFreq >= 2) {
+        pontosFrequencia = 15; // Concentração moderada
+    } else {
+        pontosFrequencia = 0;
+    }
+
+    // 3. CONDIÇÃO 3 — DIREÇÃO (Até 25 pontos)
+    // ultimos4 = [D1, D2, D3, D4]
+    const d1 = ultimos4[0], d2 = ultimos4[1], d3 = ultimos4[2], d4 = ultimos4[3];
+    const delta1 = d2 - d1;
+    const delta2 = d3 - d2;
+    const delta3 = d4 - d3;
+
+    const subindo = delta1 > 0 && delta2 > 0 && delta3 > 0;
+    const descendo = delta1 < 0 && delta2 < 0 && delta3 < 0;
+
+    if (subindo || descendo) {
+        pontosDirecao = 25; // Vetor puro (3 movimentos seguidos na mesma direção)
+    } else if ((delta2 > 0 && delta3 > 0) || (delta2 < 0 && delta3 < 0)) {
+        pontosDirecao = 15; // Tendência recente confirmada nos últimos 2 deltas
+    } else if (Math.abs(d4 - d1) >= 4) {
+        pontosDirecao = 5;  // Saldo líquido forte
+    } else {
+        pontosDirecao = 0;
+    }
+
+    // 4. CONDIÇÃO 4 — CONFIRMAÇÃO (Até 20 pontos)
+    const deltaUltimo = Math.abs(d4 - d3);
+    const d4PertenceAoGrupo = (direcaoSugerida === "EVEN" && d4 % 2 === 0) || 
+                              (direcaoSugerida === "ODD" && d4 % 2 !== 0);
+
+    if (d4PertenceAoGrupo && deltaUltimo >= 2) {
+        pontosConfirmacao = 20; // Confirmação absoluta com expansão
+    } else if (d4PertenceAoGrupo && (d3 % 2 === d4 % 2)) {
+        pontosConfirmacao = 15; // Sustentação do padrão
+    } else if (d4PertenceAoGrupo) {
+        pontosConfirmacao = 5;  // Transição de grupo
+    } else {
+        pontosConfirmacao = 0;  // Sinal invalidado no último tick
+    }
+
+    const scoreTotal = pontosSequencia + pontosFrequencia + pontosDirecao + pontosConfirmacao;
+
+    return {
+        score: scoreTotal,
+        direcao: direcaoSugerida,
+        detalhes: {
+            seq: pontosSequencia,
+            freq: pontosFrequencia,
+            dir: pontosDirecao,
+            conf: pontosConfirmacao
+        }
+    };
+}
+
 
 // === MOTOR DE PROCESSAMENTO DAS 5 ESTRATÉGIAS ===
 
@@ -1218,6 +1319,38 @@ comprarContratoDeriv(tipoContrato, 5);
         }
     }
 }
+
+
+    // 6. ESTRATÉGIA RAIN MONEY (COMBINAÇÃO DE CONDIÇÕES)
+    else if (estrategia === 'rain_money') {
+        const resultadoRain = calcularScoreRainMoney();
+
+        console.log(`☔ RAIN MONEY — Score: ${resultadoRain.score}/100 | Direção: ${resultadoRain.direcao}`);
+
+        if (resultadoRain.score >= 80 && resultadoRain.direcao) {
+            const tipoContrato = resultadoRain.direcao === "EVEN" ? "DIGITEVEN" : "DIGITODD";
+
+            operacaoAtual = {
+                ativa: true,
+                tipo: `RAIN MONEY (${resultadoRain.direcao})`,
+                preco: 0.35,
+                tickEntrada: ultimoDigito,
+                proposalId: null,
+                contractId: null,
+                aguardandoResultado: true
+            };
+
+            clearTimeout(temporizadorOperacao);
+
+            temporizadorOperacao = setTimeout(() => {
+                if (operacaoAtual && operacaoAtual.ativa) {
+                    cancelarOperacaoPresa("Tempo máximo excedido");
+                }
+            }, 10000);
+
+            comprarContratoDeriv(tipoContrato, 3);
+        }
+    }
 
 
 function renderizarBarrasIniciais() {
@@ -2698,6 +2831,25 @@ Selecionar Robô
          style="width:299px;height:180px;object-fit:contain;">
 
    <!-- <strong>MONEY PHANTOM</strong> -->
+
+</div>
+
+<div onclick="selecionarRobo('rain_money','RAIN MONEY','RAIN MONEY.png')"
+     style="
+        display:flex;
+        align-items:center;
+        gap:10px;
+        padding:10px;
+        margin-bottom:8px;
+        background:#101f35;
+        border-radius:8px;
+        cursor:pointer;
+     ">
+
+    <img src="RAIN MONEY.png"
+         style="width:300px;height:180px;object-fit:contain;">
+
+   <!-- <strong>RAIN MONEY</strong> -->
 
 </div>
 
