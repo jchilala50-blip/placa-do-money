@@ -241,7 +241,7 @@ app.post('/logout', (req, res) => {
 
 app.get('/api/link-afiliado', (req, res) => {
 
-const link = process.env.LINK_AFILIADO || 'https://partner-tracking.deriv.com/click?a=14293&o=1&c=3&link_id=1';
+const link = process.env.LINK_AFILIADO || 'https://t.deriv.link?t=2TSZ3CEC4TWX';
 
 res.json({ url: link });
 
