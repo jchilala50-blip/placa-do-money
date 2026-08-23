@@ -360,7 +360,7 @@ transform:rotate(360deg);
     color:#b0bec5;
     text-align:center;
 ">
-🔴 VERSÃO 3
+🔮 V 3
 </div>
 
 </div>
@@ -585,7 +585,7 @@ ss="mini-placar">
         text-align:center;
         font-weight:bold;
 ">
-Nenhuma 📁 ▼
+Nenhuma 🗂 ▼
 </div>
 
 <select
@@ -741,6 +741,45 @@ onchange="trocarVolatilidade()">
 
 </div>
       
+
+<!-- ☔ PAINEL EXCLUSIVO RAIN MONEY -->
+<div id="painel-rain-money" style="
+    display: none;
+    background: rgba(0, 191, 255, 0.12);
+    border: 1px solid rgba(0, 191, 255, 0.4);
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 12px;
+    backdrop-filter: blur(5px);
+">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+        <span style="color: #ffffff; font-weight: bold; font-size: 14px;">☔ RAIN MONEY — SCORE GERAL</span>
+        <span id="rain-score-total" style="color: #00ff88; font-weight: bold; font-size: 18px;">0 / 100</span>
+    </div>
+
+    <!-- MÉTROLA DAS 4 CONDIÇÕES -->
+    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; text-align: center;">
+        <div style="background: rgba(16, 31, 53, 0.6); padding: 6px; border-radius: 6px;">
+            <div style="color: #ffffff; font-size: 11px;">Sequência</div>
+            <div id="rain-cond-seq" style="color: #00e5ff; font-weight: bold; font-size: 13px;">0/30</div>
+        </div>
+        <div style="background: rgba(16, 31, 53, 0.6); padding: 6px; border-radius: 6px;">
+            <div style="color: #ffffff; font-size: 11px;">Frequência</div>
+            <div id="rain-cond-freq" style="color: #00e5ff; font-weight: bold; font-size: 13px;">0/25</div>
+        </div>
+        <div style="background: rgba(16, 31, 53, 0.6); padding: 6px; border-radius: 6px;">
+            <div style="color: #ffffff; font-size: 11px;">Direção</div>
+            <div id="rain-cond-dir" style="color: #00e5ff; font-weight: bold; font-size: 13px;">0/25</div>
+        </div>
+        <div style="background: rgba(16, 31, 53, 0.6); padding: 6px; border-radius: 6px;">
+            <div style="color: #ffffff; font-size: 11px;">Confirmação</div>
+            <div id="rain-cond-conf" style="color: #00e5ff; font-weight: bold; font-size: 13px;">0/20</div>
+        </div>
+    </div>
+</div>
+
+
+
             <div class="label-card" style="margin-bottom:6px;">Histórico de Transações:</div>
             <div class="historico-lista" id="lista-historico">
                 <div style="color: #607d8b; text-align: center; padding-top: 15px; font-size:11px;">Aguardando execução do mercado...</div>
@@ -1011,104 +1050,94 @@ function cancelarOperacaoPresa(motivo) {
 
 
 // ========================================================
-// ☔ ESTRATÉGIA RAIN MONEY — COMBINAÇÃO DE CONDIÇÕES (100 PTS)
+// ☔ ESTRATÉGIA RAIN MONEY — CÁLCULO E PAINEL EM TEMPO REAL
 // ========================================================
 function calcularScoreRainMoney() {
+    const painel = document.getElementById("painel-rain-money");
+    const estrategiaAtual = document.getElementById("estrategia-robo") ? document.getElementById("estrategia-robo").value : "";
+
+    // Exibe o painel apenas se a estratégia RAIN MONEY estiver selecionada
+    if (painel) {
+        painel.style.display = (estrategiaAtual === "rain_money") ? "block" : "none";
+    }
+
     if (!memoriaMercado || memoriaMercado.length < 10) {
         return { score: 0, direcao: null };
     }
 
     const ultimos10 = memoriaMercado.slice(-10);
     const ultimos4 = memoriaMercado.slice(-4);
-
+    
     let pontosSequencia = 0;
     let pontosFrequencia = 0;
     let pontosDirecao = 0;
     let pontosConfirmacao = 0;
-    let direcaoSugerida = null; // Exemplo: "EVEN", "ODD", "OVER", "UNDER"
+    let direcaoSugerida = null;
 
-    // 1. CONDIÇÃO 1 — SEQUÊNCIA (Até 30 pontos)
+    // 1. SEQUÊNCIA (Até 30 pts)
     const pares = ultimos10.filter(d => d % 2 === 0).length;
     const impares = 10 - pares;
     const diferencaSeq = Math.abs(pares - impares);
 
-    if (diferencaSeq >= 6) {
-        pontosSequencia = 30; // Dominância clara (ex: 8 pares e 2 ímpares)
-    } else if (diferencaSeq >= 4) {
-        pontosSequencia = 20; // Tendência moderada
-    } else if (diferencaSeq >= 2) {
-        pontosSequencia = 10; // Padrão fraco
-    } else {
-        pontosSequencia = 0;
-    }
+    if (diferencaSeq >= 6) pontosSequencia = 30;
+    else if (diferencaSeq >= 4) pontosSequencia = 20;
+    else if (diferencaSeq >= 2) pontosSequencia = 10;
 
-    // Define a direção com base no grupo dominante da sequência/frequência
     direcaoSugerida = pares > impares ? "EVEN" : "ODD";
 
-    // 2. CONDIÇÃO 2 — FREQUÊNCIA (Até 25 pontos)
+    // 2. FREQUÊNCIA (Até 25 pts)
     const altos = ultimos10.filter(d => d >= 5).length;
     const baixos = 10 - altos;
     const diferencaFreq = Math.abs(altos - baixos);
 
-    if (diferencaFreq >= 6) {
-        pontosFrequencia = 25; // Concentração muito forte
-    } else if (diferencaFreq >= 4) {
-        pontosFrequencia = 20; // Concentração forte
-    } else if (diferencaFreq >= 2) {
-        pontosFrequencia = 15; // Concentração moderada
-    } else {
-        pontosFrequencia = 0;
-    }
+    if (diferencaFreq >= 6) pontosFrequencia = 25;
+    else if (diferencaFreq >= 4) pontosFrequencia = 20;
+    else if (diferencaFreq >= 2) pontosFrequencia = 15;
 
-    // 3. CONDIÇÃO 3 — DIREÇÃO (Até 25 pontos)
-    // ultimos4 = [D1, D2, D3, D4]
+    // 3. DIREÇÃO (Até 25 pts)
     const d1 = ultimos4[0], d2 = ultimos4[1], d3 = ultimos4[2], d4 = ultimos4[3];
-    const delta1 = d2 - d1;
-    const delta2 = d3 - d2;
-    const delta3 = d4 - d3;
+    const delta1 = d2 - d1, delta2 = d3 - d2, delta3 = d4 - d3;
 
-    const subindo = delta1 > 0 && delta2 > 0 && delta3 > 0;
-    const descendo = delta1 < 0 && delta2 < 0 && delta3 < 0;
-
-    if (subindo || descendo) {
-        pontosDirecao = 25; // Vetor puro (3 movimentos seguidos na mesma direção)
+    if ((delta1 > 0 && delta2 > 0 && delta3 > 0) || (delta1 < 0 && delta2 < 0 && delta3 < 0)) {
+        pontosDirecao = 25;
     } else if ((delta2 > 0 && delta3 > 0) || (delta2 < 0 && delta3 < 0)) {
-        pontosDirecao = 15; // Tendência recente confirmada nos últimos 2 deltas
+        pontosDirecao = 15;
     } else if (Math.abs(d4 - d1) >= 4) {
-        pontosDirecao = 5;  // Saldo líquido forte
-    } else {
-        pontosDirecao = 0;
+        pontosDirecao = 5;
     }
 
-    // 4. CONDIÇÃO 4 — CONFIRMAÇÃO (Até 20 pontos)
+    // 4. CONFIRMAÇÃO (Até 20 pts)
     const deltaUltimo = Math.abs(d4 - d3);
-    const d4PertenceAoGrupo = (direcaoSugerida === "EVEN" && d4 % 2 === 0) ||
+    const d4PertenceAoGrupo = (direcaoSugerida === "EVEN" && d4 % 2 === 0) || 
                               (direcaoSugerida === "ODD" && d4 % 2 !== 0);
 
-    if (d4PertenceAoGrupo && deltaUltimo >= 2) {
-        pontosConfirmacao = 20; // Confirmação absoluta com expansão
-    } else if (d4PertenceAoGrupo && (d3 % 2 === d4 % 2)) {
-        pontosConfirmacao = 15; // Sustentação do padrão
-    } else if (d4PertenceAoGrupo) {
-        pontosConfirmacao = 5;  // Transição de grupo
-    } else {
-        pontosConfirmacao = 0;  // Sinal invalidado no último tick
-    }
+    if (d4PertenceAoGrupo && deltaUltimo >= 2) pontosConfirmacao = 20;
+    else if (d4PertenceAoGrupo && (d3 % 2 === d4 % 2)) pontosConfirmacao = 15;
+    else if (d4PertenceAoGrupo) pontosConfirmacao = 5;
 
     const scoreTotal = pontosSequencia + pontosFrequencia + pontosDirecao + pontosConfirmacao;
+
+    // ATUALIZAÇÃO DOS ELEMENTOS DO PAINEL EM TEMPO REAL
+    if (estrategiaAtual === "rain_money") {
+        const elScore = document.getElementById("rain-score-total");
+        const elSeq = document.getElementById("rain-cond-seq");
+        const elFreq = document.getElementById("rain-cond-freq");
+        const elDir = document.getElementById("rain-cond-dir");
+        const elConf = document.getElementById("rain-cond-conf");
+
+        if (elScore) elScore.innerText = `${scoreTotal} / 100`;
+        if (elSeq) elSeq.innerText = `${pontosSequencia}/30`;
+        if (elFreq) elFreq.innerText = `${pontosFrequencia}/25`;
+        if (elDir) elDir.innerText = `${pontosDirecao}/25`;
+        if (elConf) elConf.innerText = `${pontosConfirmacao}/20`;
+    }
 
     return {
         score: scoreTotal,
         direcao: direcaoSugerida,
-        detalhes: {
-            seq: pontosSequencia,
-            freq: pontosFrequencia,
-            dir: pontosDirecao,
-            conf: pontosConfirmacao
-        }
+        detalhes: { seq: pontosSequencia, freq: pontosFrequencia, dir: pontosDirecao, conf: pontosConfirmacao }
     };
 }
-
 
 
 
@@ -2389,9 +2418,15 @@ function selecionarRobo(valor, nome, imagem) {
         modal.style.display = "none";
     }
 
-    // 5. Garante sincronização da lógica antiga
+    // 5. Garante sincronização da lógica antiga e do Painel Rain Money
     if (typeof atualizarImagemRobo === "function") {
         atualizarImagemRobo();
+    }
+
+    // Exibe ou oculta o painel do Rain Money instantaneamente
+    const painelRain = document.getElementById("painel-rain-money");
+    if (painelRain) {
+        painelRain.style.display = (valor === "rain_money") ? "block" : "none";
     }
 }
 
