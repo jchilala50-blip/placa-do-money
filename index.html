@@ -1331,7 +1331,7 @@ temporizadorOperacao = setTimeout(() => {
 
         console.log(`☔ RAIN MONEY — Score: ${resultadoRain.score}/100 | Direção: ${resultadoRain.direcao}`);
 
-        if (resultadoRain.score >= 80 && resultadoRain.direcao) {
+        if (resultadoRain.score >= 50 && resultadoRain.direcao) {
             const tipoContrato = resultadoRain.direcao === "EVEN" ? "DIGITEVEN" : "DIGITODD";
 
             operacaoAtual = {
@@ -1352,7 +1352,7 @@ temporizadorOperacao = setTimeout(() => {
                 }
             }, 10000);
 
-            comprarContratoDeriv(tipoContrato, 3);
+            comprarContratoDeriv(tipoContrato, 2);
         }
     }
 }
