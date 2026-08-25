@@ -15,6 +15,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser()); // CORREÇÃO AMY: Ativar leitura de cookies
 
+// ===== ROTA DE SAÚDE / CRON =====
+app.get('/health', (req, res) => {
+    res.status(200).send('OK');
+});
+
 app.use(session({
     secret: 'placa-do-money-secret',
     resave: false,
