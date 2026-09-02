@@ -530,6 +530,7 @@ container.classList.remove('tela-robo');
 </div>
 
 
+
                 </div>
             </div>
             
@@ -1449,6 +1450,9 @@ if(percentual >= 15) {
 
 }
 
+}
+
+
 function atualizarGraficoReal() {
     const contagem = Array(10).fill(0);
 
@@ -1504,7 +1508,16 @@ function atualizarGraficoReal() {
             });
         }
     }
+
+    // 📊 ATUALIZA O PAINEL TEMPORÁRIO COM OS ÚLTIMOS TICKS NO TOPO
+    const elPainelTopo = document.getElementById("painel-ticks-topo");
+    if (elPainelTopo && typeof ultimosDigitos !== "undefined") {
+        elPainelTopo.innerText = `[ ${ultimosDigitos.slice(-10).join(" ")} ]`;
+    }
 }
+
+
+
 
 
 function abrirListaRobos() {
