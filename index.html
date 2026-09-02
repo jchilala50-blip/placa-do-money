@@ -502,7 +502,7 @@ container.classList.remove('tela-robo');
             <div class="topo-plataforma">
                 <a href="https://youtube.com/@derivtutorialnegociacao?si=QN2oZ2GlnTZa6Unn" target="_blank" class="btn-info-youtube">ℹ</a>
                 <div class="texto-logo">
-      <!-- 🚀 CABEÇALHO PRINCIPAL CENTRALIZADO -->
+<!-- 🚀 CABEÇALHO PRINCIPAL CENTRALIZADO -->
 <div style="text-align: center; margin-bottom: 12px; width: 100%;">
     <h3 style="
         color: #00e5ff;
@@ -530,7 +530,6 @@ container.classList.remove('tela-robo');
 </div>
 
 
-
                 </div>
             </div>
             
@@ -542,8 +541,7 @@ container.classList.remove('tela-robo');
                 <div class="card-status lucro">
                     <div class="label-card">Lucro/Perda</div>
                     <div class="valor-card" id="lucro-real" style="color:#00e676;">$ 0.00</div>
-                    <div cla
-ss="mini-placar">
+                    <div class="mini-placar">
                         W: <span class="win-count" id="cont-wins">0</span> 
                         L: <span class="loss-count" id="cont-losses">0</span>
                     </div>
@@ -1507,16 +1505,7 @@ function atualizarGraficoReal() {
             });
         }
     }
-
-    // 📊 ATUALIZA O PAINEL TEMPORÁRIO COM OS ÚLTIMOS TICKS NO TOPO
-    const elPainelTopo = document.getElementById("painel-ticks-topo");
-    if (elPainelTopo && typeof ultimosDigitos !== "undefined") {
-        elPainelTopo.innerText = `[ ${ultimosDigitos.slice(-10).join(" ")} ]`;
-    }
 }
-
-
-
 
 
 function abrirListaRobos() {
