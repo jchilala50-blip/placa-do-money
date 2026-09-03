@@ -321,7 +321,7 @@ transform:rotate(360deg);
     color:#b0bec5;
     text-align:center;
 ">
-🔮 V 3              🇦🇴🇺🇸🇧🇷🇯🇴
+🔮 V 3.1              🇦🇴🇺🇸🇧🇷🇯🇴
 </div>
 
 </div>
@@ -502,6 +502,47 @@ container.classList.remove('tela-robo');
             <div class="topo-plataforma">
                 <a href="https://youtube.com/@derivtutorialnegociacao?si=QN2oZ2GlnTZa6Unn" target="_blank" class="btn-info-youtube">ℹ</a>
                 <div class="texto-logo">
+
+<!-- 🟢 INDICADOR ONLINE SIMULADO -->
+<div style="
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 6px;
+    padding: 4px 12px;
+    margin-bottom: 8px;
+">
+    <span class="led-online"></span>
+    <span style="color: #8fa0b5; font-size: 10px; font-weight: bold; text-transform: lowercase;">online:</span>
+    <span id="num-online" style="color: #00e676; font-size: 11px; font-weight: bold; font-family: monospace;">336</span>
+</div>
+
+<style>
+.led-online {
+    width: 8px;
+    height: 8px;
+    background-color: #00ff88;
+    border-radius: 50%;
+    box-shadow: 0 0 10px #00ff88, 0 0 18px #00ff88;
+    animation: pulsarLed 1.5s infinite alternate ease-in-out;
+}
+
+@keyframes pulsarLed {
+    from {
+        opacity: 0.4;
+        box-shadow: 0 0 4px #00ff88;
+    }
+    to {
+        opacity: 1;
+        box-shadow: 0 0 14px #00ff88, 0 0 24px #00ff88;
+    }
+}
+</style>
+
+
+
+
+
 <!-- 🚀 CABEÇALHO PRINCIPAL CENTRALIZADO -->
 <div style="text-align: center; margin-bottom: 12px; width: 100%;">
     <h3 style="
@@ -2744,6 +2785,32 @@ function verificarNotificacaoDiaria() {
 
 // Executa a verificação assim que a página termina de carregar
 window.addEventListener("DOMContentLoaded", verificarNotificacaoDiaria);
+
+
+// 🟢 SIMULAÇÃO DE UTILIZADORES ONLINE (44 a 336)
+function simularUsuariosOnline() {
+    const elOnline = document.getElementById("num-online");
+    if (!elOnline) return;
+
+    let valorAtual = parseInt(elOnline.innerText) || 180;
+
+    setInterval(() => {
+        // Variação aleatória suave (-4 a +4 por atualização)
+        const variacao = Math.floor(Math.random() * 9) - 4;
+        valorAtual += variacao;
+
+        // Limita o valor estritamente entre 44 e 336
+        if (valorAtual < 44) valorAtual = 44 + Math.floor(Math.random() * 5);
+        if (valorAtual > 336) valorAtual = 336 - Math.floor(Math.random() * 5);
+
+        elOnline.innerText = valorAtual;
+    }, 3500); // Muda o valor a cada 3.5 segundos
+}
+
+// Inicia automaticamente quando a página carrega
+simularUsuariosOnline();
+
+
 
 
 </script>
