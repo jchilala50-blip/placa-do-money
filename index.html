@@ -514,7 +514,12 @@ container.classList.remove('tela-robo');
 ">
     <span class="led-online"></span>
     <span style="color: #8fa0b5; font-size: 10px; font-weight: bold; text-transform: lowercase;">online:</span>
-    <span id="num-online" style="color: #00e676; font-size: 11px; font-weight: bold; font-family: monospace;">336</span>
+   // Gera um número inicial aleatório entre 140 e 310 cada vez que renderiza
+const onlineInicial = Math.floor(Math.random() * (310 - 140 + 1)) + 140;
+
+// E no teu innerHTML, substitui a linha do span por esta:
+`<span id="num-online" style="color: #00e676; font-size: 10px; font-weight: bold; font-family: monospace;">${onlineInicial}</span>`
+
 </div>
 
 <style>
@@ -2787,32 +2792,21 @@ function verificarNotificacaoDiaria() {
 window.addEventListener("DOMContentLoaded", verificarNotificacaoDiaria);
 
 
-// 🟢 SIMULAÇÃO DE UTILIZADORES ONLINE (VARIAÇÃO CONSTANTE ENTRE 44 E 336)
-let intervaloOnline = null;
-
-function simularUsuariosOnline() {
+// 🟢 ATUALIZADOR GLOBAL DE ONLINE
+setInterval(() => {
     const elOnline = document.getElementById("num-online");
     if (!elOnline) return;
 
-    // Se já houver um loop a rodar, limpa para não duplicar
-    if (intervaloOnline) clearInterval(intervaloOnline);
+    let valorAtual = parseInt(elOnline.innerText) || 180;
+    const variacao = Math.floor(Math.random() * 11) - 5; // Varia de -5 a +5
+    valorAtual += variacao;
 
-    // Define um valor inicial aleatório na gama desejada (ex: entre 120 e 280)
-    let valorAtual = Math.floor(Math.random() * (280 - 120 + 1)) + 120;
+    if (valorAtual < 44) valorAtual = 44 + Math.floor(Math.random() * 10);
+    if (valorAtual > 336) valorAtual = 336 - Math.floor(Math.random() * 10);
+
     elOnline.innerText = valorAtual;
+}, 2500);
 
-    intervaloOnline = setInterval(() => {
-        // Gera oscilação entre -6 e +6
-        const variacao = Math.floor(Math.random() * 13) - 6;
-        valorAtual += variacao;
-
-        // Mantém estritamente nos limites de 44 a 336
-        if (valorAtual < 44) valorAtual = 44 + Math.floor(Math.random() * 8);
-        if (valorAtual > 336) valorAtual = 336 - Math.floor(Math.random() * 8);
-
-        elOnline.innerText = valorAtual;
-    }, 3000); // Atualiza a cada 3 segundos
-}
 
 
 
