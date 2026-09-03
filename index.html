@@ -2787,29 +2787,32 @@ function verificarNotificacaoDiaria() {
 window.addEventListener("DOMContentLoaded", verificarNotificacaoDiaria);
 
 
-// 🟢 SIMULAÇÃO DE UTILIZADORES ONLINE (44 a 336)
+// 🟢 SIMULAÇÃO DE UTILIZADORES ONLINE (VARIAÇÃO CONSTANTE ENTRE 44 E 336)
+let intervaloOnline = null;
+
 function simularUsuariosOnline() {
     const elOnline = document.getElementById("num-online");
     if (!elOnline) return;
 
-    let valorAtual = parseInt(elOnline.innerText) || 180;
+    // Se já houver um loop a rodar, limpa para não duplicar
+    if (intervaloOnline) clearInterval(intervaloOnline);
 
-    setInterval(() => {
-        // Variação aleatória suave (-4 a +4 por atualização)
-        const variacao = Math.floor(Math.random() * 9) - 4;
+    // Define um valor inicial aleatório na gama desejada (ex: entre 120 e 280)
+    let valorAtual = Math.floor(Math.random() * (280 - 120 + 1)) + 120;
+    elOnline.innerText = valorAtual;
+
+    intervaloOnline = setInterval(() => {
+        // Gera oscilação entre -6 e +6
+        const variacao = Math.floor(Math.random() * 13) - 6;
         valorAtual += variacao;
 
-        // Limita o valor estritamente entre 44 e 336
-        if (valorAtual < 44) valorAtual = 44 + Math.floor(Math.random() * 5);
-        if (valorAtual > 336) valorAtual = 336 - Math.floor(Math.random() * 5);
+        // Mantém estritamente nos limites de 44 a 336
+        if (valorAtual < 44) valorAtual = 44 + Math.floor(Math.random() * 8);
+        if (valorAtual > 336) valorAtual = 336 - Math.floor(Math.random() * 8);
 
         elOnline.innerText = valorAtual;
-    }, 3500); // Muda o valor a cada 3.5 segundos
+    }, 3000); // Atualiza a cada 3 segundos
 }
-
-// Inicia automaticamente quando a página carrega
-simularUsuariosOnline();
-
 
 
 
