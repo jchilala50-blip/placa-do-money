@@ -546,8 +546,6 @@ const onlineInicial = Math.floor(Math.random() * (310 - 140 + 1)) + 140;
 
 
 
-
-
 <!-- 🚀 CABEÇALHO PRINCIPAL CENTRALIZADO -->
 <div style="text-align: center; margin-bottom: 12px; width: 100%;">
     <h3 style="
@@ -2792,24 +2790,6 @@ function verificarNotificacaoDiaria() {
 window.addEventListener("DOMContentLoaded", verificarNotificacaoDiaria);
 
 
-// 🟢 ATUALIZADOR GLOBAL DE ONLINE
-setInterval(() => {
-    const elOnline = document.getElementById("num-online");
-    if (!elOnline) return;
-
-    let valorAtual = parseInt(elOnline.innerText) || 180;
-    const variacao = Math.floor(Math.random() * 11) - 5; // Varia de -5 a +5
-    valorAtual += variacao;
-
-    if (valorAtual < 44) valorAtual = 44 + Math.floor(Math.random() * 10);
-    if (valorAtual > 336) valorAtual = 336 - Math.floor(Math.random() * 10);
-
-    elOnline.innerText = valorAtual;
-}, 2500);
-
-
-
-
 </script>
 
 <div id="lista-robos" style="
@@ -3080,6 +3060,67 @@ position:fixed;
     to { opacity: 1; transform: translate(-50%, 0); }
 }
 </style>
+
+<!-- 🟢 INDICADOR ONLINE INDEPENDENTE (SEM ALTERAR NADA NO CÓDIGO EXISTENTE) -->
+<script>
+(function() {
+    function injetarEAtualizarOnline() {
+        const topo = document.querySelector('.topo-plataforma');
+        if (!topo) return;
+
+        // Injeta o elemento visual no canto superior direito apenas se ainda não existir
+        if (!document.getElementById('container-online')) {
+            topo.style.position = 'relative';
+            
+            const divOnline = document.createElement('div');
+            divOnline.id = 'container-online';
+            divOnline.style.cssText = 'position:absolute; top:0px; right:0px; display:flex; align-items:center; gap:5px; background:rgba(16,31,53,0.7); padding:3px 8px; border-radius:12px; border:1px solid rgba(0,230,118,0.3);';
+            
+            divOnline.innerHTML = `
+                <span class="led-online"></span>
+                <span style="color:#8fa0b5; font-size:9px; font-weight:bold;">online:</span>
+                <span id="num-online" style="color:#00e676; font-size:10px; font-weight:bold; font-family:monospace;">${Math.floor(Math.random() * (280 - 120 + 1)) + 120}</span>
+            `;
+            
+            topo.appendChild(divOnline);
+
+            // Estilo do LED pulsante
+            if (!document.getElementById('estilo-led-online')) {
+                const style = document.createElement('style');
+                style.id = 'estilo-led-online';
+                style.innerHTML = `
+                    .led-online {
+                        width: 7px;
+                        height: 7px;
+                        background-color: #00ff88;
+                        border-radius: 50%;
+                        box-shadow: 0 0 8px #00ff88, 0 0 14px #00ff88;
+                        animation: pulsarLed 1.5s infinite alternate ease-in-out;
+                    }
+                    @keyframes pulsarLed {
+                        from { opacity: 0.4; box-shadow: 0 0 3px #00ff88; }
+                        to { opacity: 1; box-shadow: 0 0 12px #00ff88, 0 0 20px #00ff88; }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+        }
+
+        // Variação do número (44 a 336)
+        const elNum = document.getElementById('num-online');
+        if (elNum) {
+            let valor = parseInt(elNum.innerText) || 180;
+            valor += Math.floor(Math.random() * 11) - 5;
+            if (valor < 44) valor = 44 + Math.floor(Math.random() * 8);
+            if (valor > 336) valor = 336 - Math.floor(Math.random() * 8);
+            elNum.innerText = valor;
+        }
+    }
+
+    // Executa a verificação/atualização continuamente a cada 2.5s
+    setInterval(injetarEAtualizarOnline, 2500);
+})();
+</script>
 
 
 </body>
