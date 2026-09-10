@@ -1529,37 +1529,7 @@ function abrirListaRobos() {
 
 }
 
-///============== INÍCIO DESTA FUNÇÃO==================
-
-function abrirRiseFall() {
-
-    const janela = document.getElementById("lista-robos");
-    const conteudo = document.getElementById("conteudo-robos");
-
-    if (!janela || !conteudo) return;
-
-    janela.style.display = "flex";
-
-    conteudo.innerHTML = `
-        <iframe
-            src="https://placa-do-money.netlify.app"
-            title="Rise Fall"
-            style="
-                position:fixed;
-                top:0;
-                left:0;
-                width:100vw;
-                height:100vh;
-                border:none;
-                margin:0;
-                padding:0;
-                display:block;
-                z-index:10000;
-                background:#060d1a;
-            "
-        ></iframe>
-    `;
-}
+///============== INÍCIO DESTA FUNÇÃO=================
 
 function fecharListaRobos() {
 
@@ -2838,7 +2808,7 @@ overflow-y:auto;
 
     <button
         type="button"
-        onclick="abrirRiseFall()"
+        onclick="window.location.href='https://placa-do-money.netlify.app'"
         style="
             width:auto;
             margin:0;
