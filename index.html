@@ -322,6 +322,34 @@
     margin-bottom: 10px;
 }
 
+/* Titulo placa do money trader automatico */
+#titulo-conexao {
+    text-align: center;
+    text-transform: uppercase;
+    white-space: nowrap;
+    font-family: Impact, "Arial Black", sans-serif;
+    font-size: 24px;
+    letter-spacing: 0.5px;
+    color: #38d9ff;
+    text-shadow:
+        0 0 3px #00bfff,
+        0 0 8px #008cff,
+        0 0 15px rgba(0, 191, 255, 0.8);
+    margin-bottom: 8px;
+}
+
+#subtitulo-conexao {
+    text-align: center;
+    white-space: nowrap;
+    font-family: Impact, "Arial Black", sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.7px;
+    color: #7eeaff;
+    text-shadow:
+        0 0 3px #00bfff,
+        0 0 7px rgba(0, 191, 255, 0.7);
+    margin-bottom: 20px;
+}
 
 
 
@@ -383,7 +411,7 @@
     color:#b0bec5;
     text-align:center;
 ">
-♻️ V 3.6              🇦🇴🇺🇸🇧🇷🇯🇴
+♻️ V 3.8              🇦🇴🇺🇸🇧🇷🇯🇴
 </div>
 
 </div>
@@ -476,12 +504,11 @@ setTimeout(esconderProcessando, 1000);
 
   container.innerHTML = `
 
-    <h2>Placa do Money - Conexão</h2>
+    <h2 id="titulo-conexao">PLACA DO MONEY TRADER AUTOMATIZADO</h2>
 
-    <p style="color: #8a99ad; font-size: 14px; margin-bottom: 20px;">
-
-     🟢 Sua conta local está ativa. Selecione uma opção para prosseguir:
- </p>      
+<p id="subtitulo-conexao">
+    CONECTA SUA CONTA DERIV OU CRIE CONTA
+</p>      
             <button onclick="conectarViaOAuth()" style="background-color: #1e88e5; margin-bottom: 12px; width: 100%; padding: 12px; border: none; border-radius: 4px; color: white; font-weight: bold; cursor: pointer;">
 
       Conectar à Deriv (OAuth)
