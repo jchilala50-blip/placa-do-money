@@ -892,28 +892,54 @@ onchange="trocarVolatilidade()">
 
 const params = new URLSearchParams(window.location.search);
 
+
 let wsUrl =
+
+
 params.get('ws_url') ||
+
+
 sessionStorage.getItem('deriv_ws_url');
+
+
 
 if (!params.get('ws_url') || !sessionStorage.getItem('deriv_ws_url')) {
 
+
+
 console.log("PEDINDO NOVA OTP");
+
 
 try {
 
+
 const tipoConta =
+
+
 document.getElementById('tipo-conta').value;
 
+
+
 const resposta =
+
+
 await fetch(
+
+
 '/api/novo-otp?tipo=' +
+
+
 tipoConta
+
+
 );
+
 
 const dados = await resposta.json();
 
+
 if (dados.success && dados.ws_url) {
+
 
 wsUrl = dados.ws_url;
 
@@ -921,33 +947,58 @@ console.log(
 wsUrl);
 
 sessionStorage.setItem(
+
+
 'deriv_ws_url',
+
+
 wsUrl
+
+
 );
 
+
 }
+
 
 } catch (erro) {
 
+
 console.log(
+
+
 "Falha ao obter OTP nova:",
+
+
 erro
+
+
 );
 
-}
 
 }
+
+
+}
+
 
 if (wsUrl) {
 
+
 const ws = new WebSocket(wsUrl);
+
 
 window.derivWS = ws;
 
+
 configurarEventosDoWS(ws);
 
+
 ws.onopen = function () {
+
+
 console.log("WS ABRIU");
+
 
 ws.send(JSON.stringify({
 
@@ -959,17 +1010,15 @@ req_id: 1
 
 }));
 
+
 ws.send(JSON.stringify({
 
-ticks: simboloAtual,
-
-subscribe: 1,
-
-req_id: 2
+ticks: simboloAtual
 
 }));
 
 };
+
 
 ws.onerror = function(err) {
 
@@ -977,11 +1026,13 @@ console.log("WS ERROR:", err);
 
 };
 
+
 ws.onclose = function(event) {
 
 console.log("WS FECHOU", event.code);
 
 };
+
 
 }// FECHA if (wsUrl)
 
