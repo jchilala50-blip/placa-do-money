@@ -1717,7 +1717,8 @@ async function alternarAmbienteConta() {
 
         const dados = await resposta.json();
 
-
+alert("🔴 TIPO ESCOLHIDO:", tipo);
+alert("🔴 WS URL DEVOLVIDA:", dados.ws_url);
 
         if (!dados.ws_url) {
 
