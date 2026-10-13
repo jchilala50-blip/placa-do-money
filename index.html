@@ -1695,105 +1695,102 @@ function fecharConfiguracoes() {
 
 async function alternarAmbienteConta() {
 
-mostrarProcessando("A trocar conta...");
+    mostrarProcessando("A trocar conta...");
 
-if (roboLigado) {
+    if (roboLigado) {
 
-alert("Desligue o robô antes de trocar de conta.");
+        alert("Desligue o robô antes de trocar de conta.");
 
-return;
+        return;
 
-}
+    }
 
-const tipo = document.getElementById('tipo-conta').value;
+    const tipo = document.getElementById('tipo-conta').value;
 
-try {
+    try {
 
-console.log("A trocar conta para:", tipo);
+        console.log("A trocar conta para:", tipo);
 
-// 1. pedir novo OTP
+        // 1. pedir novo OTP
 
-const resposta = await fetch(`/api/novo-otp?tipo=${tipo}`);
+        const resposta = await fetch(`/api/novo-otp?tipo=${tipo}`);
 
-const dados = await resposta.json();
+        const dados = await resposta.json();
 
-if (!dados.ws_url) {
+        if (!dados.ws_url) {
 
-alert("Erro ao obter ligação da conta");
+            alert("Erro ao obter ligação da conta");
 
-return;
+            return;
 
-}
+        }
 
-// 2. guardar URL
+        // 2. guardar URL
 
-sessionStorage.setItem('deriv_ws_url', dados.ws_url);
-
-
-// 3. fechar WS antigo
-
-if (window.derivWS) {
-
-try {
-
-window.derivWS.close();
-
-} catch (e) {}
-
-}
-
-// 4. criar novo WS
-
-const ws = new WebSocket(dados.ws_url);
-
-window.derivWS = ws;
-
-configurarEventosDoWS(ws);
-
-ws.onopen = function () {
-
-esconderProcessando();
-
-console.log("WS REABRIU COM CONTA:", tipo);
+        sessionStorage.setItem('deriv_ws_url', dados.ws_url);
 
 
-// 🔥 IMPORTANTE: subscrição completa
+        // 3. fechar WS antigo
 
-ws.send(JSON.stringify({
+        if (window.derivWS) {
+
+            try {
+
+                window.derivWS.close();
+
+            } catch (e) {}
+
+        }
+
+        // 4. criar novo WS
+
+        const ws = new WebSocket(dados.ws_url);
+
+        window.derivWS = ws;
+
+        configurarEventosDoWS(ws);
+
+        ws.onopen = function () {
+
+            esconderProcessando();
+
+            console.log("WS REABRIU COM CONTA:", tipo);
 
 
-balance: 1,
+            // 🔥 IMPORTANTE: subscrição completa com req_id e subscribe para manter o stream ativo
+
+            ws.send(JSON.stringify({
+
+                balance: 1,
+
+                subscribe: 1,
+
+                req_id: 1
+
+            }));
 
 
-subscribe: 1,
+            ws.send(JSON.stringify({
 
+                ticks: simboloAtual,
 
-req_id: 1
+                subscribe: 1,
 
+                req_id: 2
 
-}));
+            }));
 
+        };
+    } catch (erro) {
 
-ws.send(JSON.stringify({
+        console.error(erro);
 
+        alert("Falha ao trocar de conta");
 
-ticks: simboloAtual
-
-
-}));
-
-};
-
-
-} catch (erro) {
-
-console.error(erro);
-
-alert("Falha ao trocar de conta");
+    }
 
 }
 
-}
 
 // <== NOVA FUNÇÃO PARA ATUALIZAR ESTADO DO MERCADO ANTES DE COMPRA OU VENDA ==
 
