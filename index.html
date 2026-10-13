@@ -1754,6 +1754,12 @@ alert(
         const ws = new WebSocket(dados.ws_url);
 
         window.derivWS = ws;
+alert(
+    "💎 WEBSOCKET CRIADO\n\n" +
+    "TIPO: " + tipo +
+    "\n\nURL DO WS:\n" + ws.url
+);
+
 
         configurarEventosDoWS(ws);
 
