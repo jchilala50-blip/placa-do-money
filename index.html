@@ -1709,7 +1709,7 @@ async function alternarAmbienteConta() {
 
     try {
 
-        alert("A trocar conta para:", tipo);
+     console.log("A trocar conta para:", tipo);
 
         // 1. pedir novo OTP
 
@@ -1717,8 +1717,12 @@ async function alternarAmbienteConta() {
 
         const dados = await resposta.json();
 
-alert("🔴 TIPO ESCOLHIDO:", tipo);
-alert("🔴 WS URL DEVOLVIDA:", dados.ws_url);
+alert(
+    "🔍 DIAGNÓSTICO DA TROCA DE CONTA\n\n" +
+    "TIPO ESCOLHIDO: " + tipo + "\n\n" +
+    "SUCCESS: " + dados.success + "\n\n" +
+    "WS URL:\n" + (dados.ws_url || "SEM URL")
+);
 
         if (!dados.ws_url) {
 
@@ -1757,7 +1761,7 @@ alert("🔴 WS URL DEVOLVIDA:", dados.ws_url);
 
             esconderProcessando();
 
-            alert("WS REABRIU COM CONTA:", tipo);
+            console.log("WS REABRIU COM CONTA:", tipo);
 
 
             // 🔥 IMPORTANTE: subscrição completa com req_id e subscribe para manter o stream ativo
