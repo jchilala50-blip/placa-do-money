@@ -363,6 +363,116 @@
 <body>
 
 
+<!-- === TELA DE MANUTENÇÃO === -->
+<div id="maintenance-screen" style="
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: #0b0e14;
+    color: #ffffff;
+    z-index: 999999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: sans-serif;
+    text-align: center;
+    padding: 20px;
+">
+    <div style="
+        background: #151d2a;
+        padding: 40px;
+        border-radius: 12px;
+        border: 1px solid #1e293b;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        max-width: 400px;
+        width: 100%;
+    ">
+        <h2 style="color: #00e676; margin-top: 0; font-size: 20px;">MANUTENÇÃO VOLTE MAIS TARDE OU USE O POWER X</h2>
+        
+        <!-- BOTAO POWER X -->
+        <a href="http://placa-do-money.netlify.app" target="_blank" style="
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background: #1e293b;
+            color: #00e676;
+            font-weight: bold;
+            text-decoration: none;
+            border-radius: 6px;
+            margin: 20px 0;
+            box-sizing: border-box;
+            border: 1px solid #00e676;
+        ">POWER X</a>
+
+        <!-- CAMPO DE SENHA OCULTO -->
+        <input type="password" id="admin-pass-code" placeholder="••••••••" style="
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 12px;
+            border-radius: 6px;
+            border: 1px solid #334155;
+            background: #0f172a;
+            color: #fff;
+            text-align: center;
+            font-size: 16px;
+            outline: none;
+            box-sizing: border-box;
+        " onkeyup="verificarCodigoAdmin(event)">
+
+        <button onclick="validarAcessoAdmin()" style="
+            width: 100%;
+            padding: 12px;
+            background: #00e676;
+            color: #000;
+            font-weight: bold;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+        ">Entrar</button>
+        
+        <p id="admin-pass-error" style="color: #ff1744; font-size: 12px; margin-top: 10px; display: none;">Código incorreto.</p>
+    </div>
+</div>
+
+<script>
+    function validarAcessoAdmin() {
+        const input = document.getElementById("admin-pass-code");
+        const erro = document.getElementById("admin-pass-error");
+        
+        // Código de acesso configurado para 3000
+        if (input && input.value === "3000") {
+            const tela = document.getElementById("maintenance-screen");
+            if (tela) tela.style.display = "none";
+            sessionStorage.setItem("admin_unlocked", "true");
+        } else if (erro) {
+            erro.style.display = "block";
+        }
+    }
+
+    function verificarCodigoAdmin(event) {
+        if (event.key === "Enter") {
+            validarAcessoAdmin();
+        }
+    }
+
+    if (sessionStorage.getItem("admin_unlocked") === "true") {
+        document.addEventListener("DOMContentLoaded", function() {
+            const tela = document.getElementById("maintenance-screen");
+            if (tela) tela.style.display = "none";
+        });
+    }
+</script>
+<!-- === FIM TELA DE MANUTENÇÃO === -->
+
+
+
+
+
+
 <div class="container tela-robo" id="box-auth">
 
   <h2 id="titulo-tela">ENTRAR NA PLACA DO MONEY</h2>
