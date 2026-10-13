@@ -1709,13 +1709,15 @@ async function alternarAmbienteConta() {
 
     try {
 
-        console.log("A trocar conta para:", tipo);
+        alert("A trocar conta para:", tipo);
 
         // 1. pedir novo OTP
 
         const resposta = await fetch(`/api/novo-otp?tipo=${tipo}`);
 
         const dados = await resposta.json();
+
+
 
         if (!dados.ws_url) {
 
@@ -1754,7 +1756,7 @@ async function alternarAmbienteConta() {
 
             esconderProcessando();
 
-            console.log("WS REABRIU COM CONTA:", tipo);
+            alert("WS REABRIU COM CONTA:", tipo);
 
 
             // 🔥 IMPORTANTE: subscrição completa com req_id e subscribe para manter o stream ativo
