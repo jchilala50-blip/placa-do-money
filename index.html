@@ -1765,11 +1765,6 @@ alert(
 
         ws.onopen = function () {
 
-alert(
-    "📡 MENSAGEM RECEBIDA\n\n" +
-    msg.data
-);
-
             esconderProcessando();
 
             console.log("WS REABRIU COM CONTA:", tipo);
@@ -2059,6 +2054,14 @@ let operacaoAtual = {
 // === FUNÇÃO CENTRALIZADORA DO WEBSOCKET (ATUALIZADA) ===
 function configurarEventosDoWS(ws) {
     ws.onmessage = function (msg) {
+
+
+alert(
+    "📡 MENSAGEM RECEBIDA\n\n" +
+    msg.data
+);
+
+
         const data = JSON.parse(msg.data);
 if (data.msg_type !== "tick") {
     console.log("MSG_TYPE: " + data.msg_type);
