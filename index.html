@@ -279,15 +279,16 @@
         }
 
      
-        /* 🌟 TIPOGRAFIA ELEGANTE PARA SALDO E LUCRO/PERDA */
+        /* 🌟 TIPOGRAimpoESTILO ARIAL PARA SALDO E LUCRO/PERDA */
         #saldo-real, #lucro-real {
-            font-family: 'Playfair Display', Georgia, 'Times New Roman', serif !important;
-            font-style: italic !important;
-            font-weight: 700 !important;
-            letter-spacing: 1px !important;
-            font-size: 20px !important;
-            text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5) !important;
-        }
+    font-family: Arial, sans-serif !important;
+    font-style: normal !important;
+    font-weight: 700 !important;
+    letter-spacing: 0 !important;
+    font-size: 20px !important;
+    color: #fff !important;
+    text-shadow: none !important;
+}
 
         /* Saldo em cor branca */
         #saldo-real {
@@ -1717,7 +1718,7 @@ async function alternarAmbienteConta() {
 
         const dados = await resposta.json();
 
-alert(
+console.log(
     "🔍 DIAGNÓSTICO DA TROCA DE CONTA\n\n" +
     "TIPO ESCOLHIDO: " + tipo + "\n\n" +
     "SUCCESS: " + dados.success + "\n\n" +
@@ -1754,7 +1755,7 @@ alert(
         const ws = new WebSocket(dados.ws_url);
 
         window.derivWS = ws;
-alert(
+console.log(
     "💎 WEBSOCKET CRIADO\n\n" +
     "TIPO: " + tipo +
     "\n\nURL DO WS:\n" + ws.url
@@ -2067,7 +2068,7 @@ if (data.msg_type !== "tick") {
 
 if (data.error) {
 
-    alert(
+    console.log(
         "ERRO DERIV\n\n" +
         "REQ_ID: " + (data.req_id || "SEM REQ_ID") +
         "\n\n" +
@@ -2114,13 +2115,39 @@ window.operacaoPendente = {
 
         // 💰 1. TRATAR SALDO (BALANCE)
         if (data.msg_type === 'balance' && data.balance) {
-            const saldo = data.balance.balance;
-            const moeda = data.balance.currency;
-            const elem = document.getElementById('saldo-real');
-            if (elem) {
-                elem.innerText = `${Number(saldo).toFixed(2)} ${moeda}`;
+    const saldo = Number(data.balance.balance);
+    const moeda = data.balance.currency;
+    const elem = document.getElementById('saldo-real');
+
+    if (elem) {
+
+        const saldoAtual =
+            Number(elem.dataset.saldoAtual || saldo);
+
+        elem.dataset.saldoAtual = saldo;
+
+        const diferenca = saldo - saldoAtual;
+        const duracao = 500;
+        const inicio = performance.now();
+
+        function animarSaldo(tempoAtual) {
+            const progresso =
+                Math.min((tempoAtual - inicio) / duracao, 1);
+
+            const valor =
+                saldoAtual + (diferenca * progresso);
+
+            elem.innerText =
+                `${valor.toFixed(2)} ${moeda}`;
+
+            if (progresso < 1) {
+                requestAnimationFrame(animarSaldo);
             }
         }
+
+        requestAnimationFrame(animarSaldo);
+    }
+}
 
         // 📊 2. TRATAR TICKS (ÚLTIMOS DÍGITOS E GRÁFICO)
         if (data.tick) {
