@@ -2238,22 +2238,36 @@ if (
 
   // 🎫 2.5. TRATAR PROPOSTA RECEBIDA E EXECUTAR COMPRA
 if (data.msg_type === 'proposal') {
-console.log(JSON.stringify(data));
 
     const proposalId = data.proposal.id;
     const price = data.proposal.ask_price;
 
+    alert(
+        "📌 PROPOSTA RECEBIDA\n\n" +
+        "WS DA PROPOSTA:\n" +
+        ws.url +
+        "\n\nWS ATUAL:\n" +
+        (window.derivWS ? window.derivWS.url : "SEM WS") +
+        "\n\nID DA PROPOSTA:\n" +
+        proposalId +
+        "\n\nPREÇO:\n" +
+        price
+    );
+
     console.log(
         "📌 PROPOSAL RECEBIDA\n" +
         "ID: " + proposalId +
-        "\nPRICE: " + price
+        "\nPRICE: " + price +
+        "\nWS PROPOSTA: " + ws.url +
+        "\nWS ATUAL: " +
+        (window.derivWS ? window.derivWS.url : "SEM WS")
     );
 
     operacaoAtual.proposalId = proposalId;
-operacaoAtual.preco = price;
+    operacaoAtual.preco = price;
 
-executarCompra();
-} 
+    executarCompra();
+}
 
 // 🔥 PASSO NOVO: capturar compra realizada
 if (data.msg_type === 'buy' && data.buy) {
