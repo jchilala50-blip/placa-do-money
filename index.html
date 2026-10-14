@@ -2065,7 +2065,7 @@ if (data.msg_type !== "tick") {
 
 if (data.error) {
 
-    console.log(
+    alert(
         "ERRO DERIV\n\n" +
         "REQ_ID: " + (data.req_id || "SEM REQ_ID") +
         "\n\n" +
@@ -2073,6 +2073,7 @@ if (data.error) {
         "\n\nÚLTIMA MENSAGEM:\n" +
         JSON.stringify(window.ultimaMensagem)
     );
+
 
     if (
         typeof operacaoAtual !== "undefined" &&
