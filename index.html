@@ -538,7 +538,7 @@
 
 <script>
 
-console.log("BEM VINDO");
+alert("BEM VINDO");
 
   window.onerror = function(msg, url, line) {
 
@@ -1641,22 +1641,23 @@ function atualizarGraficoReal() {
             const corFundo = ehVerde ? "rgba(0, 230, 118, 0.25)" : "rgba(255, 23, 68, 0.25)";
             const corBorda = ehVerde ? "#00e676" : "#ff1744";
 
-            // Aplica o estilo circular no rótulo da percentagem
-            Object.assign(texto.style, {
-                display: "inline-flex",
-                alignItems: "center",
-                justifyContent: "center",
-                width: "26px",
-                height: "26px",
-                borderRadius: "50%",
-                backgroundColor: corFundo,
-                border: `1px solid ${corBorda}`,
-                color: "#ffffff",
-                fontSize: "9px",
-                fontWeight: "bold",
-                boxShadow: `0 0 6px ${corBorda}`,
-                margin: "0 auto 4px auto"
-            });
+            // Aplica o estilo quadrangular 
+Object.assign(texto.style, {
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "center",
+    width: "28px",
+    height: "16px",
+    borderRadius: "4px",
+    backgroundColor: corFundo,
+    border: `1px solid ${corBorda}`,
+    color: "#ffffff",
+    fontSize: "8px",
+    fontWeight: "bold",
+    boxShadow: `0 0 5px ${corBorda}`,
+    margin: "0 auto 4px auto"
+});
+
         }
     }
 }
