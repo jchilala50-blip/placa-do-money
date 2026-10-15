@@ -1514,39 +1514,37 @@ temporizadorOperacao = setTimeout(() => {
 
 function renderizarBarrasIniciais() {
 
-let html = '';
+    let html = '';
 
+    for(let i = 0; i <= 9; i++) {
 
-for(let i = 0; i <= 9; i++) {
+        html += `
 
+        <div class="coluna-barra">
 
-html += `
+            <div class="porcentagem-barra" id="perc-${i}">
+                ...
+            </div>
 
-<div class="coluna-barra">
+            <div style="
+                width: 1px;
+                height: 12px;
+                background: #9e9e9e;
+                margin: 0 auto -1px auto;
+            "></div>
 
-<div class="porcentagem-barra" id="perc-${i}">
+            <div class="corpo-barra" id="barra-${i}">
 
-...
+            </div>
 
-</div>
+            <div class="label-barra">${i}</div>
 
+        </div>
 
-<div class="corpo-barra" id="barra-${i}">
+        `;
+    }
 
-</div>
-
-
-<div class="label-barra">${i}</div>
-
-</div>
-
-`;
-
-}
-
-
-return html;
-
+    return html;
 }
 
 function atualizarCoresBarras(contagem) {
