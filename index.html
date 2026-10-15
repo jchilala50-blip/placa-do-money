@@ -70,24 +70,29 @@
             letter-spacing: 0.5px;
         }
         
-        /* Topo: Saldo e Lucro */
-        .grid-topo {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 8px;
-            margin-bottom: 12px;
-        }
-        .card-status {
-            background: linear-gradient(145deg, #0f1b2e, #14243b);
-            padding: 10px;
-            border-radius: 8px;
-            border-left: 4px solid #1e88e5;
-            text-align: left;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-        .card-status.lucro { border-left-color: #00e676; }
+         /* Topo: Saldo e Lucro */
+.grid-topo {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    margin-bottom: 10px;
+}
+
+.card-status {
+    background: linear-gradient(145deg, #0f1b2e, #14243b);
+    padding: 6px;
+    border-radius: 7px;
+    border-left: 3px solid #1e88e5;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.card-status.lucro {
+    border-left-color: #00e676;
+}        
+
         .label-card { font-size: 10px; color: #78909c; text-transform: uppercase; }
         .valor-card { font-size: 16px; font-weight: bold; margin-top: 4px; }
         
@@ -623,7 +628,7 @@
 
 <script>
 
-alert("BEM VINDO");
+console.log("BEM VINDO");
 
   window.onerror = function(msg, url, line) {
 
@@ -1381,7 +1386,7 @@ function calcularScoreRainMoney() {
 
 
 
-// === MOTOR DE PROCESSAMENTO DAS 5 ESTRATÉGIAS ===
+// === MOTOR DE PROCESSAMENTO DAS 6 ESTRATÉGIAS ===
 
 function executarMotorEstrategias(ultimoDigito, tickId) {
 
@@ -1544,7 +1549,7 @@ temporizadorOperacao = setTimeout(() => {
 }, 10000);
 
 
-    comprarContratoDeriv('DIGITUNDER', 5, 2);
+    comprarContratoDeriv('DIGITUNDER', 5, 7);
 }
 
  
