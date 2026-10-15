@@ -193,19 +193,6 @@
     height: 96px;
 }
 
-/* Pavio fixo acima de cada barra */
-.coluna-barra::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 1px;
-    height: 12px;
-    background: #9e9e9e;
-    z-index: 1;
-}
-
 .porcentagem-barra {
     position: absolute;
     top: 0;
@@ -338,6 +325,69 @@
         #saldo-real {
             color: #ffffff !important;
         }
+
+
+/* 💧 PLACAS CIRCULARES DE SALDO E LUCRO/PERDA */
+.placa-liquida {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.circulo-liquido {
+    position: relative;
+    width: 78px;
+    height: 78px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: #061b0b;
+    border: 2px solid #00e676;
+    box-shadow:
+        0 0 8px rgba(0, 230, 118, 0.55),
+        inset 0 0 12px rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.liquido {
+    position: absolute;
+    left: -10%;
+    bottom: 0;
+    width: 120%;
+    height: 50%;
+    background: #00e676;
+    border-radius: 50% 50% 0 0;
+    box-shadow: 0 -3px 10px rgba(0, 230, 118, 0.55);
+    transition:
+        height 0.8s ease,
+        background-color 0.5s ease,
+        box-shadow 0.5s ease;
+}
+
+.brilho-liquido {
+    position: absolute;
+    top: 10px;
+    left: 14px;
+    width: 32px;
+    height: 15px;
+    background: rgba(255, 255, 255, 0.28);
+    border-radius: 50%;
+    transform: rotate(-15deg);
+    z-index: 3;
+}
+
+.circulo-liquido .valor-card {
+    position: relative;
+    z-index: 4;
+    color: #ffffff !important;
+    font-size: 10px;
+    font-weight: bold;
+    text-align: center;
+    text-shadow: 0 1px 3px #000;
+}
+
+/*💧 FIM DESTE CODIGO */
 
 /* Estilo entrar na placa do money estrategias gratis */
 
@@ -777,20 +827,35 @@ container.classList.remove('tela-robo');
                 </div>
             </div>
             
-            <div class="grid-topo">
-                <div class="card-status">
-                    <div class="label-card">Saldo</div>
-                    <div class="valor-card" id="saldo-real">$ 0.00 USD</div>
-                </div>
-                <div class="card-status lucro">
-                    <div class="label-card">Lucro/Perda</div>
-                    <div class="valor-card" id="lucro-real" style="color:#00e676;">$ 0.00</div>
-                    <div class="mini-placar">
-                        W: <span class="win-count" id="cont-wins">0</span> 
-                        L: <span class="loss-count" id="cont-losses">0</span>
-                    </div>
-                </div>
-            </div>
+           <!-- 💧 PLACAS CIRCULARES DE SALDO E LUCRO/PERDA -->
+<div class="grid-topo">
+
+    <div class="card-status placa-liquida">
+        <div class="label-card">Saldo</div>
+
+        <div class="circulo-liquido" id="circulo-saldo">
+            <div class="liquido" id="liquido-saldo"></div>
+            <div class="brilho-liquido"></div>
+            <div class="valor-card" id="saldo-real">$ 0.00 USD</div>
+        </div>
+    </div>
+
+    <div class="card-status lucro placa-liquida">
+        <div class="label-card">Lucro/Perda</div>
+
+        <div class="circulo-liquido" id="circulo-lucro">
+            <div class="liquido" id="liquido-lucro"></div>
+            <div class="brilho-liquido"></div>
+            <div class="valor-card" id="lucro-real">$ 0.00</div>
+        </div>
+
+        <div class="mini-placar">
+            W: <span class="win-count" id="cont-wins">0</span>
+            L: <span class="loss-count" id="cont-losses">0</span>
+        </div>
+    </div>
+
+</div>
 
             <div class="linha-seletores">
                 <div>
@@ -3400,6 +3465,7 @@ position:fixed;
 })();
 </script>
 
+<script src="placas-liquidas.js"></script>
 
 </body>
 </html>
