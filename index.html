@@ -183,21 +183,43 @@
             border-bottom: 1px solid #1a3152;
         }
         .coluna-barra {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            flex: 1;
-            margin: 0 1px;
-        }
-        .porcentagem-barra { font-size: 9px; color: #90a4ae; margin-bottom: 2px; }
-        .corpo-barra {
-            width: 85%;
-            height: 50px;
-            background-color: #ffffff;
-            border-radius: 2px 2px 0 0;
-            transition: height 0.3s ease, background-color 0.3s ease;
-        }
-        .label-barra { font-size: 10px; font-weight: bold; color: #90a4ae; margin-top: 3px; }
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    flex: 1;
+    margin: 0 1px;
+    position: relative;
+    height: 96px;
+}
+
+.porcentagem-barra {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 9px;
+    color: #90a4ae;
+    margin: 0;
+    z-index: 3;
+}
+
+.corpo-barra {
+    width: 85%;
+    height: 50px;
+    background-color: #ffffff;
+    border-radius: 2px 2px 0 0;
+    transition: height 0.3s ease, background-color 0.3s ease;
+    position: relative;
+    z-index: 2;
+}
+
+.label-barra {
+    font-size: 10px;
+    font-weight: bold;
+    color: #90a4ae;
+    margin-top: 3px;
+}
 
         /* Controles: Engrenagem e Botão Único Play */
          .linha-controle {
@@ -279,7 +301,7 @@
         }
 
      
-        /* 🌟 TIPOGRAimpoESTILO ARIAL PARA SALDO E LUCRO/PERDA */
+        /* 🌟 TIPOGRIA ESTILO ARIAL PARA SALDO E LUCRO/PERDA */
         #saldo-real {
     font-family: Arial, sans-serif !important;
     font-style: normal !important;
