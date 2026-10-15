@@ -940,8 +940,8 @@ onchange="trocarVolatilidade()">
 <!-- ☔ PAINEL EXCLUSIVO RAIN MONEY -->
 <div id="painel-rain-money" style="
     display: none;
-    background: rgba(0, 191, 255, 0.12);
-    border: 1px solid rgba(0, 191, 255, 0.4);
+    background: rgba(10, 20, 45, 0.82);
+    border: 1px solid rgba(0, 229, 255, 0.55);
     border-radius: 8px;
     padding: 12px;
     margin-bottom: 12px;
@@ -2278,7 +2278,7 @@ if (data.msg_type === 'proposal') {
     const proposalId = data.proposal.id;
     const price = data.proposal.ask_price;
 
-    alert(
+    console.log(
         "📌 PROPOSTA RECEBIDA\n\n" +
         "WS DA PROPOSTA:\n" +
         ws.url +
