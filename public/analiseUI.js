@@ -1,0 +1,436 @@
+(function () {
+
+let janela = null;
+
+window.abrirJanelaAnalise = function () {
+
+    if (janela) {
+        janela.style.display = "block";
+        return;
+    }
+
+    janela = document.createElement("div");
+
+    janela.id = "janela-analise";
+
+    janela.innerHTML = `
+        <div id="topo-analise">
+
+            <span id="titulo-analise">
+                SISTEMA DE ANÁLISES DO MERCADO
+            </span>
+
+            <span id="fechar-analise">
+                ✖
+            </span>
+
+        </div>
+
+        <div id="status-live">
+
+            <span id="led-live"></span>
+
+            <span id="texto-live">LIVE</span>
+
+        </div>
+
+    <div id="conteudo-analise">
+        <div id="painel-status">
+            <div id="status-tick">
+                <span id="led-status">🟡</span>
+                <span id="texto-status">Working</span>
+            </div>
+        </div>
+
+        <div id="cards-analise">
+            <!-- CARTÃO 1 -->
+            <div class="card-analise">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <div class="titulo-card" id="titulo-volatilidade-1">Volatility 100 (1s) Index</div>
+                    <div style="display:flex; align-items:center; gap:10px; font-size:10px; font-weight:bold; color:#00e676;">
+                        <span id="contador-orion">ORION: 0</span>
+                        <span id="contador-vortex">VORTEX: 0</span>
+                        <span id="temporizador-pares">0s</span>
+                    </div>
+                </div>
+                <div class="tipo-estrategia">ANÁLISE: ORION / VORTEX</div>
+                <div class="barra-texto">
+                    <span class="blocos-barra" id="barra-pares">□□□□□□□□□□</span>
+                    <span class="valor-percentagem" id="percentual-pares">0%</span>
+                </div>
+                <div class="bot-recomendado">✔ Bot recomendado: <b id="bot-pares">VORTEX</b></div>
+            </div>
+
+            <!-- CARTÃO 2 -->
+            <div class="card-analise">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <div class="titulo-card" id="titulo-volatilidade-2">Volatility 100 (1s) Index</div>
+                    <div style="display:flex; align-items:center; gap:10px; font-size:10px; font-weight:bold; color:#00e676;">
+                        <span id="contador-titan">TITAN: 0</span>
+                        <span id="contador-epic">SUPER EPIC: 0</span>
+                        <span id="temporizador-under">0s</span>
+                    </div>
+                </div>
+                <div class="tipo-estrategia">ANÁLISE: TITAN / SUPER EPIC</div>
+                <div class="barra-texto">
+                    <span class="blocos-barra" id="barra-under">□□□□□□□□□□</span>
+                    <span class="valor-percentagem" id="percentual-under">0%</span>
+                </div>
+                <div class="bot-recomendado">✔ Bot recomendado: <b id="bot-under">-</b></div>
+            </div>
+
+            <!-- CARTÃO 3 -->
+            <div class="card-analise">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <div class="titulo-card" id="titulo-volatilidade-3">Volatility 100 (1s) Index</div>
+                    <div style="display:flex; align-items:center; gap:10px; font-size:10px; font-weight:bold; color:#00e676;">
+                        <span id="contador-phantom">PHANTOM: 0</span>
+                        <span id="temporizador-phantom">0s</span>
+                    </div>
+                </div>
+                <div class="tipo-estrategia">ANÁLISE: MONEY PHANTOM</div>
+                <div class="barra-texto">
+                    <span class="blocks-barra" id="barra-phantom">□□□□□□□□□□</span>
+                    <span class="valor-percentagem" id="percentual-phantom">0%</span>
+                </div>
+                <div class="bot-recommended">✔ Bot recomendado: <b id="bot-phantom">-</b></div>
+            </div>
+
+            <!-- CARTÃO DE RECOMENDAÇÕES (BRANCO CREME) -->
+            <div style="background-color: #FFFDD0; color: #222; padding: 12px; margin-top: 15px; border-radius: 8px; font-size: 11px; font-family: sans-serif; line-height: 1.5; box-shadow: 0 2px 4px rgba(0,0,0,0.3); text-align: left;">
+                <b style="font-size: 12px; display: block; margin-bottom: 6px; color: #000;">📋 RECOMENDAÇÕES:</b>
+                <div style="margin-bottom: 3px;">1️⃣ Selecione o mercado para operações</div>
+                <div style="margin-bottom: 3px;">2️⃣ Aguarde a recomendação da análise</div>
+                <div style="margin-bottom: 3px;">3️⃣ Selecione a estratégia recomendada</div>
+                <div style="margin-bottom: 3px;">4️⃣ Visitar periodicamente o painel</div>
+                <div style="margin-bottom: 6px;">5️⃣ Verifique o número de recomendações. Quanto maior melhor.</div>
+                <hr style="border: 0; border-top: 1px solid #e5d3b3; margin: 8px 0;">
+                <i style="font-size: 10px; color: #555; display: block; line-height: 1.3;"><b>Obs:</b> Esta analise é feita rigorosamente contra tendência em caso de dúvidas de como dominar contacte o programador no grupo PLACA DO MONEY.</i>
+            </div>
+
+        </div>
+    </div>
+
+
+</div>
+</div>
+
+</div>
+
+</div>
+    `;
+
+    document.body.appendChild(janela);
+
+    document
+        .getElementById("fechar-analise")
+        .onclick = function () {
+
+            janela.style.display = "none";
+
+        };
+
+};
+
+})();
+
+
+let contadorOrion = 0;
+let contadorVortex = 0;
+
+// === FUNÇÃO ATUALIZAR CARTÃO ==
+
+function atualizarCartaoPares(percentagem, bot) {
+
+    const percentual =
+        document.getElementById("percentual-pares");
+
+    const barra =
+        document.getElementById("barra-pares");
+
+    const botRecomendado =
+        document.getElementById("bot-pares");
+
+    if (!percentual || !barra || !botRecomendado) {
+        return;
+    }
+
+    percentual.innerText = percentagem + "%";
+
+    const blocosCheios =
+        Math.round(percentagem / 10);
+
+    barra.innerText =
+        "■".repeat(blocosCheios) +
+        "□".repeat(10 - blocosCheios);
+
+    if (percentagem <= 30) {
+
+        barra.style.color = "#ff1744";
+
+    } else {
+
+        barra.style.color = "#00ff66";
+
+    }
+
+
+    botRecomendado.innerText = bot;
+
+}
+
+// === SEGUNDO CARTÃO ==
+
+function atualizarCartaoUnder(percentagem, bot) {
+
+    const percentual =
+        document.getElementById("percentual-under");
+
+    const barra =
+        document.getElementById("barra-under");
+
+    const botRecomendado =
+        document.getElementById("bot-under");
+
+    if (!percentual || !barra || !botRecomendado) {
+        return;
+    }
+
+    percentual.innerText = percentagem + "%";
+
+    const blocosCheios =
+        Math.round(percentagem / 10);
+
+    barra.innerText =
+        "■".repeat(blocosCheios) +
+        "□".repeat(10 - blocosCheios);
+
+    if (percentagem <= 30) {
+
+        barra.style.color = "#ff1744";
+
+    } else {
+
+        barra.style.color = "#00ff66";
+
+    }
+
+    botRecomendado.innerText = bot;
+
+}
+
+
+
+// === =========================================
+
+let temporizadorSemTicks = null;
+
+function atualizarStatusLive() {
+
+    const ledLive = document.getElementById("led-live");
+    const textoLive = document.getElementById("texto-live");
+
+    const ledStatus = document.getElementById("led-status");
+    const textoStatus = document.getElementById("texto-status");
+
+    if (
+        !ledLive ||
+        !textoLive ||
+        !ledStatus ||
+        !textoStatus
+    ){
+        return;
+    }
+
+    ledLive.style.background = "#00ff00";
+    ledLive.style.boxShadow = "0 0 10px #00ff00";
+    textoLive.innerText = "LIVE";
+
+    ledStatus.style.background = "#ffd600";
+    ledStatus.style.boxShadow = "0 0 10px #ffd600";
+    textoStatus.innerText = "Working";
+
+    clearTimeout(temporizadorSemTicks);
+
+    temporizadorSemTicks = setTimeout(function(){
+
+        ledLive.style.background = "#ff1744";
+        ledLive.style.boxShadow = "0 0 10px #ff1744";
+        textoLive.innerText = "LIVE";
+
+        ledStatus.style.background = "#ff1744";
+        ledStatus.style.boxShadow = "0 0 10px #ff1744";
+        textoStatus.innerText = "No Ticks";
+
+    },5000);
+
+}
+
+
+// ===============================
+// TEMPORIZADOR DO CARTÃO PARES
+// ===============================
+
+let segundosAnalise = 0;
+
+setInterval(function () {
+
+    const visor =
+        document.getElementById("temporizador-pares");
+
+    if (!visor) {
+        return;
+    }
+
+    segundosAnalise++;
+
+    if (segundosAnalise >= 60) {
+
+    if (typeof calcularAnalisePares === "function") {
+        calcularAnalisePares();
+    }
+
+    segundosAnalise = 1;
+
+}
+
+    visor.innerText = segundosAnalise + "s";
+
+}, 1000);
+
+let contadorTitan = 0;
+let contadorEpic = 0;
+let segundosUnder = 0;
+
+// ===============================
+// TEMPORIZADOR DO CARTÃO UNDER/OVER
+// ===============================
+setInterval(function () {
+    const visor = document.getElementById("temporizador-under");
+    if (!visor) return;
+
+    segundosUnder++;
+
+    if (segundosUnder >= 60) {
+        if (typeof calcularAnaliseUnder === "function") {
+            calcularAnaliseUnder();
+        }
+        segundosUnder = 1;
+    }
+
+    visor.innerText = segundosUnder + "s";
+}, 1000);
+
+
+// == INICIO TEMPORIZADOR DO MONEY PANTHOM === 
+
+
+let contadorPhantom = 0;
+let segundosPhantom = 0;
+
+// === FUNÇÃO ATUALIZAR CARTÃO 3 (MONEY PHANTOM) ==
+function atualizarCartaoPhantom(percentagem, bot) {
+    const percentual = document.getElementById("percentual-phantom");
+    const barra = document.getElementById("barra-phantom");
+    const botRecomendado = document.getElementById("bot-phantom");
+
+    if (!percentual || !barra || !botRecomendado) return;
+
+    percentual.innerText = percentagem + "%";
+
+    const blocosCheios = Math.round(percentagem / 10);
+    barra.innerText = "■".repeat(blocosCheios) + "□".repeat(10 - blocosCheios);
+
+    if (percentagem <= 30) {
+        barra.style.color = "#ff1744";
+    } else {
+        barra.style.color = "#00ff66";
+    }
+
+    botRecomendado.innerText = bot;
+}
+
+// ===============================
+// TEMPORIZADOR DO CARTÃO 3 (MONEY PHANTOM)
+// ===============================
+setInterval(function () {
+    const visor = document.getElementById("temporizador-phantom");
+    if (!visor) return;
+
+    segundosPhantom++;
+
+    if (segundosPhantom >= 60) {
+        if (typeof calcularAnalisePhantom === "function") {
+            calcularAnalisePhantom();
+        }
+        segundosPhantom = 1;
+    }
+
+    visor.innerText = segundosPhantom + "s";
+}, 1000);
+
+
+// === FUNÇÃO PARA EMITIR SINAL SONORO ===
+window.emitirSomNotificacao = function () {
+    try {
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        
+        // Primeiro bip (mais grave)
+        const oscilador1 = audioCtx.createOscillator();
+        const ganho1 = audioCtx.createGain();
+        oscilador1.type = "sine";
+        oscilador1.frequency.setValueAtTime(600, audioCtx.currentTime); // Frequência do som
+        ganho1.gain.setValueAtTime(0.1, audioCtx.currentTime); // Volume
+        ganho1.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
+        oscilador1.connect(ganho1);
+        ganho1.connect(audioCtx.destination);
+        oscilador1.start();
+        oscilador1.stop(audioCtx.currentTime + 0.15);
+
+        // Segundo bip (mais agudo, logo a seguir para fazer um som "bip-bip")
+        setTimeout(() => {
+            const oscilador2 = audioCtx.createOscillator();
+            const ganho2 = audioCtx.createGain();
+            oscilador2.type = "sine";
+            oscilador2.frequency.setValueAtTime(800, audioCtx.currentTime);
+            ganho2.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            ganho2.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
+            oscilador2.connect(ganho2);
+            ganho2.connect(audioCtx.destination);
+            oscilador2.start();
+            oscilador2.stop(audioCtx.currentTime + 0.2);
+        }, 120);
+
+    } catch (e) {
+        console.log("Áudio ainda não permitido pelo navegador:", e);
+    }
+};
+
+
+
+// Atualiza os nomes dos mercados nos cartões dinamicamente
+setInterval(() => {
+    const nomesMercados = {
+        "1HZ10V": "Volatility 10 (1s) Index",
+        "1HZ25V": "Volatility 25 (1s) Index",
+        "1HZ50V": "Volatility 50 (1s) Index",
+        "1HZ75V": "Volatility 75 (1s) Index",
+        "1HZ100V": "Volatility 100 (1s) Index",
+        "R_10": "Volatility 10 Index",
+        "R_25": "Volatility 25 Index",
+        "R_50": "Volatility 50 Index",
+        "R_75": "Volatility 75 Index",
+        "R_100": "Volatility 100 Index"
+    };
+
+    const mercadoAtual = nomesMercados[window.volatilidadeAtiva] || "Volatility 100 (1s) Index";
+
+    const t1 = document.getElementById("titulo-volatilidade-1");
+    const t2 = document.getElementById("titulo-volatilidade-2");
+    const t3 = document.getElementById("titulo-volatilidade-3");
+
+    if (t1 && t1.innerText !== mercadoAtual) t1.innerText = mercadoAtual;
+    if (t2 && t2.innerText !== mercadoAtual) t2.innerText = mercadoAtual;
+    if (t3 && t3.innerText !== mercadoAtual) t3.innerText = mercadoAtual;
+}, 500); // Sincroniza a cada meio segundo
+

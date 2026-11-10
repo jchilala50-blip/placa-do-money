@@ -1,0 +1,3569 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+     <title>Placa do Money - Dashboard</title>
+  <style>
+
+           body {
+           background-color: #060d1a;
+           color: #ffffff;
+           font-family: 'Segoe UI', Arial, sans-serif;
+           margin: 9px 9px 0px 0px;
+           padding: 8px 8px 0px 0px;
+           display: flex;
+           justify-content: center;
+           align-items: stretch;
+           height: 100vh;
+           overflow: hidden;
+           box-sizing: border-box;
+           }
+
+           .container {
+            background-color: #0c1524;
+            padding: 12px;
+            border-radius: 12px;
+            border: 1px solid #16263f;
+            width: 100%;
+            max-width: 423px;
+            box-sizing: border-box;
+             margin-left: auto;
+             margin-right: auto;
+             margin-top: 4px;
+             max-height: 92vh;
+             overflow-y: auto;
+              }
+        
+        /* Topo com Logo e Botão Info Alinhados */
+        .topo-plataforma {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            position: relative;
+        }
+        .btn-info-youtube {
+            background-color: #101f35;
+            border: 1px solid #1a3152;
+            color: #1e88e5;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+        .texto-logo {
+            flex: 1;
+            text-align: center;
+            padding-right: 36px;
+        }
+        .texto-logo h3 {
+            margin: 0;
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 15px;
+            letter-spacing: 0.5px;
+        }
+        
+         /* Topo: Saldo e Lucro */
+.grid-topo {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    margin-bottom: 10px;
+}
+
+.card-status {
+    background: linear-gradient(145deg, #0f1b2e, #14243b);
+    padding: 6px;
+    border-radius: 7px;
+    border-left: 3px solid #1e88e5;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.card-status.lucro {
+    border-left-color: #00e676;
+}        
+
+        .label-card { font-size: 10px; color: #78909c; text-transform: uppercase; }
+        .valor-card { font-size: 16px; font-weight: bold; margin-top: 4px; }
+        
+        /* Mini Placar de Ganhos e Perdas (Estilo Enote) */
+        .mini-placar {
+            margin-top: 5px;
+            font-size: 11px;
+            font-weight: bold;
+            color: #ffffff;
+            border-top: 1px solid #1a3152;
+            padding-top: 4px;
+        }
+        .win-count { color: #00e676; margin-right: 8px; }
+        .loss-count { color: #ff1744; }
+        
+        /* Seletores Responsivos */
+        .linha-seletores {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 12px;
+            text-align: left;
+        }
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin-top: 4px;
+            background-color: #101f35;
+            border: 1px solid #1a3152;
+            border-radius: 6px;
+            color: #fff;
+            font-size: 12px;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #2e7d32;
+            border: none;
+            color: white;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        
+/* Botao criar conta */
+.btn-alternar {
+    display: block;
+    width: 90%;
+    margin: 18px auto 0;
+    padding: 10px 14px;
+
+    background: rgba(5, 20, 40, 0.88);
+    border: 1px solid #38d9ff;
+    border-radius: 8px;
+
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: bold;
+    text-align: center;
+
+    text-shadow: 0 0 3px #ffffff;
+    box-shadow:
+        0 0 6px rgba(0, 191, 255, 0.5),
+        inset 0 0 8px rgba(0, 191, 255, 0.12);
+
+    cursor: pointer;
+}
+        
+        /* Gráfico Redimensionável para Celular */
+        .container-grafico {
+            background-color: #091220;
+            border-radius: 8px;
+            padding: 10px 6px;
+            margin-bottom: 12px;
+            border: 1px solid #12223a;
+        }
+        .titulo-grafico {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            color: #90a4ae;
+            margin-bottom: 10px;
+            padding: 0 4px;
+        }
+        .area-barras {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            height: 100px;
+            padding-bottom: 3px;
+            border-bottom: 1px solid #1a3152;
+        }
+        .coluna-barra {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    flex: 1;
+    margin: 0 1px;
+    position: relative;
+    height: 96px;
+}
+
+.porcentagem-barra {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 9px;
+    color: #90a4ae;
+    margin: 0;
+    z-index: 3;
+}
+
+.corpo-barra {
+    width: 85%;
+    height: 50px;
+    background-color: #ffffff;
+    border-radius: 2px 2px 0 0;
+    transition: height 0.3s ease, background-color 0.3s ease;
+    position: relative;
+    z-index: 2;
+}
+
+.label-barra {
+    font-size: 10px;
+    font-weight: bold;
+    color: #90a4ae;
+    margin-top: 3px;
+}
+
+        /* Controles: Engrenagem e Botão Único Play */
+         .linha-controle {
+     display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 12px;
+}
+
+.btn-play-unico {
+    width: 42px;
+    min-width: 42px;
+    max-width: 42px;
+    height: 42px;
+    flex: none;
+}
+
+        .historico-lista {
+            background-color: #101f35;
+            border-radius: 6px;
+            padding: 8px;
+            height: 260px; /* ou 300px se quiseres mais espaço */
+            overflow-y: auto; 
+            font-size: 12px;
+        }
+
+ /* COMPACTAÇÃO DOS CARTÕES DO HISTÓRICO (WIN / LOSS) */
+        .historico-lista > div {
+            padding: 4px 8px !important;    /* Reduz o espaço interno vertical para metade */
+            margin-bottom: 4px !important;  /* Diminui a distância entre cartões */
+            min-height: unset !important;   /* Retira qualquer altura mínima exagerada */
+            font-size: 11px !important;     /* Diminui ligeiramente a letra */
+        }
+
+        /* Se usares spans ou badges lá dentro, encolhe o texto deles também */
+        .historico-lista > div span, 
+        .historico-lista > div strong {
+            font-size: 11px !important;
+        }
+
+
+        /* Modal */
+.tela-robo {
+    background:
+        linear-gradient(
+    rgba(6,13,26,0.40),
+    rgba(6,13,26,0.40)
+),
+        url('robot.jpg');
+
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+    
+
+        .modal-config {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.8);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal-conteudo {
+            background-color: #0c1524;
+            padding: 16px;
+            border-radius: 12px;
+            border: 1px solid #16263f;
+            width: 85%;
+            max-width: 300px;
+            text-align: left;
+        }
+
+        @keyframes girarPM {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+     
+        /* 🌟 TIPOGRIA ESTILO ARIAL PARA SALDO E LUCRO/PERDA */
+        #saldo-real {
+    font-family: Arial, sans-serif !important;
+    font-style: normal !important;
+    font-weight: 700 !important;
+    letter-spacing: 0 !important;
+    font-size: 20px !important;
+    color: #ffd600 !important;
+    text-shadow: none !important;
+}
+
+#lucro-real {
+    font-family: Arial, sans-serif !important;
+    font-style: normal !important;
+    font-weight: 700 !important;
+    letter-spacing: 0 !important;
+    font-size: 20px !important;
+    text-shadow: none !important;
+}
+
+        /* Saldo em cor branca */
+        #saldo-real {
+            color: #ffffff !important;
+        }
+
+
+/* 💧 PLACAS CIRCULARES DE SALDO E LUCRO/PERDA */
+.placa-liquida {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.circulo-liquido {
+    position: relative;
+    width: 78px;
+    height: 78px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: #061b0b;
+    border: 2px solid #00e676;
+    box-shadow:
+        0 0 8px rgba(0, 230, 118, 0.55),
+        inset 0 0 12px rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.liquido {
+    position: absolute;
+    left: -10%;
+    bottom: 0;
+    width: 120%;
+    height: 50%;
+    background: #00e676;
+    border-radius: 50% 50% 0 0;
+    box-shadow: 0 -3px 10px rgba(0, 230, 118, 0.55);
+    transition:
+        height 0.8s ease,
+        background-color 0.5s ease,
+        box-shadow 0.5s ease;
+}
+
+.brilho-liquido {
+    position: absolute;
+    top: 10px;
+    left: 14px;
+    width: 32px;
+    height: 15px;
+    background: rgba(255, 255, 255, 0.28);
+    border-radius: 50%;
+    transform: rotate(-15deg);
+    z-index: 3;
+}
+
+.circulo-liquido .valor-card {
+    position: relative;
+    z-index: 4;
+    color: #ffffff !important;
+    font-size: 10px;
+    font-weight: bold;
+    text-align: center;
+    text-shadow: 0 1px 3px #000;
+}
+
+/*💧 FIM DESTE CODIGO */
+
+/* Estilo entrar na placa do money estrategias gratis */
+
+#titulo-tela {
+    text-align: center;
+    text-transform: uppercase;
+    font-family: Impact, "Arial Black", sans-serif;
+    font-size: 28px;
+    letter-spacing: 1px;
+    color: #38d9ff;
+    text-shadow:
+        0 0 3px #00bfff,
+        0 0 8px #008cff,
+        0 0 15px rgba(0, 191, 255, 0.8);
+    margin-bottom: 4px;
+}
+
+.subtitulo-estrategias {
+    text-align: center;
+    font-family: Impact, "Arial Black", sans-serif;
+    font-size: 11px;
+    letter-spacing: 1px;
+    color: #7eeaff;
+    text-shadow:
+        0 0 3px #00bfff,
+        0 0 7px rgba(0, 191, 255, 0.7);
+    margin-bottom: 10px;
+}
+
+/* Titulo placa do money trader automatico */
+#titulo-conexao {
+    text-align: center;
+    text-transform: uppercase;
+    white-space: nowrap;
+    font-family: Impact, "Arial Black", sans-serif;
+    font-size: 16px;
+    letter-spacing: 0.5px;
+    color: #38d9ff;
+    text-shadow:
+        0 0 3px #00bfff,
+        0 0 8px #008cff,
+        0 0 15px rgba(0, 191, 255, 0.8);
+    margin-bottom: 8px;
+}
+
+#subtitulo-conexao {
+    text-align: center;
+    white-space: nowrap;
+    font-family: Impact, "Arial Black", sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.7px;
+    color: #7eeaff;
+    text-shadow:
+        0 0 3px #00bfff,
+        0 0 7px rgba(0, 191, 255, 0.7);
+    margin-bottom: 20px;
+}
+
+
+
+    </style>
+
+    <!-- Importação da fonte Serifada Elegante -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,600;1,700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!-- === TELA DE MANUTENÇÃO === -->
+
+<div id="maintenance-screen" style="
+
+position: fixed;
+
+top: 0;
+
+left: 0;
+
+width: 100vw;
+
+height: 100vh;
+
+background-color: #0b0e14;
+
+color: #ffffff;
+
+z-index: 999999;
+
+display: flex;
+
+flex-direction: column;
+
+align-items: center;
+
+justify-content: center;
+
+font-family: sans-serif;
+
+text-align: center;
+
+padding: 20px;
+
+">
+
+<div style="
+
+background: #151d2a;
+
+padding: 40px;
+
+border-radius: 12px;
+
+border: 1px solid #1e293b;
+
+box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+
+max-width: 400px;
+
+width: 100%;
+
+">
+
+<h2 style="color: #00e676; margin-top: 0; font-size: 20px;">MANUTENÇÃO VOLTE MAIS TARDE OU USE O POWER X</h2>
+
+<!-- BOTAO POWER X -->
+
+<a href="http://placa-do-money.netlify.app" target="_blank" style="
+
+display: block;
+
+width: 100%;
+
+padding: 12px;
+
+background: #1e293b;
+
+color: #00e676;
+
+font-weight: bold;
+
+text-decoration: none;
+
+border-radius: 6px;
+
+margin: 20px 0;
+
+box-sizing: border-box;
+
+border: 1px solid #00e676;
+
+">POWER X</a>
+
+
+<!-- CAMPO DE SENHA OCULTO -->
+
+<input type="password" id="admin-pass-code" placeholder="••••••••" style="
+
+width: 100%;
+
+padding: 12px;
+
+margin-bottom: 12px;
+
+border-radius: 6px;
+
+border: 1px solid #334155;
+
+background: #0f172a;
+
+color: #fff;
+
+text-align: center;
+
+font-size: 16px;
+
+outline: none;
+
+box-sizing: border-box;
+
+" onkeyup="verificarCodigoAdmin(event)">
+
+
+<button onclick="validarAcessoAdmin()" style="
+
+width: 100%;
+
+padding: 12px;
+
+background: #00e676;
+
+color: #000;
+
+font-weight: bold;
+
+border: none;
+
+border-radius: 6px;
+
+cursor: pointer;
+
+font-size: 14px;
+
+">Entrar</button>
+
+<p id="admin-pass-error" style="color: #ff1744; font-size: 12px; margin-top: 10px; display: none;">Código incorreto.</p>
+
+</div>
+
+</div>
+
+
+<script>
+
+function validarAcessoAdmin() {
+
+const input = document.getElementById("admin-pass-code");
+
+const erro = document.getElementById("admin-pass-error");
+
+// Código de acesso configurado para 3000
+
+if (input && input.value === "3000") {
+
+const tela = document.getElementById("maintenance-screen");
+
+if (tela) tela.style.display = "none";
+
+sessionStorage.setItem("admin_unlocked", "true");
+
+} else if (erro) {
+
+erro.style.display = "block";
+
+}
+
+}
+
+
+function verificarCodigoAdmin(event) {
+
+if (event.key === "Enter") {
+
+validarAcessoAdmin();
+
+}
+
+}
+
+
+if (sessionStorage.getItem("admin_unlocked") === "true") {
+
+document.addEventListener("DOMContentLoaded", function() {
+
+const tela = document.getElementById("maintenance-screen");
+
+if (tela) tela.style.display = "none";
+
+});
+
+}
+
+</script>
+
+<!-- === FIM TELA DE MANUTENÇÃO === -->
+
+
+
+
+
+
+
+
+<div class="container tela-robo" id="box-auth">
+
+  <h2 id="titulo-tela">ENTRAR NA PLACA DO MONEY</h2>
+
+<div class="subtitulo-estrategias">ESTRATÉGIAS GRÁTIS</div>
+
+  <div class="input-group" id="grupo-nome" style="display: none;">
+
+    <label>Nome Completo</label>
+
+    <input type="text" id="campo-nome" placeholder="Seu nome">
+
+  </div>
+
+  <div class="input-group">
+
+    <label>E-mail</label>
+
+    <input type="email" id="campo-email" placeholder="seuemail@exemplo.com">
+
+  </div>
+
+  <div class="input-group">
+
+    <label>Senha</label>
+
+    <input type="password" id="campo-senha" placeholder="Sua senha">
+
+  </div>
+
+  <button id="btn-principal" onclick="processarAcao()">Entrar</button>
+
+  <button
+    class="btn-alternar"
+    id="btn-mudar"
+    onclick="alternarTela()"
+>
+    Não tem conta? Criar Conta
+</button>
+
+<div style="
+    margin-top:15px;
+    padding:12px;
+    font-size:px;
+    line-height:1.5;
+    color:#b0bec5;
+    text-align:center;
+">
+♻️ V 4
+</div>
+
+</div>
+
+<script>
+
+console.log("BEM VINDO");
+
+  window.onerror = function(msg, url, line) {
+
+    console.log("Erro no código:\n" + msg + "\nLinha: " + line);
+
+    return true;
+  };
+
+  let modoCadastro = false;
+
+  const API_URL = '';
+
+let ultimosDigitos = [];
+
+
+    function alternarTela() {
+        modoCadastro = !modoCadastro;
+        const titulo = document.getElementById('titulo-tela');
+        const grupoNome = document.getElementById('grupo-nome');
+        const btnPrincipal = document.getElementById('btn-principal');
+        const btnMudar = document.getElementById('btn-mudar');
+
+        if (modoCadastro) {
+            titulo.innerText = "CRIAR CONTA";
+            grupoNome.style.display = "block";
+            btnPrincipal.innerText = "Cadastrar Conta";
+            btnMudar.innerText = "Já tem conta? Fazer Login";
+        } else {
+            titulo.innerText = "Entrar na Placa do Money";
+            grupoNome.style.display = "none";
+            btnPrincipal.innerText = "Entrar";
+            btnMudar.innerText = "Não tem conta? Criar Conta";
+        }
+    }
+
+    async function processarAcao() {
+mostrarProcessando("A autenticar...");
+        const nome = document.getElementById('campo-nome').value;
+        const email = document.getElementById('campo-email').value;
+        const senha = document.getElementById('campo-senha').value;
+
+        const rota = modoCadastro ? '/registrar' : '/login';
+        const corpoDados = modoCadastro ? { nome, email, senha } : { email, senha };
+
+        try {
+            const resposta = await fetch(`${API_URL}${rota}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(corpoDados)
+            });
+
+            const resultado = await resposta.json();
+
+            if (!resposta.ok) {
+                
+mostrarProcessando(resultado.erro || "Erro no servidor...");
+setTimeout(esconderProcessando, 2000);
+
+                return;
+            }
+
+            mostrarProcessando(resultado.mensagem);
+setTimeout(esconderProcessando, 1000);
+
+            if (!modoCadastro) {
+                carregarTelaDeriv();
+            } else {
+                alternarTela();
+            }
+
+        } catch (erro) {
+
+
+            mostrarProcessando(erro.message);
+setTimeout(esconderProcessando, 1000);
+
+        }
+    }
+
+    function carregarTelaDeriv() {
+
+  const container = document.getElementById('box-auth');
+
+  container.innerHTML = `
+
+    <h2 id="titulo-conexao">PLACA DO MONEY TRADER AUTOMATIZADO</h2>
+
+<p id="subtitulo-conexao">
+    CONECTA SUA CONTA DERIV OU CRIE CONTA
+</p>      
+            <button onclick="conectarViaOAuth()" style="background-color: #1e88e5; margin-bottom: 12px; width: 100%; padding: 12px; border: none; border-radius: 4px; color: white; font-weight: bold; cursor: pointer;">
+
+      Conectar à Deriv (OAuth)
+
+    </button>
+
+    <button onclick="abrirLinkAfiliado()" style="background-color: #d32f2f; width: 100%; padding: 12px; border: none; border-radius: 4px; color: white; font-weight: bold; cursor: pointer;">
+
+      Criar conta na Deriv
+
+    </button>
+`;
+
+}
+
+// Função do Botão Azul: Busca a URL de Login da Deriv no seu servidor e redireciona
+async function conectarViaOAuth() {
+mostrarProcessando("A ligar à Deriv...");
+    try {
+        const resposta = await fetch('/api/deriv-auth-url');
+        const dados = await resposta.json();
+        if (dados.url) {
+
+mostrarProcessando("A redirecionar para Deriv...");
+
+            window.location.href = dados.url; // Redireciona para a Deriv
+        } else {
+            Console.log("Erro ao obter URL de autenticação.");
+        }
+    } catch (erro) {
+        console.error(erro);
+        mostrarProcessando("Erro ao conectar...");
+setTimeout(esconderProcessando, 2000);
+    }
+}
+
+// Função do Botão Vermelho: Abre seu link de afiliado em uma nova aba
+async function abrirLinkAfiliado() {
+
+mostrarProcessando("Criar conta Deriv...");
+
+    try {
+        const resposta = await fetch('/api/link-afiliado');
+        const dados = await resposta.json();
+        if (dados.url) {
+
+            mostrarProcessando("A redirecionar...");
+setTimeout(() => {
+    window.open(dados.url, '_blank');
+    esconderProcessando();
+}, 800);
+
+        } else {
+
+            mostrarProcessando("Link não configurado...");
+setTimeout(esconderProcessando, 2000);
+return;
+
+        }
+    } catch (erro) {
+        console.error(erro);
+    }
+}
+
+    async function irParaAfiliado() {
+        try {
+            const dados = await resposta.json();
+            window.location.href = dados.url;
+        } catch (e) {
+            alert("Erro ao obter o link de afiliado.");
+        }
+    }
+
+    async function irParaDashboardReal() {
+        const container = document.getElementById('box-auth');
+    
+container.classList.remove('tela-robo');
+    
+        container.innerHTML = `
+            <div class="topo-plataforma">
+                <a href="https://youtube.com/@derivtutorialnegociacao?si=QN2oZ2GlnTZa6Unn" target="_blank" class="btn-info-youtube">ℹ</a>
+                <div class="texto-logo">
+<!-- 🚀 CABEÇALHO PRINCIPAL CENTRALIZADO -->
+<div style="text-align: center; margin-bottom: 12px; width: 100%;">
+    <h3 style="
+        color: #00e5ff;
+        font-family: Arial, sans-serif;
+        font-size: 13px;
+        font-weight: 900;
+        letter-spacing: 0.8px;
+        margin: 0;
+        text-shadow: 0 0 8px rgba(0, 229, 255, 0.6);
+        text-transform: uppercase;
+        white-space: nowrap;
+    ">
+        PLACA DO MONEY OFICIAL
+    </h3>
+    <div style="
+        color: #8fa0b5;
+        font-size: 9px;
+        font-weight: 500;
+        letter-spacing: 0.5px;
+        margin-top: 2px;
+        text-transform: lowercase;
+    ">
+        mercado sintético
+    </div>
+</div>
+
+
+                </div>
+            </div>
+            
+           <!-- 💧 PLACAS CIRCULARES DE SALDO E LUCRO/PERDA -->
+<div class="grid-topo">
+
+    <div class="card-status placa-liquida">
+        <div class="label-card">Saldo</div>
+
+        <div class="circulo-liquido" id="circulo-saldo">
+            <div class="liquido" id="liquido-saldo"></div>
+            <div class="brilho-liquido"></div>
+            <div class="valor-card" id="saldo-real">$ 0.00 USD</div>
+        </div>
+    </div>
+
+    <div class="card-status lucro placa-liquida">
+        <div class="label-card">Lucro/Perda</div>
+
+        <div class="circulo-liquido" id="circulo-lucro">
+            <div class="liquido" id="liquido-lucro"></div>
+            <div class="brilho-liquido"></div>
+            <div class="valor-card" id="lucro-real">$ 0.00</div>
+        </div>
+
+        <div class="mini-placar">
+            W: <span class="win-count" id="cont-wins">0</span>
+            L: <span class="loss-count" id="cont-losses">0</span>
+        </div>
+    </div>
+
+</div>
+
+            <div class="linha-seletores">
+                <div>
+                    <label class="label-card">Tipo de Conta</label>
+                    <select id="tipo-conta" onchange="alternarAmbienteConta()">
+                        <option value="VRTC">Conta Demo</option>
+                        <option value="REAL">Conta Real</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="label-card">Selecionar Robô</label>
+
+<div id="botao-robo"
+     onclick="abrirListaRobos()"
+     style="
+        background:#101f35;
+        border:1px solid #1a3152;
+        border-radius:6px;
+        padding:10px;
+        color:white;
+        cursor:pointer;
+        text-align:center;
+        font-weight:bold;
+">
+Nenhuma 🗂 ▼
+</div>
+
+<select
+    id="estrategia-robo"
+    onchange="atualizarImagemRobo()"
+    style="display:none;">
+
+<div style="text-align:center; margin-top:10px;">
+    <img
+        id="imagem-robo"
+        src="titan.png"
+        style="
+            width:90px;
+            height:90px;
+            object-fit:contain;
+        ">
+</div>
+
+    <option value="nenhuma">Selecionar Robô</option>
+
+    <option value="impar">ORION</option>
+
+    <option value="par">VORTEX</option>
+
+    <option value="over">TITAN</option>
+
+    <option value="under">SUPER EPIC</option>
+
+    <option value="repeticao">MONEY PHANTOM</option>
+    
+    <option value="rain_money">☔ RAIN MONEY</option>
+
+</select>
+                </div>
+            </div>
+
+            <div class="container-grafico">
+                <div class="titulo-grafico">
+                    <div>
+    Últimos Dígitos:
+    <span id="ultimo-digito-real">-</span>
+</div>
+                    
+<select id="volatilidade-select"
+onchange="trocarVolatilidade()">
+    <option value="1HZ10V">📊 Volatility 10(1s) Index</option>
+<option value="1HZ25V">📊 Volatility 25(1s) Index</option>
+<option value="1HZ50V">📊 Volatility 50(1s) Index</option>
+<option value="1HZ75V">📊 Volatility 75(1s) Index</option>
+<option value="1HZ100V" selected>📊 Volatility 100(1s) Index</option>
+
+<option value="R_10">📈 Volatility 10 Index</option>
+<option value="R_25">📉 Volatility 25 Index</option>
+<option value="R_50">📈 Volatility 50 Index</option>
+<option value="R_75">📈 Volatility 75 Index</option>
+<option value="R_100">📈 Volatility 100 Index</option>
+</select>
+
+                </div>
+                <div class="area-barras" id="render-grafico">
+                    ${renderizarBarrasIniciais()}
+                </div>
+            </div>
+
+            <div class="linha-controle">
+
+    <div id="btn-config"
+     class="btn-icon"
+     onclick="abrirConfiguracoes()">
+         ⚙️
+    </div>
+
+    <button
+        class="btn-play-unico"
+        id="btn-comecar-robo"
+        onclick="alternarRobo()">
+        🟥
+    </button>
+
+    <div id="sinalizadores-operacao"
+     style="
+        text-align:center;
+        flex:1;
+     ">
+
+    <div style="
+        font-size:11px;
+        color:#8fa3bf;
+        margin-bottom:3px;
+    ">
+        ESTADO DA OPERAÇÃO
+    </div>
+
+    <div id="estado-operacao"
+         style="
+            font-size:14px;
+            font-weight:bold;
+            color:#b0bec5;
+         ">
+        ⚪ Aguardando sinal...
+    </div>
+
+</div>
+
+
+<button
+    id="btn-analise"
+    onclick="abrirJanelaAnalise()"
+    title="Sistema de Análises"
+    style="
+        width:42px;
+        height:42px;
+        border-radius:50%;
+        border:none;
+        background:#d50000;
+        color:white;
+        font-size:18px;
+        cursor:pointer;
+        margin-left:10px;
+    ">
+    🔘
+</button>
+
+
+<span
+    onclick="limparHistorico()"
+    title="Limpar histórico"
+    style="
+        margin-left:15px;
+        cursor:pointer;
+        font-size:22px;
+    "
+>
+    🗑️
+</span>
+
+</div>
+
+</div>
+
+<div id="status-mercado"
+     style="
+        text-align:center;
+        padding:8px;
+        margin-top:4px;
+        margin-bottom:4px;
+        font-size:12px;
+        font-weight:bold;
+        color:#42a5f5;
+">
+    🔵 Analisando mercado...
+</div>
+
+</div>
+      
+
+<!-- ☔ PAINEL EXCLUSIVO RAIN MONEY -->
+<div id="painel-rain-money" style="
+    display: none;
+    background: rgba(10, 20, 45, 0.82);
+    border: 1px solid rgba(0, 229, 255, 0.55);
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 12px;
+    backdrop-filter: blur(5px);
+">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+        <span style="color: #ffffff; font-weight: bold; font-size: 14px;">☔ RAIN MONEY — SCORE GERAL</span>
+        <span id="rain-score-total" style="color: #00ff88; font-weight: bold; font-size: 18px;">0 / 100</span>
+    </div>
+
+    <!-- MÉTROLA DAS 4 CONDIÇÕES -->
+    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; text-align: center;">
+        <div style="background: rgba(16, 31, 53, 0.6); padding: 6px; border-radius: 6px;">
+            <div style="color: #ffffff; font-size: 11px;">Sequência</div>
+            <div id="rain-cond-seq" style="color: #00e5ff; font-weight: bold; font-size: 13px;">0/30</div>
+        </div>
+        <div style="background: rgba(16, 31, 53, 0.6); padding: 6px; border-radius: 6px;">
+            <div style="color: #ffffff; font-size: 11px;">Frequência</div>
+            <div id="rain-cond-freq" style="color: #00e5ff; font-weight: bold; font-size: 13px;">0/25</div>
+        </div>
+        <div style="background: rgba(16, 31, 53, 0.6); padding: 6px; border-radius: 6px;">
+            <div style="color: #ffffff; font-size: 11px;">Direção</div>
+            <div id="rain-cond-dir" style="color: #00e5ff; font-weight: bold; font-size: 13px;">0/25</div>
+        </div>
+        <div style="background: rgba(16, 31, 53, 0.6); padding: 6px; border-radius: 6px;">
+            <div style="color: #ffffff; font-size: 11px;">Confirmação</div>
+            <div id="rain-cond-conf" style="color: #00e5ff; font-weight: bold; font-size: 13px;">0/20</div>
+        </div>
+    </div>
+</div>
+
+
+
+            <div class="label-card" style="margin-bottom:6px;">Histórico de Transações:</div>
+            <div class="historico-lista" id="lista-historico">
+                <div style="color: #607d8b; text-align: center; padding-top: 15px; font-size:11px;">Aguardando execução do mercado...</div>
+            </div>
+
+            <div class="modal-config" id="meu-modal">
+                <div class="modal-conteudo">
+                    <h4 style="margin-top:0; border-bottom:1px solid #1a3152; padding-bottom:8px; font-size:14px;">Configurações</h4>
+                    
+                    <div style="margin-bottom:10px;">
+                        <label class="label-card">Entrada (Stake USD):</label>
+                        <input
+                        type="number"
+                         id="config-stake"
+                           value="0.35"
+                            min="0.35"
+                              step="0.01">
+                    </div>
+                    <div style="margin-bottom:10px;">
+                        <label class="label-card">Meta de Ganhos (Stop Win):</label>
+                        <input type="number" id="config-win" value="999">
+                    </div>
+                    <div style="margin-bottom:16px;">
+                        <label class="label-card">Limite de Perdas (Stop Loss):</label>
+                        <input type="number" id="config-loss" value="999">
+                    </div>
+                    
+                    <button style="background-color:#1e88e5; color:white; padding:10px; border-radius:6px; border:none; width:100%; font-weight:bold; font-size:12px;" onclick="fecharConfiguracoes()">SALVAR CONFIGURAÇÕES</button>
+                </div>
+            </div>
+        `;
+        atualizarCoresBarras();
+
+    // LIGAÇÃO REAL COM A DERIV VIA WEBSOCKET
+
+const params = new URLSearchParams(window.location.search);
+
+let wsUrl =
+params.get('ws_url') ||
+sessionStorage.getItem('deriv_ws_url');
+
+if (!params.get('ws_url') || !sessionStorage.getItem('deriv_ws_url')) {
+
+console.log("PEDINDO NOVA OTP");
+
+try {
+
+const tipoConta =
+document.getElementById('tipo-conta').value;
+
+const resposta =
+await fetch(
+'/api/novo-otp?tipo=' +
+tipoConta
+);
+
+const dados = await resposta.json();
+
+if (dados.success && dados.ws_url) {
+
+wsUrl = dados.ws_url;
+
+console.log(
+wsUrl);
+
+sessionStorage.setItem(
+'deriv_ws_url',
+wsUrl
+);
+
+}
+
+} catch (erro) {
+
+console.log(
+"Falha ao obter OTP nova:",
+erro
+);
+
+}
+
+}
+
+if (wsUrl) {
+
+const ws = new WebSocket(wsUrl);
+
+window.derivWS = ws;
+
+configurarEventosDoWS(ws);
+
+ws.onopen = function () {
+console.log("WS ABRIU");
+
+ws.send(JSON.stringify({
+
+balance: 1,
+
+subscribe: 1,
+
+req_id: 1
+
+}));
+
+ws.send(JSON.stringify({
+    ticks: simboloAtual,
+    subscribe: 1,
+    req_id: 2
+}));
+
+};
+
+ws.onerror = function(err) {
+
+console.log("WS ERROR:", err);
+
+};
+
+ws.onclose = function(event) {
+
+console.log("WS FECHOU", event.code);
+
+};
+
+}// FECHA if (wsUrl)
+
+
+// Delay de 1 segundo para o HTML assentar antes de pintar as barras
+setTimeout(() => {
+    atualizarCoresBarras();
+}, 1000);
+
+}
+// === FUNÇÃO PARA COMPRAR CONTRATO REAL NA DERIV (API v3) ===
+function comprarContratoDeriv(tipoContrato, duracaoTicks, barreira) {
+console.log("ENTREI EM comprarContratoDeriv");
+console.log("WS STATE: " + window.derivWS.readyState);
+
+    if (!window.derivWS || window.derivWS.readyState !== 1) {
+        console.log("Erro: WebSocket não está conectado!");
+        return;
+    }
+
+    if (stakeAtual <= 0) {
+    stakeAtual = Number(document.getElementById('config-stake').value) || 0.35;
+}
+
+const stake = stakeAtual;
+
+operacaoAtual.preco = stake;
+
+    // Formato oficial da API Deriv para solicitar um contrato (Proposal)
+    const requisicaoProposal = {
+        "proposal": 1,
+        "req_id": 1001,
+        "amount": stake,
+        "basis": "stake",
+        "contract_type": tipoContrato,
+        "currency": "USD",
+        "duration": Number(duracaoTicks),
+        "duration_unit": "t",
+    "underlying_symbol": typeof simboloAtual !== 'undefined' ? simboloAtual : '1HZ100V'
+    };
+
+    if (barreira !== undefined) {
+        requisicaoProposal.barrier = String(barreira);
+    }
+
+   window.ultimaMensagem = requisicaoProposal;
+    window.derivWS.send(JSON.stringify(requisicaoProposal));
+}
+
+
+let stake = Number(document.getElementById('config-stake')?.value || 0.35);
+
+if (isNaN(stake) || stake < 0.35) {
+    stake = 0.35;
+}
+
+
+function cancelarOperacaoPresa(motivo) {
+
+    console.warn(
+        "⚠️ OPERAÇÃO LIBERTADA:",
+        motivo
+    );
+
+    clearTimeout(temporizadorOperacao);
+    temporizadorOperacao = null;
+
+    operacaoAtual = {
+        ativa: false,
+        tipo: "",
+        preco: 0,
+        tickEntrada: null,
+        proposalId: null,
+        contractId: null,
+        aguardandoResultado: false
+    };
+
+    const estado =
+        document.getElementById(
+            "estado-operacao"
+        );
+
+    if (estado) {
+        estado.innerText =
+            "⚪ Pronto para nova análise";
+        estado.style.color =
+            "#42a5f5";
+    }
+}
+
+
+// ========================================================
+// ☔ ESTRATÉGIA RAIN MONEY — CÁLCULO E PAINEL EM TEMPO REAL
+// ========================================================
+function calcularScoreRainMoney() {
+    const painel = document.getElementById("painel-rain-money");
+    const estrategiaAtual = document.getElementById("estrategia-robo") ? document.getElementById("estrategia-robo").value : "";
+
+    // Exibe o painel apenas se a estratégia RAIN MONEY estiver selecionada
+    if (painel) {
+        painel.style.display = (estrategiaAtual === "rain_money") ? "block" : "none";
+    }
+
+    if (!memoriaMercado || memoriaMercado.length < 10) {
+        return { score: 0, direcao: null };
+    }
+
+    const ultimos10 = memoriaMercado.slice(-10);
+    const ultimos4 = memoriaMercado.slice(-4);
+    
+    let pontosSequencia = 0;
+    let pontosFrequencia = 0;
+    let pontosDirecao = 0;
+    let pontosConfirmacao = 0;
+    let direcaoSugerida = null;
+
+    // 1. SEQUÊNCIA (Até 30 pts)
+    const pares = ultimos10.filter(d => d % 2 === 0).length;
+    const impares = 10 - pares;
+    const diferencaSeq = Math.abs(pares - impares);
+
+    if (diferencaSeq >= 6) pontosSequencia = 30;
+    else if (diferencaSeq >= 4) pontosSequencia = 20;
+    else if (diferencaSeq >= 2) pontosSequencia = 10;
+
+    direcaoSugerida = pares > impares ? "EVEN" : "ODD";
+
+    // 2. FREQUÊNCIA (Até 25 pts)
+    const altos = ultimos10.filter(d => d >= 5).length;
+    const baixos = 10 - altos;
+    const diferencaFreq = Math.abs(altos - baixos);
+
+    if (diferencaFreq >= 6) pontosFrequencia = 25;
+    else if (diferencaFreq >= 4) pontosFrequencia = 20;
+    else if (diferencaFreq >= 2) pontosFrequencia = 15;
+
+    // 3. DIREÇÃO (Até 25 pts)
+    const d1 = ultimos4[0], d2 = ultimos4[1], d3 = ultimos4[2], d4 = ultimos4[3];
+    const delta1 = d2 - d1, delta2 = d3 - d2, delta3 = d4 - d3;
+
+    if ((delta1 > 0 && delta2 > 0 && delta3 > 0) || (delta1 < 0 && delta2 < 0 && delta3 < 0)) {
+        pontosDirecao = 25;
+    } else if ((delta2 > 0 && delta3 > 0) || (delta2 < 0 && delta3 < 0)) {
+        pontosDirecao = 15;
+    } else if (Math.abs(d4 - d1) >= 4) {
+        pontosDirecao = 5;
+    }
+
+    // 4. CONFIRMAÇÃO (Até 20 pts)
+    const deltaUltimo = Math.abs(d4 - d3);
+    const d4PertenceAoGrupo = (direcaoSugerida === "EVEN" && d4 % 2 === 0) || 
+                              (direcaoSugerida === "ODD" && d4 % 2 !== 0);
+
+    if (d4PertenceAoGrupo && deltaUltimo >= 2) pontosConfirmacao = 20;
+    else if (d4PertenceAoGrupo && (d3 % 2 === d4 % 2)) pontosConfirmacao = 15;
+    else if (d4PertenceAoGrupo) pontosConfirmacao = 5;
+
+    const scoreTotal = pontosSequencia + pontosFrequencia + pontosDirecao + pontosConfirmacao;
+
+    // ATUALIZAÇÃO DOS ELEMENTOS DO PAINEL EM TEMPO REAL
+    if (estrategiaAtual === "rain_money") {
+        const elScore = document.getElementById("rain-score-total");
+        const elSeq = document.getElementById("rain-cond-seq");
+        const elFreq = document.getElementById("rain-cond-freq");
+        const elDir = document.getElementById("rain-cond-dir");
+        const elConf = document.getElementById("rain-cond-conf");
+
+        if (elScore) elScore.innerText = `${scoreTotal} / 100`;
+        if (elSeq) elSeq.innerText = `${pontosSequencia}/30`;
+        if (elFreq) elFreq.innerText = `${pontosFrequencia}/25`;
+        if (elDir) elDir.innerText = `${pontosDirecao}/25`;
+        if (elConf) elConf.innerText = `${pontosConfirmacao}/20`;
+    }
+
+    return {
+        score: scoreTotal,
+        direcao: direcaoSugerida,
+        detalhes: { seq: pontosSequencia, freq: pontosFrequencia, dir: pontosDirecao, conf: pontosConfirmacao }
+    };
+}
+
+
+
+// === MOTOR DE PROCESSAMENTO DAS 6 ESTRATÉGIAS ===
+
+function executarMotorEstrategias(ultimoDigito, tickId) {
+
+    if (tickId === ultimoTickProcessado) return;
+
+    ultimoTickProcessado = tickId;
+
+console.log("MOTOR: " + ultimoDigito);
+
+    if (operacaoAtual.ativa) return;
+
+const estrategia = document.getElementById('estrategia-robo').value;
+
+if (estrategia === 'nenhuma') return;
+
+
+console.log(`Robô analisando dígito [${ultimoDigito}] na estratégia: ${estrategia}`);
+
+
+    // 1. ESTRATÉGIA ÍMPAR
+    if (estrategia === 'impar' && ultimoDigito % 2 !== 0) {
+
+if (!autorizacaoCompra) {
+    console.log("⛔ ORION: aguardando autorização da análise.");
+    return;
+}
+        operacaoAtual = {
+    ativa: true,
+    tipo: "ÍMPAR",
+    preco: 0.35,
+    tickEntrada: ultimoDigito,
+    proposalId: null,
+    contractId: null,
+    aguardandoResultado: true
+};
+
+clearTimeout(temporizadorOperacao);
+
+temporizadorOperacao = setTimeout(() => {
+
+    if (
+        operacaoAtual &&
+        operacaoAtual.ativa
+    ) {
+
+        cancelarOperacaoPresa(
+            "Tempo máximo excedido"
+        );
+
+    }
+
+}, 10000);
+
+
+comprarContratoDeriv('DIGITODD', 3);
+    }    
+
+   // 2. ESTRATÉGIA PAR
+else if (estrategia === 'par' && ultimoDigito % 2 === 0) {
+
+if (!autorizacaoCompra) {
+    console.log("⛔ VORTEX: aguardando autorização da análise.");
+    return;
+}
+
+    operacaoAtual = {
+        ativa: true,
+        tipo: "PAR",
+        preco: 0.35,
+        tickEntrada: ultimoDigito,
+        proposalId: null,
+        contractId: null,
+        aguardandoResultado: true
+    };
+
+clearTimeout(temporizadorOperacao);
+
+temporizadorOperacao = setTimeout(() => {
+
+    if (
+        operacaoAtual &&
+        operacaoAtual.ativa
+    ) {
+
+        cancelarOperacaoPresa(
+            "Tempo máximo excedido"
+        );
+
+    }
+
+}, 10000);
+
+
+
+    comprarContratoDeriv('DIGITEVEN', 3);
+}
+
+    // 3. ESTRATÉGIA OVER
+else if (estrategia === 'over' && ultimoDigito > 5) {
+
+    operacaoAtual = {
+        ativa: true,
+        tipo: "OVER 5",
+        preco: 0.35,
+        tickEntrada: ultimoDigito,
+        proposalId: null,
+        contractId: null,
+        aguardandoResultado: true
+    };
+
+clearTimeout(temporizadorOperacao);
+
+temporizadorOperacao = setTimeout(() => {
+
+    if (
+        operacaoAtual &&
+        operacaoAtual.ativa
+    ) {
+
+        cancelarOperacaoPresa(
+            "Tempo máximo excedido"
+        );
+
+    }
+
+}, 10000);
+
+
+    comprarContratoDeriv('DIGITOVER', 5,1 );
+}
+
+    // 4. ESTRATÉGIA UNDER
+else if (estrategia === 'under' && ultimoDigito < 5) {
+
+    operacaoAtual = {
+        ativa: true,
+        tipo: "UNDER 5",
+        preco: 0.35,
+        tickEntrada: ultimoDigito,
+        proposalId: null,
+        contractId: null,
+        aguardandoResultado: true
+    };
+
+clearTimeout(temporizadorOperacao);
+
+temporizadorOperacao = setTimeout(() => {
+
+    if (
+        operacaoAtual &&
+        operacaoAtual.ativa
+    ) {
+
+        cancelarOperacaoPresa(
+            "Tempo máximo excedido"
+        );
+
+    }
+
+}, 10000);
+
+
+    comprarContratoDeriv('DIGITUNDER', 5, 7);
+}
+
+ 
+    // 5. ESTRATÉGIA REPETIÇÃO
+    else if (estrategia === 'repeticao') {
+        if (ultimosDigitos.length >= 2) {
+            const penultimoDigito = ultimosDigitos[ultimosDigitos.length - 2];
+
+            if (ultimoDigito === penultimoDigito) {
+                console.log(`Dígito repetido detetado! [${ultimoDigito} = ${penultimoDigito}]`);
+                operacaoAtual = {
+                    ativa: true,
+                    tipo: "REPETIÇÃO",
+                    preco: 0.35,
+                    tickEntrada: ultimoDigito,
+                    proposalId: null,
+                    contractId: null,
+                    aguardandoResultado: true
+                };
+
+                clearTimeout(temporizadorOperacao);
+
+                temporizadorOperacao = setTimeout(() => {
+                    if (operacaoAtual && operacaoAtual.ativa) {
+                        cancelarOperacaoPresa("Tempo máximo excedido");
+                    }
+                }, 10000);
+
+                const tipoContrato = ultimoDigito % 2 !== 0 ? 'DIGITODD' : 'DIGITEVEN';
+                comprarContratoDeriv(tipoContrato, 5);
+            }
+        }
+    }
+    // 6. ESTRATÉGIA RAIN MONEY (COMBINAÇÃO DE CONDIÇÕES)
+    else if (estrategia === 'rain_money') {
+        const resultadoRain = calcularScoreRainMoney();
+
+        console.log(`☔ RAIN MONEY — Score: ${resultadoRain.score}/100 | Direção: ${resultadoRain.direcao}`);
+
+        if (resultadoRain.score >= 50 && resultadoRain.direcao) {
+            const tipoContrato = resultadoRain.direcao === "EVEN" ? "DIGITEVEN" : "DIGITODD";
+
+            operacaoAtual = {
+                ativa: true,
+                tipo: `RAIN MONEY (${resultadoRain.direcao})`,
+                preco: 0.35,
+                tickEntrada: ultimoDigito,
+                proposalId: null,
+                contractId: null,
+                aguardandoResultado: true
+            };
+
+            clearTimeout(temporizadorOperacao);
+
+            temporizadorOperacao = setTimeout(() => {
+                if (operacaoAtual && operacaoAtual.ativa) {
+                    cancelarOperacaoPresa("Tempo máximo excedido");
+                }
+            }, 10000);
+
+            comprarContratoDeriv(tipoContrato, 2);
+        }
+    }
+}
+
+
+
+function renderizarBarrasIniciais() {
+
+    let html = '';
+
+    for(let i = 0; i <= 9; i++) {
+
+        html += `
+
+        <div class="coluna-barra">
+
+            <div class="porcentagem-barra" id="perc-${i}">
+                ...
+            </div>
+
+            <div style="
+                width: 1px;
+                height: 12px;
+                background: #9e9e9e;
+                margin: 0 auto -1px auto;
+            "></div>
+
+            <div class="corpo-barra" id="barra-${i}">
+
+            </div>
+
+            <div class="label-barra">${i}</div>
+
+        </div>
+
+        `;
+    }
+
+    return html;
+}
+
+function atualizarCoresBarras(contagem) {
+
+
+const total =
+
+ultimosDigitos.length;
+
+
+for(let i = 0; i <= 9; i++) {
+
+
+const barra =
+
+document.getElementById(`barra-${i}`);
+
+
+if(!barra) continue;
+
+
+const percentual =
+
+total > 0
+
+? Math.round(
+
+(contagem[i] / total) * 100
+
+)
+
+: 0;
+
+
+if(percentual >= 15) {
+
+    barra.style.backgroundColor = "#00e676";
+    barra.style.boxShadow = "0 0 10px #00e676, 0 0 20px #00e676";
+
+} else if(percentual >= 8) {
+
+    barra.style.backgroundColor = "#ffffff";
+    barra.style.boxShadow = "0 0 6px #ffffff";
+
+} else {
+
+    barra.style.backgroundColor = "#ff1744";
+    barra.style.boxShadow = "0 0 10px #ff1744, 0 0 20px #ff1744";
+
+}
+
+}
+
+}
+
+
+
+function atualizarGraficoReal() {
+    const contagem = Array(10).fill(0);
+
+    ultimosDigitos.forEach(digito => {
+        if (!isNaN(digito) && digito >= 0 && digito <= 9) {
+            contagem[digito]++;
+        }
+    });
+
+    atualizarCoresBarras(contagem);
+
+    for (let i = 0; i <= 9; i++) {
+        const barra = document.getElementById(`barra-${i}`);
+        const texto = document.getElementById(`perc-${i}`);
+
+        const percentual = ultimosDigitos.length > 0 ? Math.round(
+            (contagem[i] / ultimosDigitos.length) * 100
+        ) : 0;
+
+        if (barra) {
+            let altura = percentual * 3.0;
+            if (altura > 80) {
+                altura = 80;
+            }
+            barra.style.height = Math.max(altura, 10) + "px";
+        }
+
+        if (texto) {
+            texto.innerText = percentual + "%";
+
+            // Deteta a cor atual da barra para aplicar no círculo do texto
+            const corBarra = barra ? window.getComputedStyle(barra).backgroundColor : "";
+            const ehVerde = corBarra.includes("0, 230, 118") || corBarra.includes("0, 255") || corBarra.includes("green");
+
+            const corFundo = ehVerde ? "rgba(0, 230, 118, 0.25)" : "rgba(255, 23, 68, 0.25)";
+            const corBorda = ehVerde ? "#00e676" : "#ff1744";
+
+            // Aplica o estilo quadrangular 
+Object.assign(texto.style, {
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "center",
+    width: "28px",
+    height: "16px",
+    borderRadius: "4px",
+    backgroundColor: corFundo,
+    border: `1px solid ${corBorda}`,
+    color: "#ffffff",
+    fontSize: "8px",
+    fontWeight: "bold",
+    boxShadow: `0 0 5px ${corBorda}`,
+    margin: "0 auto 4px auto"
+});
+
+        }
+    }
+}
+
+
+function abrirListaRobos() {
+
+    document.getElementById("lista-robos").style.display = "flex";
+
+}
+
+///============== INÍCIO DESTA FUNÇÃO=================
+
+function fecharListaRobos() {
+
+    const janela = document.getElementById("lista-robos");
+
+    if (!janela) return;
+
+    janela.style.display = "none";
+}
+
+///=============== FIM DA FUNÇÃO ==================
+
+function abrirConfiguracoes() { document.getElementById('meu-modal').style.display = 'flex'; }
+
+function fecharConfiguracoes() {
+
+    const stake =
+        Number(document.getElementById("config-stake").value);
+
+    if (stake < 0.35) {
+
+        alert("⚠️ A stake mínima permitida é de 0.35 USD.");
+
+        document.getElementById("config-stake").focus();
+
+        return;
+
+    }
+
+    document.getElementById('meu-modal').style.display = 'none';
+
+}
+
+
+async function alternarAmbienteConta() {
+
+    mostrarProcessando("A trocar conta...");
+
+    if (roboLigado) {
+
+        alert("Desligue o robô antes de trocar de conta.");
+
+        return;
+
+    }
+
+    const tipo = document.getElementById('tipo-conta').value;
+
+    try {
+
+     console.log("A trocar conta para:", tipo);
+
+        // 1. pedir novo OTP
+
+        const resposta = await fetch(`/api/novo-otp?tipo=${tipo}`);
+
+        const dados = await resposta.json();
+
+console.log(
+    "🔍 DIAGNÓSTICO DA TROCA DE CONTA\n\n" +
+    "TIPO ESCOLHIDO: " + tipo + "\n\n" +
+    "SUCCESS: " + dados.success + "\n\n" +
+    "WS URL:\n" + (dados.ws_url || "SEM URL")
+);
+
+        if (!dados.ws_url) {
+
+            alert("Erro ao obter ligação da conta");
+
+            return;
+
+        }
+
+        // 2. guardar URL
+
+        sessionStorage.setItem('deriv_ws_url', dados.ws_url);
+
+
+        // 3. fechar WS antigo
+
+        if (window.derivWS) {
+
+            try {
+
+                window.derivWS.close();
+
+            } catch (e) {}
+
+        }
+
+        // 4. criar novo WS
+
+        const ws = new WebSocket(dados.ws_url);
+
+        window.derivWS = ws;
+console.log(
+    "💎 WEBSOCKET CRIADO\n\n" +
+    "TIPO: " + tipo +
+    "\n\nURL DO WS:\n" + ws.url
+);
+
+
+        configurarEventosDoWS(ws);
+
+        ws.onopen = function () {
+
+            esconderProcessando();
+
+            console.log("WS REABRIU COM CONTA:", tipo);
+
+
+            // 🔥 IMPORTANTE: subscrição completa com req_id e subscribe para manter o stream ativo
+
+            ws.send(JSON.stringify({
+
+                balance: 1,
+
+                subscribe: 1,
+
+                req_id: 1
+
+            }));
+
+
+            ws.send(JSON.stringify({
+
+                ticks: simboloAtual,
+
+                subscribe: 1,
+
+                req_id: 2
+
+            }));
+
+        };
+
+console.log(
+    "💎 SUBSCRIÇÃO ENVIADA\n\n" +
+    "TIPO: " + tipo +
+    "\n\n" +
+    "SÍMBOLO: " + simboloAtual +
+    "\n\n" +
+    "REQ_ID: 2\n" +
+    "SUBSCRIBE: 1"
+);
+
+
+
+    } catch (erro) {
+
+        console.error(erro);
+
+        alert("Falha ao trocar de conta");
+
+    }
+
+}
+
+
+// <== NOVA FUNÇÃO PARA ATUALIZAR ESTADO DO MERCADO ANTES DE COMPRA OU VENDA ==
+
+
+function atualizarStatusMercado(texto, cor="#42a5f5") {
+
+  const status = document.getElementById("status-mercado");
+
+    if (!status) return;
+
+    status.innerText = texto;
+    status.style.color = cor;
+
+}
+
+function analisarSequenciaMercado() {
+
+    if (memoriaMercado.length < 3) {
+        return null;
+    }
+
+    const ultimos3 = memoriaMercado.slice(-3);
+
+    // 3 Ímpares consecutivos
+    if (ultimos3.every(n => n % 2 !== 0)) {
+        return "IMPAR";
+    }
+
+    // 3 Pares consecutivos
+    if (ultimos3.every(n => n % 2 === 0)) {
+        return "PAR";
+    }
+
+    return null;
+}
+
+// ==================================================================
+
+function renderizarHistorico() {
+
+    const historico = document.getElementById('lista-historico');
+    if (!historico) return;
+
+    if (historicoOperacoes.length === 0) {
+
+    historico.innerHTML = `
+        <div style="
+            color:#607d8b;
+            text-align:center;
+            padding:10px;
+        ">
+            Histórico vazio
+        </div>
+    `;
+
+    return;
+}
+
+    historico.innerHTML = '';
+
+    historicoOperacoes.forEach(op => {
+
+        let cor = "#ff1744";
+let icone = "✖";
+
+if (op.resultado === "WIN") {
+    cor = "#00e676";
+    icone = "✔";
+}
+
+if (op.resultado === "PROCESSANDO") {
+    cor = "#ffd600";
+    icone = "⏳";
+}
+
+        const card = `
+            <div style="
+                background:#111;
+                border-left:5px solid ${cor};
+                margin:6px 0;
+                padding:8px;
+                border-radius:8px;
+                color:#fff;
+                font-family:Arial;
+                font-size:13px;
+            ">
+                <div style="display:flex;justify-content:space-between;">
+                    <strong>${op.tipo}</strong>
+                    <span>${op.hora || ''}</span>
+                </div>
+
+                <div>
+                    Último: ${op.ultimo}
+                </div>
+
+                <div>
+                    Preço: $${op.preco}
+                </div>
+
+                <div style="color:${cor};font-weight:bold;">
+                    ${op.resultado} ${icone}  ${op.lucro}
+                </div>
+            </div>
+        `;
+
+        historico.innerHTML += card;
+    });
+}
+
+
+function trocarVolatilidade() {
+
+    const seletor =
+        document.getElementById(
+            'volatilidade-select'
+        );
+
+    if (!seletor) return;
+
+    simboloAtual =
+        seletor.value;
+
+    console.log(
+        "Nova volatilidade:",
+        simboloAtual
+    );
+
+    // ====== A LINHA MÁGICA PARA ATUALIZAR CARTOES ======
+    window.volatilidadeAtiva = simboloAtual;
+    // ================================================
+
+
+ if (
+    window.derivWS &&
+    window.derivWS.readyState === 1
+) {
+
+    // Cancela a subscrição anterior
+    if (subscriptionTickId) {
+        window.derivWS.send(JSON.stringify({
+            forget: subscriptionTickId
+        }));
+    }
+
+    // Subscreve a nova volatilidade
+    window.derivWS.send(JSON.stringify({
+    ticks: simboloAtual,
+    subscribe: 1,
+    req_id: 2
+}));
+}
+}
+
+
+function apagarEtapas() {
+
+
+document.getElementById("etapa-1").style.color =
+
+"#607d8b";
+
+
+document.getElementById("etapa-2").style.color =
+
+"#607d8b";
+
+
+document.getElementById("etapa-3").style.color =
+
+"#607d8b";
+
+}
+
+
+function ativarEtapa(numero) {
+
+
+const cor = "#00e5ff";
+
+
+if (numero >= 1)
+
+document.getElementById("etapa-1").style.color = cor;
+
+
+if (numero >= 2)
+
+document.getElementById("etapa-2").style.color = cor;
+
+
+if (numero >= 3)
+
+document.getElementById("etapa-3").style.color = cor;
+
+}
+
+let roboLigado = false;
+
+let simboloAtual = "1HZ100V";
+
+let ultimoContratoFinalizado = null;
+
+let subscriptionTickId = null;
+
+let historicoOperacoes = [];
+
+let temporizadorOperacao = null;
+
+// Memória para análise do mercado
+let memoriaMercado = [];
+
+// Autoriza a compra apenas quando existir uma tendência válida
+let autorizacaoCompra = false;
+
+let temporizadorReconexao = null;
+
+let ultimoTickProcessado = null;
+
+let lucroVirtual = 0;
+
+let perdaVirtual = 0;
+
+let stakeInicial = 0.35;
+
+let stakeAtual = 0;
+
+let operacaoAtual = {
+    ativa: false,
+    tipo: "",
+    preco: 0,
+    tickEntrada: null,
+    proposalId: null,
+    contractId: null,
+    aguardandoResultado: false
+};
+
+// === FUNÇÃO CENTRALIZADORA DO WEBSOCKET (ATUALIZADA) ===
+function configurarEventosDoWS(ws) {
+    ws.onmessage = function (msg) {
+
+if (ws !== window.derivWS) return;
+
+        const data = JSON.parse(msg.data);
+if (data.msg_type !== "tick") {
+    console.log("MSG_TYPE: " + data.msg_type);
+}
+
+
+if (data.error) {
+
+    console.log(
+        "ERRO DERIV\n\n" +
+        "REQ_ID: " + (data.req_id || "SEM REQ_ID") +
+        "\n\n" +
+        JSON.stringify(data.error) +
+        "\n\nÚLTIMA MENSAGEM:\n" +
+        JSON.stringify(window.ultimaMensagem)
+    );
+
+
+    if (
+        typeof operacaoAtual !== "undefined" &&
+        operacaoAtual &&
+        operacaoAtual.ativa === true
+    ) {
+
+        console.warn(
+            "⚠️ Operação ativa recebeu erro da Deriv."
+        );
+
+window.operacaoPendente = {
+    ...operacaoAtual
+};
+
+
+        operacaoAtual.ativa = false;
+        operacaoAtual.aguardandoResultado = false;
+        operacaoAtual.proposalId = null;
+        operacaoAtual.contractId = null;
+
+        const estado =
+            document.getElementById("estado-operacao");
+
+        if (estado) {
+            estado.innerText =
+                "⚠️ Erro na operação — pronto para nova análise";
+            estado.style.color =
+                "#ff9800";
+        }
+    }
+}
+
+
+        console.log("Mensagem recebida do WS:", data);
+
+        // 💰 1. TRATAR SALDO (BALANCE)
+        if (data.msg_type === 'balance' && data.balance) {
+    const saldo = Number(data.balance.balance);
+    const moeda = data.balance.currency;
+    const elem = document.getElementById('saldo-real');
+
+    if (elem) {
+
+        const saldoAtual =
+            Number(elem.dataset.saldoAtual || saldo);
+
+        elem.dataset.saldoAtual = saldo;
+
+        const diferenca = saldo - saldoAtual;
+        const duracao = 500;
+        const inicio = performance.now();
+
+        function animarSaldo(tempoAtual) {
+            const progresso =
+                Math.min((tempoAtual - inicio) / duracao, 1);
+
+            const valor =
+                saldoAtual + (diferenca * progresso);
+
+            elem.innerText =
+                `${valor.toFixed(2)} ${moeda}`;
+
+            if (progresso < 1) {
+                requestAnimationFrame(animarSaldo);
+            }
+        }
+
+        requestAnimationFrame(animarSaldo);
+    }
+}
+
+        // 📊 2. TRATAR TICKS (ÚLTIMOS DÍGITOS E GRÁFICO)
+        if (data.tick) {
+
+      if (data.subscription && data.subscription.id) {
+        subscriptionTickId = data.subscription.id;
+        }
+
+            const ultimoDigito = String(data.tick.quote).slice(-1);
+            const visor = document.getElementById('ultimo-digito-real');
+            
+            // Recebeu um tick, a ligação está OK
+              esconderProcessando();
+
+          // Reinicia o temporizador de monitorização
+            clearTimeout(temporizadorReconexao);
+
+            temporizadorReconexao = setTimeout(() => {
+
+             mostrarProcessando("🔄 A reconectar...");
+
+             }, 11000);
+          
+            if (visor) {
+                visor.innerText = ultimoDigito;
+            }
+
+            if (typeof ultimosDigitos !== 'undefined') {
+                ultimosDigitos.push(Number(ultimoDigito));
+                if (ultimosDigitos.length > 15) {
+                    ultimosDigitos.shift();
+                }
+            }
+
+            // Guarda os últimos dígitos para análise do mercado
+              memoriaMercado.push(Number(ultimoDigito));
+
+               if (memoriaMercado.length > 10) {
+                  memoriaMercado.shift();
+                 }
+
+// ===== Envia o tick para o Sistema de Análises =========
+
+if (typeof receberTickAnalise === "function") {
+
+    receberTickAnalise(
+        Number(ultimoDigito),
+        simboloAtual
+    );
+
+}
+
+// ======================================================
+const estrategia =
+document.getElementById("estrategia-robo").value;
+
+if (
+    !roboLigado ||
+    (estrategia !== "par" &&
+     estrategia !== "impar")
+) {
+
+    atualizarStatusMercado(
+        "⚪ Sem análise",
+        "#b0bec5"
+    );
+
+} else {
+
+    const tendencia = analisarSequenciaMercado();
+
+    if (tendencia === "IMPAR") {
+
+     autorizacaoCompra = true;
+
+        atualizarStatusMercado(
+            "🟢 Tendência: 3 Ímpares",
+            "#00e676"
+        );
+
+      } else if (tendencia === "PAR") {
+
+       autorizacaoCompra = true;
+
+        atualizarStatusMercado(
+            "🟢 Tendência: 3 Pares",
+            "#00e676"
+        );
+
+        } else {
+
+        autorizacaoCompra = false;
+
+        atualizarStatusMercado(
+            "🔵 Analisando mercado...",
+            "#42a5f5"
+        );
+
+    }
+
+}
+
+            if (typeof atualizarGraficoReal === 'function') {
+                atualizarGraficoReal();
+            }
+
+            //🔥 GATILHO DO ROBÔ: Se o robô estiver ligado, envia o dígito para o motor
+            if (typeof roboLigado !== 'undefined' && roboLigado) {
+                
+            executarMotorEstrategias(
+              Number(ultimoDigito),
+                  data.tick.epoch);
+                   }
+                }
+
+  // 🎫 2.5. TRATAR PROPOSTA RECEBIDA E EXECUTAR COMPRA
+if (data.msg_type === 'proposal') {
+
+    const proposalId = data.proposal.id;
+    const price = data.proposal.ask_price;
+
+    console.log(
+        "📌 PROPOSTA RECEBIDA\n\n" +
+        "WS DA PROPOSTA:\n" +
+        ws.url +
+        "\n\nWS ATUAL:\n" +
+        (window.derivWS ? window.derivWS.url : "SEM WS") +
+        "\n\nID DA PROPOSTA:\n" +
+        proposalId +
+        "\n\nPREÇO:\n" +
+        price
+    );
+
+    console.log(
+        "📌 PROPOSAL RECEBIDA\n" +
+        "ID: " + proposalId +
+        "\nPRICE: " + price +
+        "\nWS PROPOSTA: " + ws.url +
+        "\nWS ATUAL: " +
+        (window.derivWS ? window.derivWS.url : "SEM WS")
+    );
+
+    operacaoAtual.proposalId = proposalId;
+    operacaoAtual.preco = price;
+
+    executarCompra();
+}
+
+// 🔥 PASSO NOVO: capturar compra realizada
+if (data.msg_type === 'buy' && data.buy) {
+console.log(
+"MSG: " + data.msg_type +
+"\n\n" +
+JSON.stringify(data)
+);
+
+    const contract_id = data.buy.contract_id;
+    operacaoAtual.contractId = contract_id;
+    console.log("Contrato comprado:", contract_id);
+
+const estado = document.getElementById("estado-operacao");
+
+if (estado) {
+    estado.innerText = "🟡 ⏳ PROCESSANDO...";
+    estado.style.color = "#ffd600";
+}
+
+     // 🔥 AGORA SIM: ativar tracking do contrato
+console.log("VOU ACOMPANHAR O CONTRATO: " + contract_id);
+    ws.send(JSON.stringify({
+        proposal_open_contract: 1,
+        contract_id: contract_id,
+        subscribe: 1
+    }));
+}
+
+         // 🎫 3. TRATAR RESULTADO DA COMPRA VIA PROPOSAL_OPEN_CONTRACT
+if (data.msg_type === 'proposal_open_contract' && data.proposal_open_contract) {
+
+    console.log(JSON.stringify(data));
+
+    const contrato = data.proposal_open_contract;
+
+if (
+    window.operacaoPendente &&
+    window.operacaoPendente.contractId === contrato.contract_id
+) {
+    console.log(
+        "🔄 Recuperando operação pendente:",
+        contrato.contract_id
+    );
+
+    operacaoAtual = {
+        ...window.operacaoPendente
+    };
+
+    window.operacaoPendente = null;
+}
+
+
+    // Se o contrato ainda não foi fechado, aguarda
+    if (!contrato.is_sold) return;
+
+    // Evita processar o mesmo contrato duas vezes
+    if (ultimoContratoFinalizado === contrato.contract_id) {
+        return;
+    }
+
+    // Marca este contrato como já processado
+    ultimoContratoFinalizado = contrato.contract_id;
+
+    // Captura o dígito real onde o contrato encerrou
+    const ultimoDigitoReal =
+        Number(String(contrato.exit_spot).slice(-1));
+
+    console.log("VOU CHAMAR processarResultadoOperacao");
+
+    processarResultadoOperacao(
+        contrato.status === "won",
+        Number(contrato.profit),
+        ultimoDigitoReal
+    );
+
+}
+
+    }; // <--- ISSO FECHA O ws.onmessage CORRETAMENTE
+
+    ws.onerror = function(err) { 
+        console.log("WS ERROR:", err); 
+    };
+
+    ws.onclose = function(event) { 
+        console.log("WS FECHOU | code=" + event.code); 
+    };
+
+} // <--- ISSO FECHA O configurarEventosDoWS CORRETAMENTE
+
+// === PROCESSAR PLACAR E LIBERTAR O ROBÔ ===
+function processarResultadoOperacao(resultado, lucro, ultimoDigitoReal) {
+
+clearTimeout(temporizadorOperacao);
+temporizadorOperacao = null;
+
+console.log("ENTREI EM processarResultadoOperacao");
+
+    // CORRIGIDO: ID exato conforme o HTML do Bloco 1
+    const winsElem = document.getElementById('cont-wins');
+    const lossesElem = document.getElementById('cont-losses'); 
+
+    const isWin = resultado === true || resultado === 'won';
+
+    if (isWin) {
+        lucroVirtual += Number(lucro);
+        if (winsElem) {
+            winsElem.innerText = Number(winsElem.innerText) + 1;
+        }
+        atualizarEtapas(2);
+    } else {
+        perdaVirtual += Math.abs(Number(lucro));
+        if (lossesElem) {
+            lossesElem.innerText = Number(lossesElem.innerText) + 1;
+        }
+        atualizarEtapas(3);
+    }
+
+    // Exibe o lucro real formatado no painel superior
+    const lucroRealElem = document.getElementById('lucro-real');
+    if (lucroRealElem) {
+        const saldoFormatado = (lucroVirtual - perdaVirtual).toFixed(2);
+        lucroRealElem.innerText = `$ ${saldoFormatado}`;
+        lucroRealElem.style.color = (lucroVirtual - perdaVirtual) >= 0 ? "#00e676" : "#ff1744";
+    }
+
+    // CORRIGIDO: Agora grava o dígito real de saída obtido da Deriv!
+    historicoOperacoes.unshift({
+        tipo: operacaoAtual ? operacaoAtual.tipo : "-",
+        ultimo: ultimoDigitoReal, // Mudado aqui!
+        preco: operacaoAtual ? operacaoAtual.preco : 0,
+        resultado: isWin ? "WIN" : "LOSS",
+        lucro: Number(lucro).toFixed(2),
+        hora: new Date().toLocaleTimeString()
+    });
+
+    if (historicoOperacoes.length > 20) {
+        historicoOperacoes.pop();
+    }
+
+    if (typeof renderizarHistorico === 'function') {
+        renderizarHistorico();
+    }
+
+if (isWin) {
+    stakeAtual = stakeInicial;
+} else {
+    stakeAtual = stakeAtual * 2;
+}
+console.log("Próxima stake: " + stakeAtual);
+
+const stopWin = Number(document.getElementById("config-win").value);
+const stopLoss = Number(document.getElementById("config-loss").value);
+
+if (lucroVirtual >= stopWin) {
+    alert("STOP WIN ATINGIDO!");
+roboLigado = false;
+document.getElementById("btn-comecar-robo").innerText = "🟥";
+
+document.getElementById("tipo-conta").disabled = false;
+document.getElementById("estrategia-robo").disabled = false;
+
+}
+
+if (perdaVirtual >= stopLoss) {
+    alert("STOP LOSS ATINGIDO!");
+roboLigado = false;
+document.getElementById("btn-comecar-robo").innerText = "🟥";
+
+document.getElementById("tipo-conta").disabled = false;
+document.getElementById("estrategia-robo").disabled = false;
+
+}
+
+    operacaoAtual = {
+    ativa: false,
+    tipo: "",
+    preco: 0,
+    tickEntrada: null,
+    proposalId: null,
+    contractId: null,
+    aguardandoResultado: false
+};
+
+}
+
+function executarCompra() {
+
+    console.log(
+        "🚀 ENVIANDO BUY\n" +
+        "ID: " + window.lastProposalId +
+        "\nPRICE: " + window.lastPrice
+    );
+
+    if (!window.derivWS || window.derivWS.readyState !== 1) {
+        alert("❌ WS NÃO CONECTADO");
+        return;
+    }
+
+  const compra = {
+    buy: operacaoAtual.proposalId,
+    price: operacaoAtual.preco,
+    req_id: 1002
+};
+
+window.ultimaMensagem = compra;
+
+console.log(JSON.stringify(compra));
+
+window.derivWS.send(JSON.stringify(compra));
+
+}
+
+function atualizarEtapas(etapa) {
+
+    const etapa1 =
+        document.getElementById('etapa-1');
+
+    const etapa2 =
+        document.getElementById('etapa-2');
+
+    const etapa3 =
+        document.getElementById('etapa-3');
+
+    const azul =
+        "#00e5ff";
+
+    const cinza =
+        "#607d8b";
+
+    if (etapa1)
+        etapa1.style.color =
+            etapa >= 1
+            ? azul
+            : cinza;
+
+    if (etapa2)
+        etapa2.style.color =
+            etapa >= 2
+            ? azul
+            : cinza;
+
+    if (etapa3)
+        etapa3.style.color =
+            etapa >= 3
+            ? azul
+            : cinza;
+}
+
+function limparHistorico() {
+
+    if (!confirm("Deseja limpar todo o histórico?")) {
+        return;
+    }
+
+    historicoOperacoes = [];
+
+lucroVirtual = 0;
+perdaVirtual = 0;
+
+const lucroReal = document.getElementById("lucro-real");
+
+if (lucroReal) {
+    lucroReal.innerText = "$ 0.00";
+    lucroReal.style.color = "#00e676";
+}
+
+    const historico =
+        document.getElementById(
+            'lista-historico'
+        );
+
+    if (historico) {
+
+        historico.innerHTML = `
+            <div style="
+                color:#607d8b;
+                text-align:center;
+                padding-top:15px;
+                font-size:14px;
+            ">
+                Aguardando execução do mercado...
+            </div>
+        `;
+    }
+
+    const wins =
+        document.getElementById(
+            'cont-wins'
+        );
+
+    const losses =
+        document.getElementById(
+            'cont-losses'
+        );
+
+    if (wins) wins.innerText = "0";
+    if (losses) losses.innerText = "0";
+
+console.log("Lucro:", lucroVirtual);
+console.log("Perda:", perdaVirtual);
+console.log("Texto:", document.getElementById("lucro-real")?.innerText);
+
+    console.log(
+        "Histórico apagado."
+    );
+}
+
+// ========================================================
+
+function selecionarRobo(valor, nome, imagem) {
+
+    // 1. Atualiza o select escondido (lógica do robô)
+    const select = document.getElementById("estrategia-robo");
+    if (select) {
+        select.value = valor;
+    }
+
+    // 2. Atualiza botão visual
+    const botao = document.getElementById("botao-robo");
+    if (botao) {
+        botao.innerText = nome + " ▼";
+    }
+
+    // 3. Atualiza imagem principal
+    const img = document.getElementById("imagem-robo");
+    if (img) {
+        img.src = imagem;
+    }
+
+    // 4. Fecha modal
+    const modal = document.getElementById("lista-robos");
+    if (modal) {
+        modal.style.display = "none";
+    }
+
+    // 5. Garante sincronização da lógica antiga e do Painel Rain Money
+    if (typeof atualizarImagemRobo === "function") {
+        atualizarImagemRobo();
+    }
+
+    // Exibe ou oculta o painel do Rain Money instantaneamente
+    const painelRain = document.getElementById("painel-rain-money");
+    if (painelRain) {
+        painelRain.style.display = (valor === "rain_money") ? "block" : "none";
+    }
+}
+
+
+function atualizarImagemRobo() {
+
+    const estrategia =
+        document.getElementById("estrategia-robo").value;
+
+    const imagem =
+        document.getElementById("imagem-robo");
+
+    if (!imagem) return;
+
+    switch (estrategia) {
+
+        case "impar":
+            imagem.src = "orion.png";
+            break;
+
+        case "par":
+            imagem.src = "vortex.png";
+            break;
+
+        case "over":
+            imagem.src = "titan.png";
+            break;
+
+        case "under":
+            imagem.src = "super-epic.png";
+            break;
+
+        case "repeticao":
+            imagem.src = "money-phantom.png";
+            break;
+
+        default:
+            imagem.src = "orion.png";
+    }
+}
+
+function mostrarProcessando(texto = "A processar...") {
+
+    const painel = document.getElementById("painel-processando");
+    const msg = document.getElementById("texto-loader");
+
+    if (msg) {
+        msg.innerText = texto;
+    }
+
+    if (painel) {
+        painel.style.display = "flex";
+    }
+setTimeout(() => {
+    esconderProcessando();
+}, 3000);
+
+}
+
+function esconderProcessando() {
+
+    const painel = document.getElementById("painel-processando");
+
+    if (painel) {
+        painel.style.display = "none";
+    }
+}
+
+function sucessoProcessando(texto = "Concluído") {
+
+    const loader = document.getElementById("pm-loader");
+    const msg = document.getElementById("texto-loader");
+
+    if (loader) {
+        loader.innerHTML = "✔";
+        loader.style.border = "none";
+        loader.style.animation = "none";
+        loader.style.color = "#00e676";
+        loader.style.fontSize = "32px";
+    }
+
+    if (msg) {
+        msg.innerText = texto;
+    }
+
+    setTimeout(() => {
+        esconderProcessando();
+    }, 800);
+}
+
+// ========================================================
+
+   function alternarRobo() {
+
+    const est =
+        document.getElementById(
+            'estrategia-robo'
+        ).value;
+
+    const btn =
+        document.getElementById(
+            'btn-comecar-robo'
+        );
+
+    if (est === 'nenhuma') {
+
+        alert(
+
+" ❌ Por favor, selecione uma estratégia antes de iniciar o robô!"
+
+);
+
+return;
+
+}
+
+    roboLigado = !roboLigado;
+
+// === OFUSCA O BOTÃO DA ENGRENAGEM E O BOTÃO DE SELEÇÃO DE ROBÔ ===
+
+const btnConfig = document.getElementById("btn-config");
+const btnRobo = document.getElementById("botao-robo");
+
+if (btnConfig) {
+    btnConfig.style.opacity = roboLigado ? "0.5" : "1";
+    btnConfig.style.pointerEvents = roboLigado ? "none" : "auto";
+}
+
+if (btnRobo) {
+    btnRobo.style.opacity = roboLigado ? "0.5" : "1";
+    btnRobo.style.pointerEvents = roboLigado ? "none" : "auto";
+}
+
+// == FIM DESTE CÓDIGO ACIMA ==
+
+if (!roboLigado) {
+    const estado = document.getElementById("estado-operacao");
+
+    if (estado) {
+
+estado.innerText = "⚪ Aguardando sinal...";
+estado.style.color = "#b0bec5";
+}
+   atualizarStatusMercado(
+   "⚪ Sem análise",
+   "#b0bec5"
+);
+
+}
+
+if (roboLigado) {
+
+    stakeInicial = Number(document.getElementById("config-stake").value) || 0.35;
+    stakeAtual = stakeInicial;
+
+    const estrategia =
+        document.getElementById("estrategia-robo").value;
+
+    if (
+        estrategia === "par" ||
+        estrategia === "impar"
+    ) {
+
+        atualizarStatusMercado(
+            "🔵 Analisando mercado...",
+            "#42a5f5"
+        );
+
+    } else {
+
+        atualizarStatusMercado(
+            "⚪ Sem análise",
+            "#b0bec5"
+        );
+
+    }
+}
+
+console.log("Stake inicial: " + stakeInicial);
+console.log("Stake atual: " + stakeAtual);
+
+const stopWin = Number(document.getElementById("config-win").value);
+
+console.log("Stop Win: " + stopWin);
+
+const stopLoss = Number(document.getElementById("config-loss").value);
+
+console.log("Stop Loss: " + stopLoss);
+
+    const etapa1 =
+        document.getElementById(
+            'etapa-1'
+        );
+
+    const etapa2 =
+        document.getElementById(
+            'etapa-2'
+        );
+
+    const etapa3 =
+        document.getElementById(
+            'etapa-3'
+        );
+
+    if (roboLigado) {
+
+        btn.innerText = "🟩";
+document.getElementById("tipo-conta").disabled = true;
+
+document.getElementById("estrategia-robo").disabled = true;
+
+    } else {
+
+        btn.innerText = "🟥";
+document.getElementById("tipo-conta").disabled = false;
+
+document.getElementById("estrategia-robo").disabled = false;
+    }
+}
+
+    // Captura automática do WebSocket OTP da Deriv
+
+window.addEventListener('DOMContentLoaded', () => {
+
+
+const urlParams = new URLSearchParams(window.location.search);
+
+
+const wsUrl = urlParams.get('ws_url');
+
+const authStatus = urlParams.get('auth');
+
+
+if (authStatus === 'success' && wsUrl) {
+
+
+sessionStorage.setItem('deriv_ws_url', wsUrl);
+
+
+window.history.replaceState(
+
+{},
+
+document.title,
+
+'/index.html'
+
+);
+
+const tipoGuardado = sessionStorage.getItem("tipoConta");
+
+if (tipoGuardado) {
+    setTimeout(() => {
+        const seletor = document.getElementById("tipo-conta");
+
+        if (seletor) {
+            seletor.value = tipoGuardado;
+        }
+    }, 300);
+}
+
+if (typeof irParaDashboardReal === 'function') { irParaDashboardReal();
+
+}
+
+} else {
+
+
+const wsSalvo = sessionStorage.getItem('deriv_ws_url');
+
+if (wsSalvo) {
+
+const tipoGuardado = sessionStorage.getItem("tipoConta");
+
+if (tipoGuardado) {
+    setTimeout(() => {
+        const seletor = document.getElementById("tipo-conta");
+
+        if (seletor) {
+            seletor.value = tipoGuardado;
+        }
+    }, 300);
+}
+
+if (typeof irParaDashboardReal === 'function') {
+
+irParaDashboardReal();
+
+}
+
+
+}
+
+}
+
+});
+
+window.addEventListener("load", async function () {
+
+    await verificarSessao();
+
+    mostrarProcessando("Aguarde...");
+
+});
+
+
+// ========================================================
+// 🔔 GESTOR DE NOTIFICAÇÃO DIÁRIA (8 SEGUNDOS)
+// ========================================================
+function verificarNotificacaoDiaria() {
+    const hoje = new Date().toISOString().split('T')[0]; // Pega a data atual (AAAA-MM-DD)
+    const ultimaExibicao = localStorage.getItem("data_notificacao_placa");
+
+    if (ultimaExibicao !== hoje) {
+        const notif = document.getElementById("notificacao-boas-vindas");
+        if (notif) {
+            notif.style.display = "block";
+
+            // Regista que a mensagem já foi mostrada hoje
+            localStorage.setItem("data_notificacao_placa", hoje);
+
+            // Oculta a notificação após 8 segundos
+            setTimeout(() => {
+                notif.style.display = "none";
+            }, 8000);
+        }
+    }
+}
+
+// Executa a verificação assim que a página termina de carregar
+window.addEventListener("DOMContentLoaded", verificarNotificacaoDiaria);
+
+
+</script>
+
+<div id="lista-robos" style="
+display:none;
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.75);
+justify-content:center;
+align-items:center;
+z-index:9999;
+">
+
+<div style="
+background:#0c1524;
+padding:15px;
+border-radius:12px;
+width:90%;
+max-width:320px;
+max-height:80vh;
+overflow-y:auto;
+">
+
+<div style="
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:12px;
+">
+
+    <button
+        type="button"
+        onclick="window.location.href='https://placa-do-money.netlify.app'"
+        style="
+            width:auto;
+            margin:0;
+            padding:7px 10px;
+            background:#101f35;
+            border:1px solid #1e88e5;
+            color:#1e88e5;
+            border-radius:6px;
+            font-size:11px;
+            font-weight:bold;
+            cursor:pointer;
+        "
+    >
+        RISE/FALL
+    </button>
+
+    <h3 style="
+        margin:0;
+        font-size:17px;
+        text-align:center;
+    ">
+        Selecionar Robô
+    </h3>
+
+    <button
+        type="button"
+        onclick="fecharListaRobos()"
+        style="
+            width:32px;
+            height:32px;
+            margin:0;
+            padding:0;
+            background:#101f35;
+            border:1px solid #ff1744;
+            color:#ff1744;
+            border-radius:6px;
+            font-size:18px;
+            font-weight:bold;
+            cursor:pointer;
+        "
+    >
+        X
+    </button>
+
+</div>
+
+<div id="conteudo-robos">
+
+    <div onclick="selecionarRobo('impar','ORION','orion.png')"
+         style="
+            display:flex;
+            align-items:center;
+            gap:10px;
+            padding:10px;
+            margin-bottom:8px;
+            background:#101f35;
+            border-radius:8px;
+            cursor:pointer;
+         ">
+
+        <img src="orion.png"
+             style="width:300px;height:180px;object-fit:contain;">
+
+       <!-- <strong>ORION</strong> -->
+
+    </div>
+
+<div onclick="selecionarRobo('par','VORTEX','vortex.png')"
+     style="
+        display:flex;
+        align-items:center;
+        gap:10px;
+        padding:10px;
+        margin-bottom:8px;
+        background:#101f35;
+        border-radius:8px;
+        cursor:pointer;
+     ">
+
+    <img src="vortex.png"
+         style="width:300px;height:180px;object-fit:contain;">
+
+   <!-- <strong>VORTEX</strong> -->
+
+</div>
+
+
+<div onclick="selecionarRobo('over','TITAN','titan.png')"
+     style="
+        display:flex;
+        align-items:center;
+        gap:10px;
+        padding:10px;
+        margin-bottom:8px;
+        background:#101f35;
+        border-radius:8px;
+        cursor:pointer;
+     ">
+
+    <img src="titan.png"
+         style="width:300px;height:180px;object-fit:contain;">
+
+   <!-- <strong>TITAN</strong> -->
+
+</div>
+
+<div onclick="selecionarRobo('under','SUPER EPIC','super-epic.png')"
+     style="
+        display:flex;
+        align-items:center;
+        gap:10px;
+        padding:10px;
+        margin-bottom:8px;
+        background:#101f35;
+        border-radius:8px;
+        cursor:pointer;
+     ">
+
+    <img src="super-epic.png"
+         style="width:300px;height:180px;object-fit:contain;">
+
+   <!-- <strong>SUPER EPIC</strong> -->
+
+</div>
+
+<div onclick="selecionarRobo('repeticao','MONEY PHANTOM','money-phantom.png')"
+     style="
+        display:flex;
+        align-items:center;
+        gap:10px;
+        padding:10px;
+        margin-bottom:8px;
+        background:#101f35;
+        border-radius:8px;
+        cursor:pointer;
+     ">
+
+    <img src="money-phantom.png"
+         style="width:299px;height:180px;object-fit:contain;">
+
+   <!-- <strong>MONEY PHANTOM</strong> -->
+
+</div>
+
+
+<div onclick="selecionarRobo('rain_money','RAIN MONEY','RAIN MONEY.png')"
+     style="
+        display:flex;
+        align-items:center;
+        gap:10px;
+        padding:10px;
+        margin-bottom:8px;
+        background:#101f35;
+        border-radius:8px;
+        cursor:pointer;
+     ">
+
+    <img src="RAIN MONEY.png"
+         style="width:305px;height:180px;object-fit:contain;">
+
+   <!-- <strong>RAIN MONEY</strong> -->
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div id="painel-processando" style="
+display:none;
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,.55);
+z-index:99999;
+justify-content:center;
+align-items:center;
+">
+
+<div style="
+width:220px;
+background:#101826;
+border:1px solid #1d3d68;
+border-radius:16px;
+padding:25px;
+text-align:center;
+box-shadow:0 0 25px rgba(0,170,255,.35);
+">
+
+<div id="pm-loader" style="
+width:70px;
+height:70px;
+margin:auto;
+border:4px solid #1d3d68;
+border-top:4px solid #29b6f6;
+border-radius:50%;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:24px;
+font-weight:bold;
+color:#29b6f6;
+animation:girarPM 1s linear infinite;
+">
+PM
+</div>
+
+<div id="texto-loader"
+style="
+margin-top:18px;
+color:white;
+font-size:16px;
+">
+A processar...
+</div>
+
+</div>
+
+</div>
+
+<a
+    href="https://chat.whatsapp.com/EyrkXvpYG0V7IauoircBqH?s=cl&p=a&mlu=4&ilr=4"
+    target="_blank"
+    title="Grupo Oficial WhatsApp"
+    style="
+position:fixed;
+        bottom:20px;
+        right:20px;
+        width:45px;
+        height:45px;
+        border-radius:50%;
+        background:#00b0ff;
+        color:white;
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        text-decoration:none;
+        font-size:24px;
+        box-shadow:0 4px 12px rgba(0,0,0,.4);
+        z-index:9999;
+    "
+>
+    📩
+</a>
+
+<link rel="stylesheet" href="analise.css">
+
+<script src="analiseMercado.js"></script>
+<script src="analiseUI.js"></script>
+
+<!-- 🔔 NOTIFICAÇÃO DE BOAS-VINDAS (ONCE A DAY) -->
+<div id="notificacao-boas-vindas" style="
+    display: none;
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+    width: 90%;
+    max-width: 380px;
+    background: rgba(16, 31, 53, 0.95);
+    border: 1px solid #00e5ff;
+    border-radius: 12px;
+    padding: 14px 18px;
+    text-align: center;
+    box-shadow: 0 0 20px rgba(0, 229, 255, 0.4);
+    backdrop-filter: blur(8px);
+    animation: fadeInDown 0.5s ease;
+">
+    <div style="color: #00e5ff; font-weight: bold; font-size: 14px; margin-bottom: 4px;">
+        👋 Bem-vindo à Placa do Money da Deriv
+    </div>
+    <div style="color: #ffffff; font-size: 12px; line-height: 1.4;">
+        com Análise e Operações Automatizadas
+    </div>
+</div>
+
+<style>
+@keyframes fadeInDown {
+    from { opacity: 0; transform: translate(-50%, -20px); }
+    to { opacity: 1; transform: translate(-50%, 0); }
+}
+</style>
+
+<!-- 🟢 INDICADOR ONLINE INDEPENDENTE (SEM ALTERAR NADA NO CÓDIGO EXISTENTE) -->
+<script>
+(function() {
+    function injetarEAtualizarOnline() {
+        const topo = document.querySelector('.topo-plataforma');
+        if (!topo) return;
+
+        // Injeta o elemento visual no canto superior direito apenas se ainda não existir
+        if (!document.getElementById('container-online')) {
+            topo.style.position = 'relative';
+            
+            const divOnline = document.createElement('div');
+            divOnline.id = 'container-online';
+            divOnline.style.cssText = 'position:absolute; top:0px; right:0px; display:flex; align-items:center; gap:5px; background:rgba(16,31,53,0.7); padding:3px 8px; border-radius:12px; border:1px solid rgba(0,230,118,0.3);';
+            
+            divOnline.innerHTML = `
+                <span class="led-online"></span>
+                <span style="color:#8fa0b5; font-size:9px; font-weight:bold;">online:</span>
+                <span id="num-online" style="color:#00e676; font-size:10px; font-weight:bold; font-family:monospace;">${Math.floor(Math.random() * (280 - 120 + 1)) + 120}</span>
+            `;
+            
+            topo.appendChild(divOnline);
+
+            // Estilo do LED pulsante
+            if (!document.getElementById('estilo-led-online')) {
+                const style = document.createElement('style');
+                style.id = 'estilo-led-online';
+                style.innerHTML = `
+                    .led-online {
+                        width: 7px;
+                        height: 7px;
+                        background-color: #00ff88;
+                        border-radius: 50%;
+                        box-shadow: 0 0 8px #00ff88, 0 0 14px #00ff88;
+                        animation: pulsarLed 1.5s infinite alternate ease-in-out;
+                    }
+                    @keyframes pulsarLed {
+                        from { opacity: 0.4; box-shadow: 0 0 3px #00ff88; }
+                        to { opacity: 1; box-shadow: 0 0 12px #00ff88, 0 0 20px #00ff88; }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+        }
+
+        // Variação do número (44 a 336)
+        const elNum = document.getElementById('num-online');
+        if (elNum) {
+            let valor = parseInt(elNum.innerText) || 180;
+            valor += Math.floor(Math.random() * 11) - 5;
+            if (valor < 44) valor = 44 + Math.floor(Math.random() * 8);
+            if (valor > 336) valor = 336 - Math.floor(Math.random() * 8);
+            elNum.innerText = valor;
+        }
+    }
+
+    // Executa a verificação/atualização continuamente a cada 2.5s
+    setInterval(injetarEAtualizarOnline, 2500);
+})();
+</script>
+
+<script src="placas-liquidas.js"></script>
+
+</body>
+</html>

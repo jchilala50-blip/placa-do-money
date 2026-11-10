@@ -5,6 +5,7 @@ const axios = require('axios');
 const path = require('path');
 const cookieParser = require('cookie-parser'); // CORREÇÃO AMY: Importar cookies
 const session = require('express-session');
+const connectPgSimple = require('connect-pg-simple');
 const { Pool } = require('pg');
 const bcrypt = require('bcryptjs');
 const app = express();
@@ -20,22 +21,32 @@ app.get('/health', (req, res) => {
     res.status(200).send('OK');
 });
 
-app.use(session({
-    secret: 'placa-do-money-secret',
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-        maxAge: 24 * 60 * 60 * 1000
-    }
-}));
-
-
 const db = new Pool({
     connectionString: process.env.DATABASE_URL,
     ssl: {
         rejectUnauthorized: false
     }
 });
+
+const PgSession = connectPgSimple(session);
+
+app.use(session({
+    store: new PgSession({
+        pool: db,
+        tableName: 'user_sessions',
+        createTableIfMissing: true
+    }),
+    secret: process.env.SESSION_SECRET || 'placa-do-money-secret',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        maxAge: 24 * 60 * 60 * 1000,
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax'
+    }
+}));
+
 
 db.connect()
 .then(() => {
@@ -51,7 +62,7 @@ db.connect()
 const CLIENT_ID = process.env.DERIV_APP_ID || '33syUeaX60IlPmcJHrdtB';
 const REDIRECT_URI = 'https://placa-do-money.onrender.com/callback';
 
-app.use(express.static(path.join(__dirname)));
+app.use(express.static(path.join(__dirname, 'public')));
 
 // --- ROTAS DO USUÁRIO LOCAL ---
 
@@ -529,7 +540,10 @@ const accountId =
     }
 });
 
-app.listen(PORT, () => {
-    console.log(`Servidor rodando na porta ${PORT}`);
-});
+if (require.main === module) {
+    app.listen(PORT, () => {
+        console.log(`Servidor rodando na porta ${PORT}`);
+    });
+}
 
+module.exports = app;
