@@ -60,7 +60,7 @@ db.connect()
 // let derivToken = null;
 
 const CLIENT_ID = process.env.DERIV_APP_ID || '33syUeaX60IlPmcJHrdtB';
-const REDIRECT_URI = 'https://placa-do-money.onrender.com/callback';
+const REDIRECT_URI = 'https://placa-do-money.vercel.app/callback';
 
 app.use(express.static(path.join(__dirname, 'public')));
 
