@@ -2567,6 +2567,20 @@ if (motivoParagem) {
     document.getElementById("btn-comecar-robo").innerText = "🟥";
     document.getElementById("tipo-conta").disabled = false;
     document.getElementById("estrategia-robo").disabled = false;
+
+
+    const btnConfig = document.getElementById("btn-config");
+    const btnRobo = document.getElementById("botao-robo");
+
+    if (btnConfig) {
+        btnConfig.style.opacity = "1";
+        btnConfig.style.pointerEvents = "auto";
+    }
+
+    if (btnRobo) {
+        btnRobo.style.opacity = "1";
+        btnRobo.style.pointerEvents = "auto";
+    }
 }
 
     operacaoAtual = {
