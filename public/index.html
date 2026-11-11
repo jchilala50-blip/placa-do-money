@@ -2533,24 +2533,32 @@ console.log("Próxima stake: " + stakeAtual);
 const stopWin = Number(document.getElementById("config-win").value);
 const stopLoss = Number(document.getElementById("config-loss").value);
 
-if (lucroVirtual >= stopWin) {
-    alert("STOP WIN ATINGIDO!");
-roboLigado = false;
-document.getElementById("btn-comecar-robo").innerText = "🟥";
+const resultadoLiquido = Number(
+    (lucroVirtual - perdaVirtual).toFixed(2)
+);
 
-document.getElementById("tipo-conta").disabled = false;
-document.getElementById("estrategia-robo").disabled = false;
+let motivoParagem = "";
 
+if (stopWin > 0 && resultadoLiquido >= stopWin) {
+    motivoParagem = "STOP WIN ATINGIDO!";
 }
 
-if (perdaVirtual >= stopLoss) {
-    alert("STOP LOSS ATINGIDO!");
-roboLigado = false;
-document.getElementById("btn-comecar-robo").innerText = "🟥";
+if (stopLoss > 0 && resultadoLiquido <= -stopLoss) {
+    motivoParagem = "STOP LOSS ATINGIDO!";
+}
 
-document.getElementById("tipo-conta").disabled = false;
-document.getElementById("estrategia-robo").disabled = false;
+if (motivoParagem) {
+    alert(
+        motivoParagem +
+        "\nResultado líquido: $" +
+        resultadoLiquido.toFixed(2)
+    );
 
+    roboLigado = false;
+
+    document.getElementById("btn-comecar-robo").innerText = "🟥";
+    document.getElementById("tipo-conta").disabled = false;
+    document.getElementById("estrategia-robo").disabled = false;
 }
 
     operacaoAtual = {
