@@ -1258,46 +1258,14 @@ erro
 
 if (wsUrl) {
 
-const ws = new WebSocket(wsUrl);
+    conectarWebSocketDeriv(wsUrl);
 
-window.derivWS = ws;
+} else {
 
-configurarEventosDoWS(ws);
+    console.error("Não foi possível estabelecer a ligação Deriv.");
 
-ws.onopen = function () {
-console.log("WS ABRIU");
+}
 
-ws.send(JSON.stringify({
-
-balance: 1,
-
-subscribe: 1,
-
-req_id: 1
-
-}));
-
-ws.send(JSON.stringify({
-    ticks: simboloAtual,
-    subscribe: 1,
-    req_id: 2
-}));
-
-};
-
-ws.onerror = function(err) {
-
-console.log("WS ERROR:", err);
-
-};
-
-ws.onclose = function(event) {
-
-console.log("WS FECHOU", event.code);
-
-};
-
-}// FECHA if (wsUrl)
 
 
 // Delay de 1 segundo para o HTML assentar antes de pintar as barras
@@ -1943,75 +1911,17 @@ console.log(
 
         sessionStorage.setItem('deriv_ws_url', dados.ws_url);
 
+// 3. Atualizar a ligação através do gestor central
 
-        // 3. fechar WS antigo
+subscriptionTickId = null;
 
-        if (window.derivWS) {
-
-            try {
-
-                window.derivWS.close();
-
-            } catch (e) {}
-
-        }
-
-        // 4. criar novo WS
-
-        const ws = new WebSocket(dados.ws_url);
-
-        window.derivWS = ws;
-console.log(
-    "💎 WEBSOCKET CRIADO\n\n" +
-    "TIPO: " + tipo +
-    "\n\nURL DO WS:\n" + ws.url
-);
-
-
-        configurarEventosDoWS(ws);
-
-        ws.onopen = function () {
-
-            esconderProcessando();
-
-            console.log("WS REABRIU COM CONTA:", tipo);
-
-
-            // 🔥 IMPORTANTE: subscrição completa com req_id e subscribe para manter o stream ativo
-
-            ws.send(JSON.stringify({
-
-                balance: 1,
-
-                subscribe: 1,
-
-                req_id: 1
-
-            }));
-
-
-            ws.send(JSON.stringify({
-
-                ticks: simboloAtual,
-
-                subscribe: 1,
-
-                req_id: 2
-
-            }));
-
-        };
+conectarWebSocketDeriv(dados.ws_url);
 
 console.log(
-    "💎 SUBSCRIÇÃO ENVIADA\n\n" +
+    "💎 TROCA DE CONTA SOLICITADA\n" +
     "TIPO: " + tipo +
-    "\n\n" +
-    "SÍMBOLO: " + simboloAtual +
-    "\n\n" +
-    "REQ_ID: 2\n" +
-    "SUBSCRIBE: 1"
+    "\nSÍMBOLO: " + simboloAtual
 );
-
 
 
     } catch (erro) {
@@ -2023,7 +1933,6 @@ console.log(
     }
 
 }
-
 
 // <== NOVA FUNÇÃO PARA ATUALIZAR ESTADO DO MERCADO ANTES DE COMPRA OU VENDA ==
 
@@ -2260,6 +2169,185 @@ let operacaoAtual = {
     aguardandoResultado: false
 };
 
+
+
+
+// === GESTOR CENTRAL DE CONEXÃO DERIV ===
+
+let temporizadorReconexaoAutomatica = null;
+let tentativasReconexao = 0;
+let reconexaoEmCurso = false;
+let ultimaHoraTick = Date.now();
+
+function agendarReconexaoDeriv() {
+
+    if (reconexaoEmCurso) return;
+
+    if (temporizadorReconexaoAutomatica) return;
+
+    reconexaoEmCurso = true;
+
+    const atraso = Math.min(
+        2000 * Math.pow(2, tentativasReconexao),
+        30000
+    );
+
+    tentativasReconexao++;
+
+    console.log(
+        "🔄 Reconexão Deriv em " +
+        Math.round(atraso / 1000) +
+        " segundos."
+    );
+
+    temporizadorReconexaoAutomatica = setTimeout(
+        async () => {
+
+            temporizadorReconexaoAutomatica = null;
+
+            try {
+
+                const tipo =
+                    document.getElementById("tipo-conta").value;
+
+                const resposta = await fetch(
+                    `/api/novo-otp?tipo=${tipo}`
+                );
+
+                const dados = await resposta.json();
+
+                if (!dados.success || !dados.ws_url) {
+                    throw new Error("Não foi possível obter novo OTP.");
+                }
+
+                sessionStorage.setItem(
+                    "deriv_ws_url",
+                    dados.ws_url
+                );
+
+                conectarWebSocketDeriv(dados.ws_url);
+
+            } catch (erro) {
+
+                console.error(
+                    "Falha na reconexão Deriv:",
+                    erro
+                );
+
+                reconexaoEmCurso = false;
+                agendarReconexaoDeriv();
+
+            }
+
+        },
+        atraso
+    );
+}
+
+function conectarWebSocketDeriv(wsUrl) {
+
+    if (!wsUrl) return;
+
+    if (window.derivWS) {
+        try {
+            window.derivWS.close();
+        } catch (erro) {}
+    }
+
+    const ws = new WebSocket(wsUrl);
+
+    window.derivWS = ws;
+
+    configurarEventosDoWS(ws);
+
+    ws.onopen = function () {
+
+        if (ws !== window.derivWS) return;
+
+        console.log("✅ WebSocket Deriv conectado.");
+
+        tentativasReconexao = 0;
+        reconexaoEmCurso = false;
+
+        esconderProcessando();
+
+        ultimaHoraTick = Date.now();
+
+         vigiarTicksDeriv(ws);
+
+        ws.send(JSON.stringify({
+            balance: 1,
+            subscribe: 1,
+            req_id: 1
+        }));
+
+        ws.send(JSON.stringify({
+            ticks: simboloAtual,
+            subscribe: 1,
+            req_id: 2
+        }));
+
+    };
+
+    ws.onerror = function (erro) {
+
+    if (ws !== window.derivWS) return;
+
+    console.error("⚠️ Erro no WebSocket Deriv:", erro);
+
+    if (ws.readyState !== WebSocket.CLOSED) {
+        ws.close();
+    }
+
+};
+
+    ws.onclose = function (evento) {
+
+        if (ws !== window.derivWS) return;
+
+        console.log(
+            "⚠️ WebSocket fechado:",
+            evento.code
+        );
+
+        reconexaoEmCurso = false;
+
+        agendarReconexaoDeriv();
+
+    };
+
+}
+
+
+// === MONITOR AUTOMÁTICO DE TICKS ===
+
+function vigiarTicksDeriv(ws) {
+
+    if (ws !== window.derivWS) return;
+
+    ultimaHoraTick = Date.now();
+
+    clearTimeout(temporizadorReconexao);
+
+    temporizadorReconexao = setTimeout(() => {
+
+        if (ws !== window.derivWS) return;
+
+        if (Date.now() - ultimaHoraTick >= 15000) {
+
+            console.warn("⚠️ TICKS INTERROMPIDOS.");
+
+            mostrarProcessando("🔄 A recuperar ligação...");
+
+            ws.close();
+
+        }
+
+    }, 15000);
+
+}
+
+
 // === FUNÇÃO CENTRALIZADORA DO WEBSOCKET (ATUALIZADA) ===
 function configurarEventosDoWS(ws) {
     ws.onmessage = function (msg) {
@@ -2358,6 +2446,8 @@ window.operacaoPendente = {
         // 📊 2. TRATAR TICKS (ÚLTIMOS DÍGITOS E GRÁFICO)
         if (data.tick) {
 
+       vigiarTicksDeriv(ws);
+
       if (data.subscription && data.subscription.id) {
         subscriptionTickId = data.subscription.id;
         }
@@ -2365,17 +2455,8 @@ window.operacaoPendente = {
             const ultimoDigito = String(data.tick.quote).slice(-1);
             const visor = document.getElementById('ultimo-digito-real');
             
-            // Recebeu um tick, a ligação está OK
-              esconderProcessando();
-
-          // Reinicia o temporizador de monitorização
-            clearTimeout(temporizadorReconexao);
-
-            temporizadorReconexao = setTimeout(() => {
-
-             mostrarProcessando("🔄 A reconectar...");
-
-             }, 11000);
+            // Recebeu um tick: ligação ativa
+esconderProcessando();
           
             if (visor) {
                 visor.innerText = ultimoDigito;
