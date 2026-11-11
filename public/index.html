@@ -2556,6 +2556,14 @@ if (motivoParagem) {
 
     roboLigado = false;
 
+    const estado = document.getElementById("estado-operacao");
+
+    if (estado) {
+        estado.innerText = "⚪ Aguardando sinal...";
+        estado.style.color = "#b0bec5";
+    }
+
+
     document.getElementById("btn-comecar-robo").innerText = "🟥";
     document.getElementById("tipo-conta").disabled = false;
     document.getElementById("estrategia-robo").disabled = false;
